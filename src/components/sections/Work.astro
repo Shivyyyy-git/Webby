@@ -1,0 +1,189 @@
+---
+import { getCollection } from 'astro:content';
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+---
+<section id="work">
+  <div class="w">
+    <div class="cap"><b>Section 03</b> — Selected work</div>
+    <div class="work-head reveal">
+      <h2 class="work-h">Things I shipped<br />that <em>matter.</em></h2>
+      <p class="work-blurb">A short list. Each had a deadline, a budget, real users on the other end, and a call I had to make. The fluff is gone — it didn't survive contact with the road.</p>
+    </div>
+
+    {work.map((entry, i) => {
+      const { title, titleEm, role, era, note, tags, stats } = entry.data;
+      return (
+        <article class="proj reveal" data-cur="proj" data-cur-lbl="Open">
+          <div class="proj-num">{String(i + 1).padStart(2, '0')} / {String(work.length).padStart(2, '0')}</div>
+          <div>
+            <h3 class="proj-name">{title} <em>{titleEm}</em></h3>
+            <div class="proj-role">{role} · {era}</div>
+          </div>
+          <div>
+            <p class="proj-desc" set:html={note} />
+            <div class="proj-tags">
+              {tags.map((t: string) => <span class="proj-tag">{t}</span>)}
+            </div>
+          </div>
+          <div class="proj-stat">
+            {stats.map((s: { value: string; label: string }) => (
+              <div class="ps">
+                <div class="pv">{s.value}</div>
+                <div class="pl">{s.label}</div>
+              </div>
+            ))}
+          </div>
+          <span class="proj-arrow">→</span>
+        </article>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  #work {
+    padding: 18vh 0 12vh;
+    background: var(--ink);
+    color: var(--cream);
+    position: relative;
+  }
+  #work .cap { color: rgba(237, 228, 211, 0.5); }
+  #work .cap::before { background: var(--terra); }
+  .work-head {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+    margin: 48px 0 96px;
+    align-items: end;
+  }
+  .work-h {
+    font-size: clamp(46px, 7vw, 118px);
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+    color: var(--cream);
+    text-wrap: balance;
+  }
+  .work-blurb {
+    font-size: 15px;
+    color: rgba(237, 228, 211, 0.65);
+    line-height: 1.5;
+  }
+  .proj {
+    display: grid;
+    grid-template-columns: 80px 1.4fr 1.6fr 1fr;
+    gap: 32px;
+    padding: 36px 0;
+    border-top: 1px solid rgba(237, 228, 211, 0.15);
+    position: relative;
+    cursor: none;
+    transition: padding 0.5s cubic-bezier(0.2, 0.9, 0.2, 1), background 0.5s;
+  }
+  .proj:last-child { border-bottom: 1px solid rgba(237, 228, 211, 0.15); }
+  .proj-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: rgba(237, 228, 211, 0.4);
+    padding-top: 8px;
+  }
+  .proj-name {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(36px, 4.6vw, 68px);
+    line-height: 0.96;
+    color: var(--cream);
+    font-variation-settings: 'opsz' 72, 'wght' 300;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .proj-name em {
+    font-style: italic;
+    color: var(--terra);
+    font-variation-settings: 'opsz' 72, 'ital' 1, 'wght' 300;
+  }
+  .proj-role {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.5);
+    margin-top: 14px;
+  }
+  .proj-desc {
+    font-size: 14.5px;
+    color: rgba(237, 228, 211, 0.78);
+    line-height: 1.55;
+  }
+  .proj-desc :global(b) { color: var(--cream); font-weight: 500; }
+  .proj-tags {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .proj-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.6);
+    padding: 4px 9px;
+    border: 1px solid rgba(237, 228, 211, 0.2);
+    border-radius: 99px;
+  }
+  .proj-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: flex-end;
+  }
+  .proj-stat .ps { text-align: right; }
+  .proj-stat .pv {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(28px, 3vw, 46px);
+    color: var(--terra);
+    line-height: 1;
+    font-variation-settings: 'opsz' 60, 'wght' 300;
+    letter-spacing: -0.02em;
+  }
+  .proj-stat .pl {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.5);
+    margin-top: 4px;
+  }
+  .proj-arrow {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) translateX(40px);
+    opacity: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 46px;
+    color: var(--terra);
+    transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.2, 1), opacity 0.4s;
+  }
+  .proj:hover {
+    padding-left: 36px;
+    background: linear-gradient(90deg, rgba(194, 90, 58, 0.08), transparent 60%);
+  }
+  .proj:hover .proj-num { color: var(--terra); }
+  .proj:hover .proj-arrow {
+    transform: translateY(-50%) translateX(0);
+    opacity: 1;
+  }
+  .proj:hover .proj-name em { color: var(--cream); }
+  .proj.in { animation: projIn 0.9s cubic-bezier(0.2, 0.9, 0.2, 1) forwards; }
+  @keyframes projIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @media (max-width: 900px) {
+    .work-head { grid-template-columns: 1fr; gap: 24px; }
+    .proj { grid-template-columns: 1fr; gap: 14px; }
+  }
+</style>

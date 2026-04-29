@@ -1,0 +1,87 @@
+/*
+  Locked stack:
+   Fraunces        — display, variable axes (opsz, ital, wght)
+   Instrument Serif — italic-only accent ("the human voice", used twice on the page)
+   Space Grotesk   — body + UI, weights 300 and 600 only
+   JetBrains Mono  — meta, captions, scroll indicators
+*/
+
+body {
+  font-family: var(--sans);
+  font-weight: 300;
+}
+
+.hero-name,
+.dcc-h,
+.rh,
+.work-h,
+.tl-h,
+.phil-h,
+.off-h,
+.cl-h,
+.proj-name,
+.pc-city,
+.sp-city,
+.sp-h {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-variation-settings: 'opsz' 144, 'wght' 300;
+}
+
+.hero-name .ital,
+.dcc-h em,
+.rh em,
+.work-h em,
+.tl-h em,
+.phil-h em,
+.off-h em,
+.cl-h em,
+.proj-name em,
+.pc-city.ital,
+.sp-h em {
+  font-style: italic;
+  color: var(--terra);
+  font-variation-settings: 'opsz' 144, 'ital' 1, 'wght' 300;
+}
+
+/* Instrument Serif italic — reserved voice. Used in hero italic-on-arrival + close. */
+.hi-italic {
+  font-family: var(--serif-italic);
+  font-style: italic;
+}
+
+.tt,
+.tl-c h4,
+.phil-q,
+.pc-mood,
+.cl-mail,
+.cl-val {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: 'opsz' 60, 'ital' 1, 'wght' 400;
+}
+
+.cap,
+.tlbl,
+.tl-y,
+.tl-tag,
+.tc,
+.proj-num,
+.proj-role,
+.proj-tag,
+.pl,
+.pc-greet,
+.pc-stamp-ph,
+#dc-counter,
+#dc-loc,
+#local-time,
+#dc-skip,
+#dc-replay,
+#dc-hint,
+#aud-tog,
+.dcb-meta,
+.dcc-eyebrow {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}

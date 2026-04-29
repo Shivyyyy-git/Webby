@@ -1,0 +1,54 @@
+---
+const ITEMS = [
+  'Two acquisitions',
+  '200,000 residents',
+  '26 languages',
+  '500K+ government users',
+  'Maya AI',
+  'Trace AI',
+  'Boston · Bangalore',
+  'Index 2026',
+];
+---
+<section id="ribbon">
+  <div class="tt" id="tt">
+    {[...ITEMS, ...ITEMS].map((item) => (
+      <>
+        <span>{item}</span>
+        <i>✦</i>
+      </>
+    ))}
+  </div>
+</section>
+
+<style>
+  #ribbon {
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .tt {
+    display: flex;
+    white-space: nowrap;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(28px, 3.4vw, 52px);
+    color: var(--moss);
+    font-variation-settings: 'opsz' 60, 'ital' 1, 'wght' 300;
+    will-change: transform;
+  }
+  .tt span {
+    padding: 0 14px;
+    display: inline-block;
+  }
+  .tt i {
+    color: var(--terra);
+    font-style: normal;
+    padding: 0 14px;
+    font-size: 0.4em;
+    vertical-align: middle;
+  }
+</style>

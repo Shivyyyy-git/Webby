@@ -1,0 +1,78 @@
+---
+const ITEMS = [
+  { num: '01.', body: "Features that can't survive a 30-second user interview are <em>guesses</em> wearing JIRA tickets." },
+  { num: '02.', body: "The hard part of AI products isn't the model. It's the <span class='terra'>five specific moments</span> it should hand control back to the user." },
+  { num: '03.', body: "Good PMs show up with <em>numbers from yesterday</em> and conviction about tomorrow. Anything else is theatre." },
+  { num: '04.', body: "Multilingual isn't a feature. It's a <em>commitment</em> — to people whose language wasn't in the training data." },
+];
+---
+<section id="phil">
+  <div class="w">
+    <div class="cap"><b>Section 05</b> — Mind / mouth</div>
+    <h2 class="phil-h reveal">Four things I will <em>fight</em><br />you about.</h2>
+    <div class="phil-list">
+      {ITEMS.map((it) => (
+        <div class="phil-item reveal">
+          <div class="phil-num">{it.num}</div>
+          <p class="phil-q" set:html={it.body} />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  #phil {
+    padding: 24vh 0 18vh;
+    background: var(--cream);
+    overflow: hidden;
+  }
+  .phil-h {
+    font-size: clamp(40px, 6vw, 108px);
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+    margin: 40px 0 80px;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+  .phil-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .phil-item {
+    padding: 8vh 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 48px;
+  }
+  .phil-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--terra);
+    padding-top: 8px;
+  }
+  .phil-q {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(32px, 4.4vw, 72px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    font-variation-settings: 'opsz' 96, 'wght' 300;
+    text-wrap: balance;
+  }
+  .phil-q :global(em) {
+    font-style: italic;
+    color: var(--moss);
+    font-variation-settings: 'opsz' 96, 'ital' 1, 'wght' 300;
+  }
+  .phil-q :global(.terra) {
+    color: var(--terra);
+    font-style: italic;
+    font-variation-settings: 'opsz' 96, 'ital' 1, 'wght' 300;
+  }
+</style>

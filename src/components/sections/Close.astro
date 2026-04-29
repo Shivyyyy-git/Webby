@@ -1,0 +1,128 @@
+---
+---
+<section id="close">
+  <div class="w">
+    <div class="cap"><b>Section 07</b> — Reach me</div>
+    <h2 class="cl-h reveal">Let's <em>build</em><br />something real.</h2>
+    <a class="cl-mail" href="mailto:shivamsharma2023@gmail.com" data-cur="link">shivamsharma2023@gmail.com →</a>
+
+    <p class="cl-coda hi-italic">Until then — here's where to find me.</p>
+
+    <div class="cl-grid">
+      <a href="https://www.linkedin.com/in/shivamsharma23" target="_blank" rel="noopener" data-cur="link">
+        <div class="cl-cap">LinkedIn</div>
+        <div class="cl-val">@shivamsharma23</div>
+      </a>
+      <a href="https://x.com/shivampm" target="_blank" rel="noopener" data-cur="link">
+        <div class="cl-cap">X / Twitter</div>
+        <div class="cl-val">@shivampm</div>
+      </a>
+      <a href="https://open.spotify.com/playlist/4FidzePzkgudGlOJknEjhN" target="_blank" rel="noopener" data-cur="link">
+        <div class="cl-cap">Spotify</div>
+        <div class="cl-val">In rotation</div>
+      </a>
+      <a href="mailto:shivamsharma2023@gmail.com" data-cur="link">
+        <div class="cl-cap">Email</div>
+        <div class="cl-val">→ Direct line</div>
+      </a>
+    </div>
+    <div class="cl-end">
+      <span>© 2026 Shivam Sharma · Boston</span>
+      <span>Built with Astro · Index 2026</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  #close {
+    padding: 18vh 0 8vh;
+    background: var(--cream);
+    color: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .cl-h {
+    font-size: clamp(64px, 11vw, 220px);
+    line-height: 0.86;
+    letter-spacing: -0.05em;
+    color: var(--ink);
+    margin: 48px 0 60px;
+    text-wrap: balance;
+  }
+  .cl-mail {
+    display: inline-block;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(28px, 3.6vw, 56px);
+    color: var(--moss);
+    text-decoration: none;
+    border-bottom: 2px solid var(--line);
+    padding-bottom: 6px;
+    font-variation-settings: 'opsz' 60, 'ital' 1, 'wght' 400;
+    transition: color 0.3s, border-color 0.3s, letter-spacing 0.3s;
+  }
+  .cl-mail:hover {
+    color: var(--terra);
+    border-color: var(--terra);
+    letter-spacing: 0.005em;
+  }
+
+  /* Instrument-Serif italic — second of two appearances on the page (the human voice) */
+  .cl-coda {
+    font-family: var(--serif-italic);
+    font-style: italic;
+    font-size: clamp(22px, 2vw, 30px);
+    color: var(--muted);
+    margin: 32px 0 0;
+    max-width: 56ch;
+  }
+
+  .cl-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .cl-grid a {
+    text-decoration: none;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: transform 0.3s;
+  }
+  .cl-grid a:hover { transform: translateY(-3px); }
+  .cl-cap {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cl-val {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--ink);
+    font-variation-settings: 'opsz' 24, 'ital' 1, 'wght' 400;
+  }
+  .cl-end {
+    margin-top: 120px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  @media (max-width: 900px) {
+    .cl-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>

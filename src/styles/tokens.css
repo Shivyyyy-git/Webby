@@ -1,0 +1,23 @@
+:root {
+  /* PALETTE — locked per design brief */
+  --cream: #ede4d3;
+  --paper: #f4ecdb;
+  --ink: #1d2e22;
+  --moss: #2d4533;
+  --terra: #c25a3a;
+  --terra-deep: #9a3f24;
+  --rust: #7a3220;
+  --sand: #d4c5a8;
+  --muted: rgba(29, 46, 34, 0.55);
+  --line: rgba(29, 46, 34, 0.18);
+
+  /* GRID */
+  --g: clamp(24px, 5vw, 80px);
+  --mw: 1480px;
+
+  /* TYPE STACKS */
+  --serif: 'Fraunces', serif;
+  --serif-italic: 'Instrument Serif', 'Fraunces', serif;
+  --sans: 'Space Grotesk', 'Inter Tight', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}

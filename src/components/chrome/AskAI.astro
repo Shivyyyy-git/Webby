@@ -1,0 +1,175 @@
+---
+---
+<div id="ask">
+  <div id="ask-pill">
+    <div id="ask-icon">S</div>
+    <input id="ask-input" placeholder="Ask the AI version of me anything →" autocomplete="off" />
+    <button id="ask-send" aria-label="Send">→</button>
+  </div>
+  <div id="ask-suggest">
+    <span class="ask-chip" data-q="What did you build at Maya?">What did you build at Maya?</span>
+    <span class="ask-chip" data-q="Why did you leave consulting?">Why did you leave consulting?</span>
+    <span class="ask-chip" data-q="What's your hot take on AI PMs?">Hot take on AI PMs?</span>
+    <span class="ask-chip" data-q="What are you reading right now?">What are you reading?</span>
+    <span class="ask-chip" data-q="Are you hireable?">Are you hireable?</span>
+  </div>
+  <div id="ask-thread"></div>
+</div>
+
+<style>
+  #ask {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    z-index: 610;
+    width: min(640px, calc(100vw - 320px));
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+  #ask.live { opacity: 1; pointer-events: auto; }
+  #ask-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 99px;
+    padding: 8px 8px 8px 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    transition: border-radius 0.35s;
+  }
+  #ask.expanded #ask-pill { border-radius: 24px; }
+  #ask-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--terra);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--cream);
+    flex-shrink: 0;
+    font-variation-settings: 'opsz' 24, 'ital' 1, 'wght' 500;
+  }
+  #ask-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 8px 0;
+  }
+  #ask-input::placeholder { color: rgba(237, 228, 211, 0.45); }
+  #ask-send {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--terra);
+    color: var(--cream);
+    border: none;
+    font-size: 18px;
+    cursor: none;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.2s;
+  }
+  #ask-send:hover { background: var(--terra-deep); transform: scale(1.05); }
+  #ask-suggest {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 10px;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.4s, transform 0.4s;
+    pointer-events: none;
+  }
+  #ask:focus-within #ask-suggest,
+  #ask.expanded #ask-suggest {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .ask-chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    background: var(--paper);
+    padding: 6px 12px;
+    border-radius: 99px;
+    border: 1px solid var(--line);
+    cursor: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .ask-chip:hover {
+    background: var(--terra);
+    color: var(--cream);
+    border-color: var(--terra);
+  }
+  #ask-thread {
+    margin-top: 14px;
+    background: var(--paper);
+    border-radius: 18px;
+    padding: 16px;
+    max-height: 280px;
+    overflow-y: auto;
+    display: none;
+    border: 1px solid var(--line);
+  }
+  #ask.has-thread #ask-thread { display: block; }
+  .msg { font-size: 14px; line-height: 1.55; padding: 8px 0; }
+  .msg.u { color: var(--moss); font-weight: 500; }
+  .msg.u::before {
+    content: "You — ";
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .msg.a { color: var(--ink); }
+  .msg.a::before {
+    content: "Shivam (AI) — ";
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terra);
+    font-weight: 400;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .msg.thinking {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .msg.thinking i {
+    width: 5px;
+    height: 5px;
+    background: var(--terra);
+    border-radius: 50%;
+    animation: lp 1.2s infinite;
+  }
+  .msg.thinking i:nth-child(2) { animation-delay: 0.2s; }
+  .msg.thinking i:nth-child(3) { animation-delay: 0.4s; }
+  @media (max-width: 900px) {
+    #ask { width: calc(100vw - 32px); }
+  }
+</style>

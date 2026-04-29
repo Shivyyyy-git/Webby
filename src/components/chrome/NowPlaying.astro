@@ -1,0 +1,113 @@
+---
+---
+<div id="np">
+  <span class="np-x" id="np-x">×</span>
+  <div class="np-art"><div class="np-bars"><i></i><i></i><i></i><i></i></div></div>
+  <div class="np-meta">
+    <div class="np-cap">Now playing · Spotify</div>
+    <div class="np-title" id="np-title">In rotation, mostly</div>
+    <div class="np-sub" id="np-sub">Shivam's playlist · 47 tracks</div>
+  </div>
+</div>
+
+<style>
+  #np {
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    z-index: 600;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 99px;
+    padding: 10px 18px 10px 10px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    cursor: none;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+  }
+  #np.show.live { opacity: 1; transform: none; pointer-events: auto; }
+  #np.collapsed { transform: translateY(0) translateX(calc(-100% - 50px)); opacity: 0; pointer-events: none; }
+  #np .np-art {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--terra);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .np-bars {
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+    height: 14px;
+  }
+  .np-bars i {
+    display: block;
+    width: 2px;
+    background: var(--cream);
+    animation: eq 0.9s ease-in-out infinite;
+  }
+  .np-bars i:nth-child(1) { animation-delay: 0s;   height: 8px; }
+  .np-bars i:nth-child(2) { animation-delay: 0.2s; height: 12px; }
+  .np-bars i:nth-child(3) { animation-delay: 0.4s; height: 6px; }
+  .np-bars i:nth-child(4) { animation-delay: 0.1s; height: 10px; }
+  @keyframes eq {
+    0%, 100% { transform: scaleY(0.4); }
+    50%      { transform: scaleY(1); }
+  }
+  .np-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .np-cap {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.5);
+  }
+  .np-title {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--cream);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.35s;
+  }
+  .np-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: rgba(237, 228, 211, 0.6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.35s;
+  }
+  .np-x {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    line-height: 1;
+    font-weight: 300;
+  }
+  @media (max-width: 900px) {
+    #np { display: none; }
+  }
+</style>

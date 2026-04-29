@@ -1,0 +1,33 @@
+---
+---
+<canvas id="three-field" aria-hidden="true"></canvas>
+
+<style>
+  #three-field {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+  }
+  @media (hover: none), (max-width: 720px) {
+    /* Mobile: skip the 3D layer entirely for perf */
+    #three-field { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #three-field { display: none; }
+  }
+</style>
+
+<script>
+  import { initAmbientField } from '@/scripts/three-field';
+  if (matchMedia('(hover:none)').matches === false &&
+      matchMedia('(prefers-reduced-motion: reduce)').matches === false) {
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(() => initAmbientField('#three-field'));
+    } else {
+      setTimeout(() => initAmbientField('#three-field'), 250);
+    }
+  }
+</script>

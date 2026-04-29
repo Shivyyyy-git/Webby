@@ -1,0 +1,111 @@
+---
+const RECEIPTS = [
+  { value: 200, suffix: 'K+', label: 'Residents served', note: 'Maya AI handles real city services in real languages — not a sandbox demo.' },
+  { value: 26,  suffix: 'lang', label: 'Languages live', note: 'Spanish, Haitian Creole, Vietnamese, Mandarin, Arabic, and 21 more — everyday parity.' },
+  { value: 2,   suffix: '×', label: 'Acquisitions', note: 'Both companies I joined early were acquired. Not luck — focus.' },
+  { value: 500, suffix: 'K+', label: 'Gov users in flight', note: "Trace's AI workflows now sit inside half a million government workflows." },
+];
+---
+<section id="receipts">
+  <div class="w">
+    <div class="cap"><b>Section 02</b> — Receipts before rhetoric</div>
+    <h2 class="rh reveal">Numbers do the <em>talking.</em><br />Stories come after.</h2>
+    <div class="recl">
+      {RECEIPTS.map((r) => (
+        <div class="rec reveal">
+          <div class="tnum">
+            <span class="cnum" data-to={r.value}>0</span><b>{r.suffix}</b>
+          </div>
+          <div class="tlbl">{r.label}</div>
+          <div class="tnote">{r.note}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  #receipts {
+    padding: 18vh 0 14vh;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+  .rh {
+    font-size: clamp(40px, 6.2vw, 108px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    margin: 48px 0 96px;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+  .rh em { color: var(--moss); font-style: italic; font-variation-settings: 'opsz' 144, 'ital' 1, 'wght' 300; }
+  .recl {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .rec {
+    padding: 48px 28px 36px 0;
+    border-right: 1px solid var(--line);
+    position: relative;
+    transition: background 0.35s;
+  }
+  .rec:last-child { border-right: none; padding-right: 0; }
+  .rec::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 28px;
+    height: 2px;
+    background: var(--terra);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.8s cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+  .rec:hover::after { transform: scaleX(1); }
+  .rec:hover .tnum { color: var(--terra-deep); }
+  .tnum {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(64px, 8vw, 128px);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    color: var(--terra);
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: 'opsz' 144, 'wght' 300;
+    display: flex;
+    align-items: flex-start;
+  }
+  .tnum b {
+    font-size: 0.36em;
+    font-style: italic;
+    color: var(--moss);
+    font-weight: 300;
+    font-variation-settings: 'opsz' 60, 'ital' 1, 'wght' 300;
+    margin-left: 0.1em;
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  .tlbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 500;
+    margin-top: 18px;
+  }
+  .tnote {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 8px;
+    max-width: 240px;
+  }
+  @media (max-width: 900px) {
+    .recl { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

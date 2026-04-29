@@ -1,0 +1,72 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.55;
+  cursor: none;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@media (hover: none) {
+  body { cursor: auto; }
+}
+
+::selection {
+  background: var(--terra);
+  color: var(--paper);
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: none; background: none; border: none; color: inherit; }
+
+main { position: relative; z-index: 10; }
+section { position: relative; }
+
+.w {
+  max-width: var(--mw);
+  margin: 0 auto;
+  padding: 0 var(--g);
+}
+
+.cap {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.cap b { color: var(--terra); font-weight: 500; }
+.cap::before {
+  content: "";
+  width: 32px;
+  height: 1px;
+  background: var(--terra);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+.reveal.in { opacity: 1; transform: none; }
+
+@media (max-width: 900px) {
+  :root { --g: 24px; }
+}

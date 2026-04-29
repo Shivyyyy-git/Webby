@@ -1,0 +1,390 @@
+---
+const CHAPTERS = [
+  {
+    era: '1995 — 2014',
+    place: 'Delhi · Childhood',
+    headline: 'Born loud, raised loud',
+    body: "Negotiation before reading. Cricket before school. The city taught speed and survival before anything else did.",
+  },
+  {
+    era: 'every summer',
+    place: 'Punjab · Roots',
+    headline: 'Family at the table',
+    body: 'Wheat, dhol, daal, weddings that last a week. Hospitality as a default state. Feed strangers first, ask questions never.',
+  },
+  {
+    era: '2014 — 2018',
+    place: 'Cambridge · UK',
+    headline: 'Schooled',
+    body: "Read Economics. Discovered the obvious answer is almost never the correct one — and that good thinking sounds boring on the way to a sharp conclusion.",
+  },
+  {
+    era: '2018 — 2024',
+    place: 'McKinsey → Trace AI',
+    headline: 'Built it',
+    body: 'Two years of decks. Then two startups, two acquisitions. Learned that shipping is a personality trait — and advising is downstream of building.',
+  },
+  {
+    era: '2024 — now',
+    place: 'Boston · Maya AI',
+    headline: 'Civic AI for 200K',
+    body: 'Multilingual assistant for residents. 26 languages. Replies in 30 seconds where the city used to take two weeks. Still calm-ish.',
+  },
+];
+
+const TL_ROWS = [
+  { y: '2024 — now',   h: 'AI PM at ESC Partners',  c: 'Boston · Maya AI',           d: "Building a multilingual civic assistant. Eval, RAG, governance, and a lot of conversations with residents who don't speak English.", t: 'Civic · LLM' },
+  { y: '2022 — 2024',  h: 'Founding PM, Trace AI',  c: "SF · Acquired Q4 '24",       d: 'From whiteboard to 500K+ government workflows. Wrote the first eval suite, hired the first three engineers, killed two products before they shipped.', t: 'GovTech · Agents' },
+  { y: '2020 — 2022',  h: 'PM #2, Inflection Labs', c: 'NYC · Acquired 2022',         d: '$200K → $4M ARR. SMB e-commerce personalization. The first job where I learned shipping is a personality trait.', t: 'e-comm · ML' },
+  { y: '2018 — 2020',  h: 'Strategy at McKinsey',   c: 'Bangalore · Telecom & FS',    d: 'Decks, frameworks, four-hour syndicate sessions. Learned the meta-skill of asking better questions. Left to be upstream of the answer.', t: 'Strategy' },
+  { y: '2014 — 2018',  h: 'BS, Computer Science',   c: 'IIT Bombay · 2018',           d: "Built three apps. None worked. Wrote my first eval at 22 — for a friend's chatbot side-project. Still my best teacher.", t: 'Education' },
+];
+---
+<section id="timeline">
+  <div class="w">
+    <div class="cap"><b>Section 04</b> — The path</div>
+    <h2 class="tl-h reveal">Eight years, four<br />cities, one <em>thread.</em></h2>
+
+    <!-- JOURNEY: pinned scrub — zig-zag track + train weaving past 5 chapter cards -->
+    <div id="tl-journey" class="tl-journey reveal">
+      {/* Zig-zag rail — top-left → upper-right → middle-left → lower-right → bottom-right */}
+      <svg id="tl-track" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path
+          id="tl-track-path"
+          d="M 6 6 L 92 26 L 6 50 L 92 74 L 92 94"
+          fill="none"
+          stroke="rgba(29,46,34,0.22)"
+          stroke-width="0.35"
+          stroke-dasharray="0.8 1.4"
+          vector-effect="non-scaling-stroke"
+        />
+        <path
+          id="tl-track-fill"
+          d="M 6 6 L 92 26 L 6 50 L 92 74 L 92 94"
+          fill="none"
+          stroke="var(--terra)"
+          stroke-width="0.45"
+          stroke-dasharray="0 1000"
+          vector-effect="non-scaling-stroke"
+        />
+      </svg>
+
+      {/* Station markers at each chapter waypoint */}
+      <div class="tl-stations" aria-hidden="true">
+        {CHAPTERS.map((_, i) => (
+          <div class="tl-station" data-i={i}>
+            <span class="tl-st-dot"></span>
+            <span class="tl-st-num">{String(i + 1).padStart(2, '0')}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Chapter cards — only one visible at a time, centered in pinned viewport */}
+      <div class="tl-stage">
+        {CHAPTERS.map((ch, i) => (
+          <article class="tl-chapter" data-i={i} data-active={i === 0 ? 'true' : 'false'}>
+            <div class="tl-era">{ch.era}</div>
+            <div class="tl-place">{ch.place}</div>
+            <h3 class="tl-headline">{ch.headline}</h3>
+            <p class="tl-body">{ch.body}</p>
+          </article>
+        ))}
+      </div>
+
+      {/* Train — slides along the zig-zag track, position set by JS */}
+      <svg id="tl-train" viewBox="0 0 160 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g class="smoke">
+          <circle cx="14" cy="10" r="2.5" />
+          <circle cx="11" cy="6"  r="3" />
+          <circle cx="16" cy="2"  r="3.5" />
+        </g>
+        <rect x="2"  y="18" width="44" height="22" rx="2" fill="#1d2e22" />
+        <rect x="6"  y="13" width="14" height="6" fill="#1d2e22" />
+        <rect x="11" y="8"  width="6"  height="6" fill="#1d2e22" />
+        <rect x="32" y="22" width="8"  height="8" fill="#ede4d3" />
+        <rect x="0"  y="31" width="48" height="2" fill="#c25a3a" />
+        <rect x="46" y="28" width="6" height="2" fill="#1d2e22" />
+        <rect x="50" y="21" width="48" height="19" rx="1.5" fill="#c25a3a" />
+        <rect x="56" y="24" width="6" height="6" fill="#ede4d3" />
+        <rect x="66" y="24" width="6" height="6" fill="#ede4d3" />
+        <rect x="76" y="24" width="6" height="6" fill="#ede4d3" />
+        <rect x="86" y="24" width="6" height="6" fill="#ede4d3" />
+        <rect x="96" y="28" width="6" height="2" fill="#1d2e22" />
+        <rect x="100" y="21" width="48" height="19" rx="1.5" fill="#2d4533" />
+        <rect x="106" y="24" width="6" height="6" fill="#ede4d3" />
+        <rect x="116" y="24" width="6" height="6" fill="#ede4d3" />
+        <rect x="126" y="24" width="6" height="6" fill="#ede4d3" />
+        <rect x="136" y="24" width="6" height="6" fill="#ede4d3" />
+        <circle cx="10"  cy="42" r="4"   fill="#1d2e22" />
+        <circle cx="36"  cy="42" r="4"   fill="#1d2e22" />
+        <circle cx="60"  cy="42" r="3.2" fill="#1d2e22" />
+        <circle cx="88"  cy="42" r="3.2" fill="#1d2e22" />
+        <circle cx="110" cy="42" r="3.2" fill="#1d2e22" />
+        <circle cx="138" cy="42" r="3.2" fill="#1d2e22" />
+      </svg>
+    </div>
+
+    <!-- Static rows for full résumé -->
+    <div class="tl-list">
+      {TL_ROWS.map((r) => (
+        <div class="tl-row" data-cur="drag" data-cur-lbl="Read">
+          <div class="tl-y">{r.y}</div>
+          <div class="tl-c">
+            <h4>{r.h}</h4>
+            <div class="tc">{r.c}</div>
+            <div class="td">{r.d}</div>
+          </div>
+          <div class="tl-tag">{r.t}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  #timeline {
+    padding: 18vh 0 14vh;
+    background: var(--paper);
+    position: relative;
+  }
+  .tl-h {
+    font-size: clamp(40px, 6vw, 108px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    margin: 48px 0 60px;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+
+  /* JOURNEY — pinned scrub stage with zig-zag train track */
+  .tl-journey {
+    position: relative;
+    margin-bottom: 14vh;
+    height: 78vh;
+    min-height: 560px;
+  }
+
+  /* Zig-zag rail (decorative SVG) — fills the journey area */
+  #tl-track {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  #tl-track-fill {
+    transition: stroke-dasharray 0.4s ease;
+  }
+
+  /* Station markers — positioned absolutely at each waypoint (set in JS) */
+  .tl-stations {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .tl-station {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .tl-st-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    box-shadow: 0 0 0 2px var(--paper);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.2, 1), background 0.3s, border-color 0.3s;
+  }
+  .tl-station[data-live="true"] .tl-st-dot {
+    background: var(--terra);
+    border-color: var(--terra);
+    transform: scale(1.6);
+  }
+  .tl-st-num {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .tl-station[data-live="true"] .tl-st-num { color: var(--terra); }
+
+  /* Chapter card — single card centered in pinned viewport */
+  .tl-stage {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(640px, 80%);
+    z-index: 3;
+    pointer-events: none;
+  }
+  .tl-chapter {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.9, 0.2, 1);
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    padding: 24px;
+    background: rgba(244, 236, 219, 0.78);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 4px;
+  }
+  .tl-chapter[data-active="true"] {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .tl-chapter .tl-era,
+  .tl-chapter .tl-place {
+    text-align: center;
+  }
+
+  /* Train — absolutely positioned, JS sets left/top/rotation */
+  #tl-train {
+    position: absolute;
+    width: 92px;
+    height: 28px;
+    left: 6%;
+    top: 6%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 6px rgba(29, 46, 34, 0.18));
+    will-change: transform, left, top;
+  }
+  #tl-train .smoke circle {
+    fill: var(--ink);
+    opacity: 0;
+    animation: tl-train-smoke 2.2s ease-out infinite;
+  }
+  #tl-train .smoke circle:nth-child(2) { animation-delay: 0.6s; }
+  #tl-train .smoke circle:nth-child(3) { animation-delay: 1.2s; }
+  @keyframes tl-train-smoke {
+    0%   { opacity: 0;   transform: translate(0, 0)     scale(0.6); }
+    20%  { opacity: 0.4; }
+    100% { opacity: 0;   transform: translate(7px, -22px) scale(1.6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #tl-train .smoke circle { animation: none; }
+  }
+
+  @media (max-width: 720px) {
+    .tl-journey { height: 90vh; }
+    #tl-train { width: 70px; height: 22px; }
+    .tl-stage { width: 90%; }
+    .tl-chapter { padding: 16px; }
+  }
+  .tl-era {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terra);
+  }
+  .tl-place {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: -8px;
+  }
+  .tl-headline {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(40px, 5.5vw, 88px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    font-variation-settings: 'opsz' 144, 'ital' 1, 'wght' 300;
+    text-wrap: balance;
+  }
+  .tl-body {
+    font-family: var(--sans);
+    font-size: clamp(15px, 1.2vw, 18px);
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 56ch;
+    margin-top: 6px;
+  }
+
+  /* Existing résumé list */
+  .tl-list {
+    display: grid;
+    grid-template-columns: 140px 1fr 220px;
+    gap: 0;
+  }
+  .tl-list > div {
+    padding: 24px 32px 24px 0;
+    border-top: 1px solid var(--line);
+  }
+  .tl-list > div:nth-child(3n+3) { padding-right: 0; }
+  .tl-y {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    padding-top: 30px;
+  }
+  .tl-c {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: padding 0.4s cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+  .tl-c h4 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(22px, 2.4vw, 34px);
+    color: var(--ink);
+    font-variation-settings: 'opsz' 36, 'ital' 1, 'wght' 400;
+    line-height: 1.05;
+  }
+  .tl-c .tc {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terra);
+  }
+  .tl-c .td {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+  .tl-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--moss);
+    text-align: right;
+    padding-top: 30px;
+  }
+  .tl-row { display: contents; }
+  .tl-row:hover .tl-c { padding-left: 18px; }
+  .tl-row:hover .tl-c h4 { color: var(--terra); }
+
+  @media (max-width: 900px) {
+    .tl-journey { grid-template-columns: 1fr; gap: 24px; }
+    .tl-rail { display: none; }
+    .tl-list { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>
