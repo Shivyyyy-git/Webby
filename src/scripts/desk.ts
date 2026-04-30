@@ -306,6 +306,9 @@ export function initDesk() {
     spread.classList.remove('open');
     if (!cineActive) {
       cards.forEach((c) => c.classList.remove('focus'));
+      // Reset strip pan + train target so the user lands back at rest state
+      // (Delhi visible) instead of staying centered on the card they opened.
+      target = 0;
       cineFocused = -1;
       updateTrainTarget();
     }
