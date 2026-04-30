@@ -18,6 +18,9 @@ export function initChromeReveal() {
     const past = window.scrollY > window.innerHeight * 0.55;
     if (ask) ask.classList.toggle('live', past);
     if (np && np.classList.contains('show')) np.classList.toggle('live', past);
+    // Once the user scrolls past ~30vh, retire the "where could we go next?"
+    // coda so it doesn't linger if they come back.
+    document.body.classList.toggle('coda-dismissed', window.scrollY > window.innerHeight * 0.3);
   }
   window.addEventListener('scroll', up, { passive: true });
   up();

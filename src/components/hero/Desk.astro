@@ -53,14 +53,14 @@ const POSTCARDS = [
   },
   {
     loc: 'usa',
-    label: 'NY/Boston · open',
+    label: 'New York · open',
     rotation: '2.4deg',
     ital: true,
-    title: ['New York', 'Boston'],
+    title: 'New York',
     mood: '— Shipping.',
     stamp: '$1',
     flag: 'us',
-    pmL: 'BOSTON · MA',
+    pmL: 'NEW YORK · NY',
     pmDate: 'NOW',
     pmR: '★ NOW ★',
     handwritten: ['two startups, two acquisitions.', 'building maya — civic ai for', '200k residents. still calm-ish.'],
@@ -150,18 +150,11 @@ const POSTCARDS = [
                   </svg>
                 )}
                 <div class="ph-grain"></div>
-                <div class="pc-stamp-ph">{p.loc === 'usa' ? 'NY · BOS' : p.loc.toUpperCase()}</div>
+                <div class="pc-stamp-ph">{p.loc === 'usa' ? 'NEW YORK' : p.loc.toUpperCase()}</div>
               </div>
               <div class="pc-text">
                 <span class="pc-greet">Greetings from</span>
-                {Array.isArray(p.title) ? (
-                  <>
-                    <h3 class={`pc-city ${p.ital ? 'ital' : ''}`}>{p.title[0]}<span class="pc-amp"> /</span></h3>
-                    <h3 class={`pc-city ${p.ital ? 'ital' : ''}`}>{p.title[1]}<span class="pc-amp">.</span></h3>
-                  </>
-                ) : (
-                  <h3 class={`pc-city ${p.ital ? 'ital' : ''}`}>{p.title}<span class="pc-amp">.</span></h3>
-                )}
+                <h3 class={`pc-city ${p.ital ? 'ital' : ''}`}>{p.title}<span class="pc-amp">.</span></h3>
                 <span class="pc-mood">{p.mood}</span>
               </div>
             </div>
@@ -251,7 +244,7 @@ const POSTCARDS = [
       <div class="dcb bot">
         <div class="dcb-meta">
           <span>auto-pan · click any postcard to open</span>
-          <span id="dc-loc">Delhi → Boston</span>
+          <span id="dc-loc">Delhi → New York</span>
         </div>
       </div>
     </div>
@@ -260,6 +253,14 @@ const POSTCARDS = [
     <button id="aud-tog"><span class="ad"></span>sound off</button>
     <button id="dc-replay">replay</button>
     <div id="dc-hint">drag the strip · click any postcard</div>
+
+    {/* Closing kicker — appears after the postcard ride finishes. Forward-
+        looking, italic, asks the viewer where the story goes next. */}
+    <div id="dc-coda" aria-hidden="true">
+      <span class="dc-coda-eyebrow">stop 05 · ?</span>
+      <span class="dc-coda-h">where could we go next?</span>
+      <span class="dc-coda-p">— your move, recruiter</span>
+    </div>
 
     <div id="dc-caption">
       <span class="dcc-eyebrow" id="dcc-eyebrow">stop 01 · 1995</span>
@@ -944,7 +945,7 @@ const POSTCARDS = [
   #dc-hint {
     position: absolute;
     left: 50%;
-    bottom: 14vh;
+    bottom: 7vh;
     transform: translateX(-50%);
     z-index: 6;
     font-family: var(--mono);
@@ -958,6 +959,72 @@ const POSTCARDS = [
     align-items: center;
     gap: 10px;
     pointer-events: none;
+  }
+
+  /* CLOSING KICKER — "where could we go next?" — fades in after cinema-done.
+     Sits in the same vertical band as the (now-hidden) cinema caption
+     so it lands between the postcards and the train track. */
+  #dc-coda {
+    position: absolute;
+    left: 50%;
+    bottom: 22vh;
+    transform: translateX(-50%);
+    z-index: 7;
+    text-align: center;
+    pointer-events: none;
+    width: min(680px, 85vw);
+    display: none;
+  }
+  :global(body.cinema-done) #dc-coda {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: dc-coda-in 1.4s cubic-bezier(0.2, 0.9, 0.2, 1) 1.2s forwards;
+  }
+  /* Hide once user starts scrolling past the hero — the coda is a beat,
+     not a permanent fixture. */
+  :global(body.coda-dismissed) #dc-coda {
+    opacity: 0 !important;
+    animation: none !important;
+    transition: opacity 0.5s ease;
+  }
+  @keyframes dc-coda-in {
+    from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  .dc-coda-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--terra);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .dc-coda-eyebrow::before,
+  .dc-coda-eyebrow::after {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: var(--terra);
+  }
+  .dc-coda-h {
+    font-family: var(--serif-italic);
+    font-style: italic;
+    font-size: clamp(34px, 4vw, 56px);
+    line-height: 1.1;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .dc-coda-p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(14px, 1.2vw, 18px);
+    color: var(--moss);
+    font-variation-settings: 'opsz' 24, 'ital' 1, 'wght' 400;
   }
   #dc-hint::before, #dc-hint::after {
     content: "";

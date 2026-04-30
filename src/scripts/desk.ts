@@ -5,10 +5,10 @@ import {
 } from './audio';
 
 const SCRIPT = [
-  { loc: 'delhi',  eyebrow: 'stop 01 · 1995',  h: 'Delhi.',              mood: 'Rowdy.',    p: 'born loud · raised loud' },
-  { loc: 'punjab', eyebrow: 'stop 02 · roots', h: 'Punjab.',             mood: 'Roots.',    p: 'bhangra in the bones' },
-  { loc: 'london', eyebrow: 'stop 03 · 2014',  h: 'London.',             mood: 'Schooled.', p: 'cambridge → mckinsey' },
-  { loc: 'usa',    eyebrow: 'stop 04 · now',   h: 'New York / Boston.',  mood: 'Shipping.', p: 'two acquisitions in' },
+  { loc: 'delhi',  eyebrow: 'stop 01 · 1995',  h: 'Delhi.',  mood: 'Rowdy.',    p: 'born loud · raised loud' },
+  { loc: 'punjab', eyebrow: 'stop 02 · roots', h: 'Punjab.', mood: 'Roots.',    p: 'bhangra in the bones' },
+  { loc: 'london', eyebrow: 'stop 03 · 2014',  h: 'London.', mood: 'Schooled.', p: 'cambridge → mckinsey' },
+  { loc: 'usa',    eyebrow: 'stop 04 · now',   h: 'New York.', mood: 'Shipping.', p: 'two acquisitions in' },
 ];
 
 const STATION_DATA = [
@@ -44,8 +44,8 @@ const STATION_DATA = [
   },
   {
     loc: 'usa', idx: 3, stamp: '$1', flag: 'us',
-    pmL: 'BOSTON · MA', pmDate: 'NOW', pmR: '★ NOW ★',
-    eyebrow: 'Stop 04 · Now · NY / Boston', h: 'New York / Boston. <em>Shipping.</em>',
+    pmL: 'NEW YORK · NY', pmDate: 'NOW', pmR: '★ NOW ★',
+    eyebrow: 'Stop 04 · Now · New York', h: 'New York. <em>Shipping.</em>',
     sub: 'Two startups, two acquisitions. Now AI PM at ESC Partners — civic AI for cities and counties.',
     p1: "Moved to the US in 2019. Founded two startups, both acquired. Now: building Maya, an AI assistant for residents — answers in 26 languages, 200K residents served, replies in 30 seconds where the city used to take two weeks.",
     p2: "The thread from Delhi to here: <em>messy real-world systems, served humanely</em>. Civic infrastructure is the last great unshipped product surface. I'm here for it.",
