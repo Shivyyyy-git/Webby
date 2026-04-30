@@ -1,8 +1,33 @@
 ---
 ---
 <div id="hero-words" class="w hero-w">
+  {/* Animated background — five rows of softly-drifting identity words, very
+      low contrast, idle motion. Inspired by wodniack.dev's binary rows. */}
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hb-row hb-row-1">
+      <span>AI&nbsp;·&nbsp;PM</span><span>BUILDER</span><span>MAYA</span><span>TRACE</span><span>INFLECTION</span><span>MCKINSEY</span><span>200K&nbsp;RESIDENTS</span><span>26&nbsp;LANGUAGES</span>
+      <span>AI&nbsp;·&nbsp;PM</span><span>BUILDER</span><span>MAYA</span><span>TRACE</span><span>INFLECTION</span><span>MCKINSEY</span><span>200K&nbsp;RESIDENTS</span><span>26&nbsp;LANGUAGES</span>
+    </div>
+    <div class="hb-row hb-row-2">
+      <span>DELHI</span><span>PUNJAB</span><span>LONDON</span><span>NEW&nbsp;YORK</span><span>BOSTON</span><span>CAMBRIDGE</span><span>BANGALORE</span><span>JALANDHAR</span>
+      <span>DELHI</span><span>PUNJAB</span><span>LONDON</span><span>NEW&nbsp;YORK</span><span>BOSTON</span><span>CAMBRIDGE</span><span>BANGALORE</span><span>JALANDHAR</span>
+    </div>
+    <div class="hb-row hb-row-3">
+      <span>SHIPPING</span><span>EVAL</span><span>RAG</span><span>AGENTS</span><span>CIVIC&nbsp;AI</span><span>LLM</span><span>i18n</span><span>GOVTECH</span>
+      <span>SHIPPING</span><span>EVAL</span><span>RAG</span><span>AGENTS</span><span>CIVIC&nbsp;AI</span><span>LLM</span><span>i18n</span><span>GOVTECH</span>
+    </div>
+    <div class="hb-row hb-row-4">
+      <span>SPANISH</span><span>HAITIAN&nbsp;CREOLE</span><span>VIETNAMESE</span><span>MANDARIN</span><span>ARABIC</span><span>HINDI</span><span>PUNJABI</span><span>CHEROKEE</span>
+      <span>SPANISH</span><span>HAITIAN&nbsp;CREOLE</span><span>VIETNAMESE</span><span>MANDARIN</span><span>ARABIC</span><span>HINDI</span><span>PUNJABI</span><span>CHEROKEE</span>
+    </div>
+    <div class="hb-row hb-row-5">
+      <span>2&nbsp;ACQUISITIONS</span><span>500K&nbsp;WORKFLOWS</span><span>SHIPPING</span><span>BUILDING</span><span>MEASURING</span><span>LISTENING</span>
+      <span>2&nbsp;ACQUISITIONS</span><span>500K&nbsp;WORKFLOWS</span><span>SHIPPING</span><span>BUILDING</span><span>MEASURING</span><span>LISTENING</span>
+    </div>
+  </div>
+
   <div class="hero-top">
-    <div class="cap"><b>Index №01</b> — Delhi → Punjab → London → Boston</div>
+    <div class="cap"><b>Index №01</b> — Delhi → Punjab → London → New York</div>
     <div id="local-time">— : — local</div>
   </div>
 
@@ -72,6 +97,77 @@
     justify-content: center;
     padding: 10vh var(--g) 6vh;
     z-index: 5;
+    overflow: hidden;
+  }
+
+  /* Animated background — multi-row word marquees that idle-scroll behind the
+     name. Wodniack.dev-inspired. Pure CSS, no JS, GPU-accelerated transforms. */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+    user-select: none;
+  }
+  .hb-row {
+    position: absolute;
+    left: 0;
+    display: inline-flex;
+    white-space: nowrap;
+    color: var(--ink);
+    opacity: 0.055;
+    font-family: var(--mono);
+    font-size: clamp(46px, 7vw, 110px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    will-change: transform;
+    line-height: 1;
+  }
+  .hb-row span {
+    padding: 0 28px;
+    flex-shrink: 0;
+  }
+  .hb-row-1 {
+    top: 4%;
+    animation: hb-scroll 64s linear infinite;
+  }
+  .hb-row-2 {
+    top: 22%;
+    animation: hb-scroll 88s linear infinite reverse;
+    color: var(--terra);
+    opacity: 0.06;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .hb-row-3 {
+    top: 42%;
+    animation: hb-scroll 56s linear infinite;
+    opacity: 0.05;
+  }
+  .hb-row-4 {
+    top: 62%;
+    animation: hb-scroll 96s linear infinite reverse;
+    color: var(--moss);
+    opacity: 0.07;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .hb-row-5 {
+    top: 82%;
+    animation: hb-scroll 72s linear infinite;
+    opacity: 0.05;
+  }
+  @keyframes hb-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
+  }
+  /* Slight darkening at hover/scroll for life — disabled on reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hb-row { animation: none !important; }
   }
   #hero-words .hero-stack { margin-bottom: 8vh; }
   .hero-stack { margin-top: 0; position: relative; z-index: 6; }
@@ -159,21 +255,22 @@
     color: var(--muted);
   }
 
-  /* Polaroid portrait */
+  /* Polaroid portrait — bumped up size, no grain overlay so the actual
+     photograph reads clean. */
   #hero-photo {
     position: absolute;
-    top: 8%;
-    right: 6%;
-    width: clamp(200px, 22vw, 340px);
+    top: 6%;
+    right: 5%;
+    width: clamp(280px, 30vw, 480px);
     aspect-ratio: 3 / 4;
     background: var(--paper);
-    padding: 14px 14px 56px;
+    padding: 16px 16px 62px;
     border-radius: 4px;
     box-shadow:
-      0 30px 80px -10px rgba(29, 46, 34, 0.22),
-      0 8px 16px -4px rgba(29, 46, 34, 0.14),
+      0 40px 100px -10px rgba(29, 46, 34, 0.28),
+      0 12px 24px -6px rgba(29, 46, 34, 0.16),
       0 0 0 1px rgba(29, 46, 34, 0.06);
-    transform: rotate(2.5deg) translateY(28px);
+    transform: rotate(2deg) translateY(28px);
     opacity: 0;
     transition: opacity 0.9s ease 1s, transform 1.4s cubic-bezier(0.2, 0.9, 0.2, 1) 0.9s;
     z-index: 4;
@@ -182,19 +279,9 @@
     cursor: none;
     margin: 0;
   }
-  #hero-photo::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.4 0 0 0 0 0.35 0 0 0 0.3 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0.18;
-    mix-blend-mode: multiply;
-    pointer-events: none;
-    border-radius: 4px;
-  }
   #hero-photo.in {
     opacity: 1;
-    transform: rotate(2.5deg) translateY(0);
+    transform: rotate(2deg) translateY(0);
   }
   /* A small piece of "tape" at the top */
   #hero-photo::after {
