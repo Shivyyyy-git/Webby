@@ -1,4 +1,4 @@
-import { initLoader, initClock, initChromeReveal, initNowPlaying, initSmoothAnchors } from './chrome';
+import { initLoader, initClock, initChromeReveal, initNowPlaying, initSmoothAnchors, initMagneticPhoto } from './chrome';
 import { initCursor } from './cursor';
 import { initDesk } from './desk';
 import { initReveal, initCounters } from './reveal';
@@ -18,6 +18,7 @@ function run() {
   initRibbon();
   initNowPlaying();
   initSmoothAnchors();
+  initMagneticPhoto();
   initJourney();
 }
 

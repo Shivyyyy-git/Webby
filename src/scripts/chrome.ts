@@ -112,7 +112,26 @@ function revealHero() {
     setTimeout(() => w.classList.add('in'), i * 120)
   );
   document.querySelectorAll<HTMLElement>('#hero .reveal').forEach((el) => el.classList.add('in'));
+  const photo = document.querySelector<HTMLElement>('#hero-photo');
+  if (photo) setTimeout(() => photo.classList.add('in'), 480);
   const np = document.querySelector<HTMLElement>('#np');
   if (np) np.classList.add('show');
   if ((window as any).__startRailCinema) (window as any).__startRailCinema();
+}
+
+/* Magnetic photo — rotateX/Y on mousemove. Disabled on touch / reduced-motion. */
+export function initMagneticPhoto() {
+  if (matchMedia('(hover:none)').matches) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const ph = document.querySelector<HTMLElement>('#hero-photo');
+  if (!ph) return;
+  ph.addEventListener('mousemove', (e) => {
+    const r = ph.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width / 2) / r.width;
+    const y = (e.clientY - r.top - r.height / 2) / r.height;
+    ph.style.transform = `rotate(0deg) rotateX(${(y * -8).toFixed(2)}deg) rotateY(${(x * 10).toFixed(2)}deg) translateY(-6px) scale(1.03)`;
+  });
+  ph.addEventListener('mouseleave', () => {
+    ph.style.transform = '';
+  });
 }

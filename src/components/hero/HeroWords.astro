@@ -17,6 +17,18 @@
     </p>
   </div>
 
+  {/* Polaroid portrait — floats top-right of hero-words. Magnetic
+      tilt-on-mousemove handled in chrome.ts → initMagneticPhoto(). */}
+  <figure id="hero-photo" data-cur="proj" data-cur-lbl="Hi">
+    <span class="hp-frame">
+      <img src="/images/shivam-portrait-cream.png" alt="Shivam Sharma" width="640" height="640" loading="eager" decoding="async" />
+    </span>
+    <figcaption>
+      <span class="hp-name">Shivam.</span>
+      <span class="hp-meta">Boston · 2026</span>
+    </figcaption>
+  </figure>
+
   <div class="hero-foot reveal">
     <p class="hero-bio">
       I build <em>AI products that ship</em> — to half a million government workers, to 200,000 multilingual residents, to whoever actually needs them. <em>Two startups, two acquisitions.</em> Now at ESC Partners, putting AI inside city halls.
@@ -145,6 +157,115 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--muted);
+  }
+
+  /* Polaroid portrait */
+  #hero-photo {
+    position: absolute;
+    top: 8%;
+    right: 6%;
+    width: clamp(200px, 22vw, 340px);
+    aspect-ratio: 3 / 4;
+    background: var(--paper);
+    padding: 14px 14px 56px;
+    border-radius: 4px;
+    box-shadow:
+      0 30px 80px -10px rgba(29, 46, 34, 0.22),
+      0 8px 16px -4px rgba(29, 46, 34, 0.14),
+      0 0 0 1px rgba(29, 46, 34, 0.06);
+    transform: rotate(2.5deg) translateY(28px);
+    opacity: 0;
+    transition: opacity 0.9s ease 1s, transform 1.4s cubic-bezier(0.2, 0.9, 0.2, 1) 0.9s;
+    z-index: 4;
+    perspective: 800px;
+    transform-style: preserve-3d;
+    cursor: none;
+    margin: 0;
+  }
+  #hero-photo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.4 0 0 0 0 0.35 0 0 0 0.3 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.18;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    border-radius: 4px;
+  }
+  #hero-photo.in {
+    opacity: 1;
+    transform: rotate(2.5deg) translateY(0);
+  }
+  /* A small piece of "tape" at the top */
+  #hero-photo::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 84px;
+    height: 22px;
+    background: rgba(212, 180, 140, 0.55);
+    background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.16) 0 2px, transparent 2px 6px);
+    box-shadow: 0 1px 2px rgba(29, 46, 34, 0.14);
+    z-index: 6;
+    pointer-events: none;
+  }
+  .hp-frame {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--ink);
+  }
+  #hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: contrast(1.02) saturate(0.95);
+  }
+  #hero-photo figcaption {
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .hp-name {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--ink);
+    font-variation-settings: 'opsz' 24, 'ital' 1, 'wght' 400;
+  }
+  .hp-meta {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  :global(body.cinema) #hero-photo {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  @media (max-width: 900px) {
+    #hero-photo {
+      position: relative;
+      top: auto;
+      right: auto;
+      margin: 32px auto 0;
+      width: min(280px, 70%);
+    }
   }
 
   .hero-foot {
