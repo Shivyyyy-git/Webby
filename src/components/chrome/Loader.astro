@@ -1,10 +1,16 @@
 ---
 ---
+<!--
+  Atmospheric intro — slow fade + color shift (ink → cream).
+  Quiet, cinematic. No counter, no progress bar — just a held italic
+  signature, then a long crossfade as the page surface arrives.
+-->
 <div id="loader">
-  <div class="lcap"><span class="dot"></span> Shivam Sharma · Index 2026</div>
-  <div class="lcount" id="lcount">00</div>
-  <div class="lline"><i id="lline"></i></div>
-  <div class="lfoot"><span>Loading the portfolio</span><span id="lpct">0%</span></div>
+  <div id="loader-inner">
+    <span class="loader-eyebrow"><span class="dot"></span>Index № 01 · 2026</span>
+    <span class="loader-mark">Shivam Sharma</span>
+    <span class="loader-place">Boston · ESC Partners · AI PM</span>
+  </div>
 </div>
 
 <style>
@@ -15,68 +21,97 @@
     background: var(--ink);
     color: var(--cream);
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding: 0 var(--g) 6vh;
+    align-items: center;
+    justify-content: center;
     pointer-events: all;
+    transition:
+      background 1400ms cubic-bezier(0.4, 0, 0.2, 1),
+      color 1400ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 1100ms ease 1500ms;
   }
   #loader.gone { pointer-events: none; }
-  #loader .lcap {
+
+  /* Phase 1 — color shift (ink → cream). Triggered by JS at ~1.6s */
+  #loader.shift {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  /* Phase 2 — full fade out (after color shift starts). */
+  #loader.fade {
+    opacity: 0;
+  }
+
+  #loader-inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 0 var(--g);
+  }
+
+  /* Eyebrow — appears first, very soft */
+  .loader-eyebrow {
     font-family: var(--mono);
     font-size: 10px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
-    color: rgba(237, 228, 211, 0.5);
-    margin-bottom: 14px;
+    color: currentColor;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 1.6s ease 0.2s, transform 1.6s ease 0.2s;
     display: flex;
     align-items: center;
     gap: 14px;
   }
-  #loader .lcap .dot {
-    width: 6px;
-    height: 6px;
+  .loader-eyebrow .dot {
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background: var(--terra);
-    animation: lp 1.4s ease-in-out infinite;
+    animation: lp 2.4s ease-in-out infinite;
   }
-  @keyframes lp {
-    0%, 100% { opacity: 0.3; }
-    50%      { opacity: 1; }
-  }
-  #loader .lcount {
-    font-family: var(--serif);
+
+  /* Main mark — Instrument Serif italic, breathing in */
+  .loader-mark {
+    font-family: var(--serif-italic);
     font-style: italic;
-    font-size: clamp(140px, 22vw, 320px);
-    font-weight: 300;
-    line-height: 0.85;
-    letter-spacing: -0.05em;
-    color: var(--cream);
-    font-variation-settings: 'opsz' 144, 'ital' 1, 'wght' 300;
-    margin-bottom: 20px;
+    font-weight: 400;
+    font-size: clamp(54px, 7vw, 110px);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: currentColor;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 2s ease 0.55s, transform 2s ease 0.55s;
   }
-  #loader .lline {
-    width: min(720px, 80vw);
-    height: 1px;
-    background: rgba(237, 228, 211, 0.2);
-    position: relative;
-    overflow: hidden;
-  }
-  #loader .lline i {
-    display: block;
-    height: 100%;
-    background: var(--terra);
-    width: 0%;
-  }
-  #loader .lfoot {
-    margin-top: 24px;
-    display: flex;
-    justify-content: space-between;
-    width: min(720px, 80vw);
+
+  /* Place line — quietest, last to arrive */
+  .loader-place {
     font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.18em;
+    font-size: 11px;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: rgba(237, 228, 211, 0.5);
+    color: currentColor;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 1.4s ease 0.95s, transform 1.4s ease 0.95s;
+    max-width: 38ch;
+  }
+
+  #loader.in .loader-eyebrow,
+  #loader.in .loader-mark,
+  #loader.in .loader-place {
+    opacity: 0.92;
+    transform: none;
+  }
+  #loader.in .loader-eyebrow,
+  #loader.in .loader-place {
+    opacity: 0.55;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #loader, .loader-eyebrow, .loader-mark, .loader-place { transition-duration: 0.2s !important; }
   }
 </style>

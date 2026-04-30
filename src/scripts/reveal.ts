@@ -10,7 +10,7 @@ export function initReveal() {
     },
     { threshold: 0.12, rootMargin: '0px 0px -10% 0px' }
   );
-  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  document.querySelectorAll('.reveal, .work-mast').forEach((el) => io.observe(el));
 }
 
 export function initCounters() {

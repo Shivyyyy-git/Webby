@@ -89,35 +89,22 @@ export function initSmoothAnchors() {
 }
 
 export function initLoader() {
-  const lcount = document.querySelector<HTMLElement>('#lcount');
-  const lline = document.querySelector<HTMLElement>('#lline');
-  const lpct = document.querySelector<HTMLElement>('#lpct');
   const loader = document.querySelector<HTMLElement>('#loader');
-  if (!lcount || !lline || !lpct || !loader) return;
+  if (!loader) return;
 
-  const dur = 2200;
-  const start = performance.now();
-
-  function frame(t: number) {
-    const p = Math.min(1, (t - start) / dur);
-    const n = Math.floor(p * 100);
-    lcount!.textContent = String(n).padStart(2, '0');
-    lline!.style.width = p * 100 + '%';
-    lpct!.textContent = n + '%';
-    if (p < 1) requestAnimationFrame(frame);
-    else {
-      setTimeout(() => {
-        loader!.style.transition = 'clip-path 1s cubic-bezier(.7,0,.3,1),opacity .6s';
-        loader!.style.clipPath = 'inset(0 0 100% 0)';
-        loader!.classList.add('gone');
-        setTimeout(() => {
-          loader!.style.display = 'none';
-          revealHero();
-        }, 1000);
-      }, 300);
-    }
-  }
-  requestAnimationFrame(frame);
+  // Atmospheric intro:
+  //   t=0      ink screen, content invisible
+  //   t≈80ms   `.in` → eyebrow / mark / place fade in (CSS staggers them)
+  //   t=1700   `.shift` → background crossfades ink → cream (1.4s)
+  //   t=3100   `.fade` → loader opacity 1 → 0 (1.1s)
+  //   t=4250   loader removed, hero revealed
+  setTimeout(() => loader.classList.add('in'), 80);
+  setTimeout(() => loader.classList.add('shift'), 1700);
+  setTimeout(() => loader.classList.add('fade', 'gone'), 3100);
+  setTimeout(() => {
+    loader.style.display = 'none';
+    revealHero();
+  }, 4250);
 }
 
 function revealHero() {
