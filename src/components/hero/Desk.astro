@@ -624,15 +624,17 @@ const POSTCARDS = [
     color: var(--muted);
   }
 
-  /* RAILWAY TRACK */
+  /* RAILWAY TRACK — anchored to the bottom of the desk-section, just
+     above the cinema bottom letterbox bar (11vh). Caption sits above
+     the track with ~4vh of breathing room. */
   #desk-track {
     position: absolute;
-    top: 72%;
+    bottom: 13vh;
     left: 0;
     right: 0;
-    height: 64px;
+    height: 50px;
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
   }
   /* Wooden ties: short horizontal slabs poking out below the single rail */
   .track-ties {
@@ -722,14 +724,24 @@ const POSTCARDS = [
     filter: drop-shadow(0 4px 6px rgba(29, 46, 34, 0.18));
     transition: opacity 0.5s ease;
   }
-  /* Hide track + train during cinema autopan — they're a post-cinema element */
-  :global(body.cinema) #desk-track,
-  :global(body.cinema) #desk-train {
-    opacity: 0;
-    pointer-events: none;
+  /* During cinema, dim the track to ~40% so the caption stays primary —
+     but keep the train fully visible so the user sees it pull into each
+     station as the autopan progresses. Train chugs through the journey
+     while the cinema bars are up. */
+  :global(body.cinema) #desk-track {
+    opacity: 0.45;
+    transition: opacity 0.6s ease;
   }
   :global(body.cinema) .track-station {
-    opacity: 0;
+    opacity: 0.6;
+  }
+  :global(body.cinema) #desk-train {
+    opacity: 1;
+  }
+  /* Once cinema ends, hide the lingering caption text completely */
+  :global(body.cinema-done) #dc-caption {
+    opacity: 0 !important;
+    visibility: hidden;
   }
   #desk-train .smoke circle {
     fill: var(--ink);
@@ -748,9 +760,9 @@ const POSTCARDS = [
     #desk-train .smoke circle { animation: none; opacity: 0; }
   }
   @media (max-width: 720px) {
-    #desk-track { top: 76%; height: 56px; }
-    .st-label { font-size: 8px; }
-    .st-label b { font-size: 10px; }
+    #desk-track { bottom: 14vh; height: 44px; }
+    .st-label { font-size: 9px; }
+    .st-label b { font-size: 11px; }
     #desk-train { width: 90px; height: 27px; }
   }
 
@@ -820,11 +832,11 @@ const POSTCARDS = [
     animation: lp 1.6s ease-in-out infinite;
   }
 
-  /* CAPTION — sits above the postcards (z above .pcard.focus) */
+  /* CAPTION — above the track with breathing room, below the postcards */
   #dc-caption {
     position: absolute;
     left: 50%;
-    bottom: 18vh;
+    bottom: 22vh;
     transform: translateX(-50%) translateY(12px);
     width: min(80vw, 1100px);
     text-align: center;
