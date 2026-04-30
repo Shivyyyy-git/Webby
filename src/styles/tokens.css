@@ -8,8 +8,9 @@
   --terra-deep: #9a3f24;
   --rust: #7a3220;
   --sand: #d4c5a8;
-  --muted: rgba(29, 46, 34, 0.55);
-  --line: rgba(29, 46, 34, 0.18);
+  /* Bumped from 0.55 → 0.72 for WCAG AA contrast on cream */
+  --muted: rgba(29, 46, 34, 0.72);
+  --line: rgba(29, 46, 34, 0.22);
 
   /* GRID */
   --g: clamp(24px, 5vw, 80px);

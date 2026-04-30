@@ -10,7 +10,9 @@
     <a href="#close">Contact</a>
   </nav>
   <div class="right">
-    <span class="pill"><span class="led live"></span>Open to roles</span>
+    <a class="pill" href="/resume.pdf" target="_blank" rel="noopener" data-cur="link">
+      <span class="led live"></span>Open to roles
+    </a>
   </div>
 </div>
 
@@ -66,6 +68,16 @@
     display: flex;
     gap: 8px;
     align-items: center;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.2s, color 0.2s;
+  }
+  #chrome a.pill:hover {
+    background: currentColor;
+  }
+  #chrome a.pill:hover .led,
+  #chrome a.pill:hover {
+    /* invert on hover via mix-blend; the chrome already uses mix-blend-mode: difference */
   }
   #chrome .led {
     width: 6px;

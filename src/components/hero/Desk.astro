@@ -188,11 +188,10 @@ const POSTCARDS = [
           </article>
         ))}
 
-        {/* RAILWAY TRACK — runs through all four postcards as stations */}
+        {/* RAILWAY TRACK — single side-view rail with ties below */}
         <div id="desk-track" aria-hidden="true">
           <div class="track-ties"></div>
-          <div class="track-rail track-rail-top"></div>
-          <div class="track-rail track-rail-bot"></div>
+          <div class="track-rail"></div>
           {POSTCARDS.map((p, i) => (
             <div class="track-station" data-i={i}>
               <span class="st-dot"></span>
@@ -447,10 +446,11 @@ const POSTCARDS = [
   }
   .pc-greet {
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--muted);
+    font-weight: 500;
   }
   .pc-city {
     font-family: var(--serif);
@@ -562,10 +562,11 @@ const POSTCARDS = [
     flex-direction: column;
     gap: 2px;
     font-family: var(--mono);
-    font-size: 8px;
+    font-size: 10px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--muted);
+    font-weight: 500;
   }
   .pc-postmark .pm-date {
     font-family: var(--serif);
@@ -633,29 +634,30 @@ const POSTCARDS = [
     pointer-events: none;
     z-index: 1;
   }
+  /* Wooden ties: short horizontal slabs poking out below the single rail */
   .track-ties {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 6px;
-    height: 14px;
+    bottom: 0;
+    height: 16px;
     background: repeating-linear-gradient(
       to right,
-      rgba(29, 46, 34, 0.55) 0 3px,
-      transparent 3px 20px
+      rgba(29, 46, 34, 0.62) 0 4px,
+      transparent 4px 22px
     );
-    opacity: 0.6;
+    opacity: 0.55;
   }
+  /* Single rail — train wheels rest on this */
   .track-rail {
     position: absolute;
     left: 0;
     right: 0;
-    height: 1.5px;
+    bottom: 18px;
+    height: 2px;
     background: var(--ink);
-    opacity: 0.55;
+    opacity: 0.65;
   }
-  .track-rail-top { bottom: 18px; }
-  .track-rail-bot { bottom: 6px; }
 
   .track-station {
     position: absolute;
@@ -711,14 +713,23 @@ const POSTCARDS = [
   /* TRAIN */
   #desk-train {
     position: absolute;
-    bottom: 12px;
+    bottom: 19px;  /* wheels (≈ 4px from sprite bottom) sit on the rail at bottom: 18px */
     width: 110px;
     height: 33px;
-    /* JS sets transform: translate3d(x, 0, 0) */
     transform: translate3d(0, 0, 0);
     will-change: transform;
     z-index: 4;
     filter: drop-shadow(0 4px 6px rgba(29, 46, 34, 0.18));
+    transition: opacity 0.5s ease;
+  }
+  /* Hide track + train during cinema autopan — they're a post-cinema element */
+  :global(body.cinema) #desk-track,
+  :global(body.cinema) #desk-train {
+    opacity: 0;
+    pointer-events: none;
+  }
+  :global(body.cinema) .track-station {
+    opacity: 0;
   }
   #desk-train .smoke circle {
     fill: var(--ink);
@@ -787,11 +798,12 @@ const POSTCARDS = [
     left: 0;
     right: 0;
     bottom: 14px;
-    color: rgba(237, 228, 211, 0.55);
+    color: rgba(237, 228, 211, 0.85);
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
+    font-weight: 500;
     display: flex;
     justify-content: space-between;
     padding: 0 var(--g);
@@ -808,37 +820,42 @@ const POSTCARDS = [
     animation: lp 1.6s ease-in-out infinite;
   }
 
-  /* CAPTION */
+  /* CAPTION — sits above the postcards (z above .pcard.focus) */
   #dc-caption {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 50%;
     bottom: 18vh;
+    transform: translateX(-50%) translateY(12px);
+    width: min(80vw, 1100px);
     text-align: center;
-    z-index: 8;
+    z-index: 60;
     pointer-events: none;
     opacity: 0;
-    transform: translateY(12px);
     transition: opacity 0.55s ease, transform 0.7s cubic-bezier(0.2, 0.9, 0.2, 1);
     padding: 0 var(--g);
   }
-  #dc-caption.show { opacity: 1; transform: none; }
+  #dc-caption.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
   .dcc-eyebrow {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--terra);
+    font-weight: 500;
   }
   .dcc-h {
     font-family: var(--serif);
     font-weight: 300;
-    font-size: clamp(48px, 7vw, 108px);
-    line-height: 0.95;
+    font-size: clamp(40px, 6vw, 92px);
+    line-height: 0.98;
     letter-spacing: -0.04em;
     color: var(--ink);
     font-variation-settings: 'opsz' 144, 'wght' 300;
-    margin-top: 6px;
+    margin-top: 8px;
+    text-wrap: balance;
   }
   .dcc-h em {
     font-style: italic;
@@ -848,25 +865,26 @@ const POSTCARDS = [
   .dcc-p {
     font-family: var(--serif);
     font-style: italic;
-    font-size: clamp(15px, 1.4vw, 20px);
+    font-size: clamp(16px, 1.5vw, 22px);
     color: var(--moss);
-    margin-top: 8px;
+    margin-top: 12px;
     font-variation-settings: 'opsz' 24, 'ital' 1, 'wght' 400;
   }
 
-  /* SKIP / REPLAY / HINT */
+  /* SKIP / REPLAY / HINT — relocated to top-LEFT during cinema so they don't
+     stack underneath the chrome bar's "Open to roles" pill on the right */
   #dc-skip {
     position: fixed;
     top: 13vh;
-    right: var(--g);
+    left: var(--g);
     z-index: 55;
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: rgba(237, 228, 211, 0.7);
-    background: rgba(10, 18, 12, 0.6);
-    border: 1px solid rgba(237, 228, 211, 0.25);
+    color: rgba(237, 228, 211, 0.92);
+    background: rgba(10, 18, 12, 0.85);
+    border: 1px solid rgba(237, 228, 211, 0.35);
     padding: 10px 16px;
     border-radius: 99px;
     cursor: none;
@@ -874,6 +892,7 @@ const POSTCARDS = [
     display: flex;
     align-items: center;
     gap: 8px;
+    font-weight: 500;
     transition: opacity 0.5s, background 0.25s, color 0.25s;
   }
   #dc-skip::after {
@@ -940,19 +959,19 @@ const POSTCARDS = [
     50%      { opacity: 0.95; }
   }
 
-  /* AUDIO TOGGLE */
+  /* AUDIO TOGGLE — sits next to Skip Ride on top-left */
   #aud-tog {
     position: fixed;
     top: 13vh;
-    right: calc(var(--g) + 130px);
+    left: calc(var(--g) + 140px);
     z-index: 55;
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: rgba(237, 228, 211, 0.7);
-    background: rgba(10, 18, 12, 0.6);
-    border: 1px solid rgba(237, 228, 211, 0.25);
+    color: rgba(237, 228, 211, 0.92);
+    background: rgba(10, 18, 12, 0.85);
+    border: 1px solid rgba(237, 228, 211, 0.35);
     padding: 10px 16px;
     border-radius: 99px;
     cursor: none;
@@ -960,6 +979,7 @@ const POSTCARDS = [
     display: flex;
     align-items: center;
     gap: 8px;
+    font-weight: 500;
     transition: opacity 0.5s, background 0.25s, color 0.25s;
   }
   #aud-tog:hover { background: var(--terra); color: #fff; border-color: var(--terra); }
