@@ -1,49 +1,50 @@
 ---
 const CHAPTERS = [
   {
-    era: '1995 — 2014',
-    place: 'Delhi · Childhood',
+    era: 'Childhood',
+    place: 'Delhi',
     headline: 'Born loud, raised loud',
-    body: "Negotiation before reading. Cricket before school. The city taught speed and survival before anything else did.",
+    body: 'Negotiation before reading. Cricket before school. The city taught speed and survival before anything else did.',
   },
   {
-    era: 'every summer',
-    place: 'Punjab · Roots',
+    era: 'Every summer',
+    place: 'Punjab · Jalandhar',
     headline: 'Family at the table',
     body: 'Wheat, dhol, daal, weddings that last a week. Hospitality as a default state. Feed strangers first, ask questions never.',
   },
   {
-    era: '2014 — 2018',
-    place: 'Cambridge · UK',
-    headline: 'Schooled',
-    body: "Read Economics. Discovered the obvious answer is almost never the correct one — and that good thinking sounds boring on the way to a sharp conclusion.",
+    era: '2019 — 2024',
+    place: 'London · Dubai',
+    headline: 'Built two companies',
+    body: 'CloudApproach and Approachables, between London and Dubai. Hired teams. Paid payroll personally when cash was thin. Sold both. $575K combined exits.',
   },
   {
-    era: '2018 — 2024',
-    place: 'McKinsey → Trace AI',
-    headline: 'Built it',
-    body: 'Two years of decks. Then two startups, two acquisitions. Learned that shipping is a personality trait — and advising is downstream of building.',
+    era: '2025',
+    place: 'Simon Business School',
+    headline: "Master's in AI",
+    body: "MS in AI in Business (STEM), graduated December 2025. Did the program while working as Product Lead at the Ain Center and (briefly) Founding PM at Vollie.",
   },
   {
-    era: '2024 — now',
-    place: 'Boston · Maya AI',
-    headline: 'Civic AI for 200K',
-    body: 'Multilingual assistant for residents. 26 languages. Replies in 30 seconds where the city used to take two weeks. Still calm-ish.',
+    era: '2026 — now',
+    place: 'Rochester · ESC Partners',
+    headline: 'Shipping Maya AI',
+    body: 'AI Product Manager. Built Maya end-to-end as the only AI person on the team in about 2.5 months. Customer support assistant for utility companies. 70 to 80% first-touch on one US client. Pilot at 40+ agents.',
   },
 ];
 
 const TL_ROWS = [
-  { y: '2024 — now',   h: 'AI PM at ESC Partners',  c: 'Boston · Maya AI',           d: "Building a multilingual civic assistant. Eval, RAG, governance, and a lot of conversations with residents who don't speak English.", t: 'Civic · LLM' },
-  { y: '2022 — 2024',  h: 'Founding PM, Trace AI',  c: "SF · Acquired Q4 '24",       d: 'From whiteboard to 500K+ government workflows. Wrote the first eval suite, hired the first three engineers, killed two products before they shipped.', t: 'GovTech · Agents' },
-  { y: '2020 — 2022',  h: 'PM #2, Inflection Labs', c: 'NYC · Acquired 2022',         d: '$200K → $4M ARR. SMB e-commerce personalization. The first job where I learned shipping is a personality trait.', t: 'e-comm · ML' },
-  { y: '2018 — 2020',  h: 'Strategy at McKinsey',   c: 'Bangalore · Telecom & FS',    d: 'Decks, frameworks, four-hour syndicate sessions. Learned the meta-skill of asking better questions. Left to be upstream of the answer.', t: 'Strategy' },
-  { y: '2014 — 2018',  h: 'BS, Computer Science',   c: 'IIT Bombay · 2018',           d: "Built three apps. None worked. Wrote my first eval at 22 — for a friend's chatbot side-project. Still my best teacher.", t: 'Education' },
+  { y: '2026 — now',   h: 'AI Product Manager, ESC Partners', c: 'Rochester NY · Maya AI',                d: 'Built Maya end-to-end. Voice, chat, SMS, email, mobile, plus an internal agent console for Oracle CCS. Pilot at 40+ agents. 70 to 80% first-touch coverage on one US utility.',                                  t: 'AI PM · End-to-end' },
+  { y: 'Oct 2025 — Jan 2026', h: 'Senior Product Manager, Assisted Living Locators', c: 'Remote CA',         d: 'Marketplace product matching families with care options. Owned the matching flow and the agent-facing console.',                                                                                                t: 'Senior PM · Marketplace' },
+  { y: 'May — Dec 2025',      h: 'Founding PM, Vollie Inc.',  c: 'Buffalo NY',                                d: 'Founding product manager on an early-stage AI product team. Wrote the first eval suite, scoped the first three features, killed the wrong ones before they shipped.',                                              t: 'Founding PM · 0 to 1' },
+  { y: 'Jan — Dec 2025',      h: 'Product Lead, Ain Center',  c: 'Simon Business School',                     d: "Built the application stack students used for programs and grants. Ran in parallel with the master's.",                                                                                                          t: 'Product Lead' },
+  { y: 'Dec 2025',            h: "MS in AI in Business",      c: 'Simon Business School · STEM',              d: "Master's in AI applied to business. Graduated December 2025.",                                                                                                                                                  t: 'Education' },
+  { y: '2019 — 2024',         h: 'Founder, CloudApproach + Approachables', c: 'London · Dubai · UK + MENA',  d: 'Founded and ran two companies across the UK and Middle East. Sold both. $575K combined exits, roughly $5M influenced in deals closed (deals my team and I drove, not personal revenue).',                          t: 'Founder · 2 exits' },
 ];
 ---
 <section id="timeline">
   <div class="w">
     <div class="cap"><b>Section 04</b> — The path</div>
-    <h2 class="tl-h reveal">Eight years, four<br />cities, one <em>thread.</em></h2>
+    <h2 class="tl-h reveal">Five years, four<br />cities, one <em>thread.</em></h2>
 
     <!-- JOURNEY: pinned scrub — zig-zag track + train weaving past 5 chapter cards -->
     <div id="tl-journey" class="tl-journey reveal">

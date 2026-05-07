@@ -6,3 +6,6 @@ dist
 .DS_Store
 .vercel
 .netlify
+
+# Personal copy brief, never commit
+BRIEF.md

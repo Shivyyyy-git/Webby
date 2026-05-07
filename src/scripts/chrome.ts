@@ -5,7 +5,7 @@ export function initClock() {
     const d = new Date();
     const h = d.getHours();
     const m = d.getMinutes();
-    el!.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} local · Boston`;
+    el!.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} local · Rochester`;
   }
   up();
   setInterval(up, 30000);

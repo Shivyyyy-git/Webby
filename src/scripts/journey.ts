@@ -1,13 +1,14 @@
 /*
-  Timeline journey — pinned scrub through 5 chapters (Delhi → Punjab → London → Boston → Vision).
+  Timeline journey — pinned scrub through 5 chapters
+  (Delhi → Punjab → London/Dubai → Simon Business School → Rochester).
   Train slides along a zig-zag track from top-left to bottom-right as scroll progresses.
 
   Waypoints (in % of the journey container, where x=0..100, y=0..100):
-    [0]  ( 6,  6)   top-left      — Delhi
-    [1]  (92, 26)   upper-right   — Punjab
-    [2]  ( 6, 50)   middle-left   — London
-    [3]  (92, 74)   lower-right   — Boston
-    [4]  (92, 94)   bottom-right  — Vision
+    [0]  ( 6,  6)   top-left      — Delhi (childhood)
+    [1]  (92, 26)   upper-right   — Punjab (roots)
+    [2]  ( 6, 50)   middle-left   — London + Dubai (founder years)
+    [3]  (92, 74)   lower-right   — Simon Business School (master's)
+    [4]  (92, 94)   bottom-right  — Rochester (ESC Partners · Maya AI · now)
 */
 
 const WAYPOINTS: ReadonlyArray<readonly [number, number]> = [
