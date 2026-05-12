@@ -1,15 +1,15 @@
 ---
 const RECEIPTS = [
-  { value: 70, suffix: '%+', label: 'First-touch coverage', note: "Maya handles 70 to 80% of inbound support volume on one US utility's channel. The metric I'll defend in a one-on-one." },
-  { value: 40, suffix: '+', label: 'Agents in pilot', note: 'Internal agent console plus a customer-facing assistant. Voice, chat, SMS, email, mobile.' },
-  { value: 2,  suffix: '·',  label: 'Exits', note: 'CloudApproach and Approachables. $575K combined. Roughly $5M influenced in deals closed (deals my team and I drove, not personal revenue).' },
-  { value: 2,  suffix: '.5 mo', label: 'To ship Maya', note: 'Built end-to-end as the only AI person at ESC Partners. FastAPI, React, AWS Bedrock, DynamoDB, integrated with Oracle CCS.' },
+  { value: 70, suffix: '%+', label: 'First-touch coverage', note: "Maya handles 70 to 80% of inbound support volume on one US utility's channel." },
+  { value: 40, suffix: '+',  label: 'Agents in pilot',      note: 'Internal agent console plus a customer-facing assistant. Voice, chat, SMS, email, mobile.' },
+  { value: 2,  suffix: '·',  label: 'Exits',                note: 'CloudApproach and Approachables. $575K combined. Roughly $5M influenced in deals closed (deals my team and I drove, not personal revenue).' },
+  { value: 5,  suffix: '',   label: 'Channels',             note: 'Voice, chat, SMS, email, mobile. Built end-to-end at ESC Partners. FastAPI, React, AWS Bedrock, DynamoDB, Oracle CCS.' },
 ];
 ---
 <section id="receipts">
   <div class="w">
     <div class="cap"><b>Section 02</b> · Receipts before rhetoric</div>
-    <h2 class="rh reveal">Numbers I can <em>defend.</em><br />Asterisks in the headline, not the footnote.</h2>
+    <h2 class="rh reveal">Numbers I can <em>defend</em>.</h2>
     <div class="recl">
       {RECEIPTS.map((r) => (
         <div class="rec reveal">

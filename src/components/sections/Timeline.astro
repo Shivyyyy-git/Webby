@@ -1,22 +1,10 @@
 ---
 const CHAPTERS = [
   {
-    era: 'Childhood',
-    place: 'Delhi',
-    headline: 'Born loud, raised loud',
-    body: 'Negotiation before reading. Cricket before school. The city taught speed and survival before anything else did.',
-  },
-  {
-    era: 'Every summer',
-    place: 'Punjab · Jalandhar',
-    headline: 'Family at the table',
-    body: 'Wheat, dhol, daal, weddings that last a week. Hospitality as a default state. Feed strangers first, ask questions never.',
-  },
-  {
     era: '2019 to 2024',
     place: 'London · Dubai',
-    headline: 'Built two companies',
-    body: 'CloudApproach and Approachables, between London and Dubai. Hired teams. Paid payroll personally when cash was thin. Sold both. $575K combined exits.',
+    headline: 'Started in undergrad',
+    body: 'Approachables came out of my second year at UCLan. Marketing agency, 200+ clients. Then CloudApproach with a co-founder, AI-powered real estate CRM across UK and MENA. Sold both. $575K combined.',
   },
   {
     era: '2025',
@@ -28,23 +16,23 @@ const CHAPTERS = [
     era: '2026, now',
     place: 'Rochester · ESC Partners',
     headline: 'Shipping Maya AI',
-    body: "AI Product Manager. Built Maya end-to-end as the only AI person on the team in about 2.5 months. Customer support for utility companies. 70 to 80% first-touch on one US client. Pilot at 40+ agents.",
+    body: 'Maya is a two-sided AI customer support platform for utility companies. Customer-facing assistant (voice, chat, SMS, email, mobile) paired with an internal agent console.',
   },
 ];
 
 const TL_ROWS = [
-  { y: '2026, now',           h: 'AI Product Manager, ESC Partners',                  c: 'Rochester NY · Maya AI',                d: 'Built Maya end-to-end. Voice, chat, SMS, email, mobile, plus an internal agent console for Oracle CCS. Pilot at 40+ agents. 70 to 80% first-touch on one US utility.',                                  t: 'AI PM · End-to-end' },
-  { y: 'Oct 2025 to Jan 2026', h: 'Senior Product Manager, Assisted Living Locators', c: 'Remote CA',                              d: 'Marketplace product matching families with care options. Owned the matching flow and the agent-facing console.',                                                                                          t: 'Senior PM' },
-  { y: 'May to Dec 2025',      h: 'Founding PM, Vollie Inc.',                          c: 'Buffalo NY',                            d: 'Wrote the first eval suite. Scoped the first three features. Killed the wrong ones before they shipped.',                                                                                                  t: 'Founding PM · 0 to 1' },
-  { y: 'Jan to Dec 2025',      h: 'Product Lead, Ain Center',                          c: 'Simon Business School',                 d: "Built the application stack students used for programs and grants. Ran in parallel with the master's.",                                                                                                  t: 'Product Lead' },
-  { y: 'Dec 2025',             h: "MS in AI in Business",                              c: 'Simon Business School · STEM',          d: "Master's in AI applied to business. Graduated December 2025.",                                                                                                                                          t: 'Education' },
-  { y: '2019 to 2024',         h: 'Founder, CloudApproach + Approachables',            c: 'London · Dubai · UK + MENA',            d: 'Two companies across the UK and Middle East. Sold both. $575K combined exits. Roughly $5M influenced in deals closed (deals my team and I drove, not personal revenue).',                                  t: 'Founder · 2 exits' },
+  { y: '2026, now',          h: 'AI Product Manager, ESC Partners',                  c: 'Rochester NY · Maya AI',                d: 'Maya: a two-sided AI customer support platform for utility companies. Customer assistant (voice, chat, SMS, email, mobile) plus an internal agent console integrated with Oracle CCS. Handles 70-80% of first-touch volume on one US utility. Removes ~100 manual emails per manager per day. Pilot at 40+ agents.', t: 'AI PM · End-to-end' },
+  { y: 'Oct 2025 to Jan 2026', h: 'AI Product Consultant (Builder), Assisted Living Locators', c: 'Remote CA',                       d: 'Marketplace product matching families with care options. Owned the matching flow and the agent-facing console.',                                                                                            t: 'AI Consultant · Builder' },
+  { y: 'May to Dec 2025',      h: 'Founding PM, Vollie Inc.',                                   c: 'Buffalo NY',                     d: "Wrote the first eval suite. Scoped the first three features. Cut what didn't fit.",                                                                                                                          t: 'Founding PM · 0 to 1' },
+  { y: 'Jan to Dec 2025',      h: 'Product Lead, Ain Center',                                   c: 'Simon Business School',          d: "Built the application stack students used for programs and grants. Ran in parallel with the master's.",                                                                                                      t: 'Product Lead' },
+  { y: 'Dec 2025',            h: 'MS in AI in Business',                              c: 'Simon Business School · STEM',          d: "Master's in AI applied to business. Graduated December 2025.",                                                                                                                                              t: 'Education' },
+  { y: '2019 to 2024',        h: 'Founder, CloudApproach + Approachables',            c: 'London · Dubai · UK + MENA',            d: 'Two companies across the UK and Middle East. Sold both. $575K combined exits. Roughly $5M influenced in deals closed (deals my team and I drove, not personal revenue).',                                  t: 'Founder · 2 exits' },
 ];
 ---
 <section id="timeline">
   <div class="w">
-    <div class="cap"><b>Section 04</b> · The path</div>
-    <h2 class="tl-h reveal">Five years, four<br />cities, one <em>thread.</em></h2>
+    <div class="cap"><b>Section 04</b> · How I got here</div>
+    <h2 class="tl-h reveal">Three cities. Two exits.<br />One <em>thread</em>.</h2>
 
     <!-- JOURNEY: pinned scrub — zig-zag track + train weaving past 5 chapter cards -->
     <div id="tl-journey" class="tl-journey reveal">
@@ -52,7 +40,7 @@ const TL_ROWS = [
       <svg id="tl-track" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
         <path
           id="tl-track-path"
-          d="M 6 6 L 92 26 L 6 50 L 92 74 L 92 94"
+          d="M 8 10 L 92 50 L 8 90"
           fill="none"
           stroke="rgba(29,46,34,0.22)"
           stroke-width="0.35"
@@ -61,7 +49,7 @@ const TL_ROWS = [
         />
         <path
           id="tl-track-fill"
-          d="M 6 6 L 92 26 L 6 50 L 92 74 L 92 94"
+          d="M 8 10 L 92 50 L 8 90"
           fill="none"
           stroke="var(--terra)"
           stroke-width="0.45"
