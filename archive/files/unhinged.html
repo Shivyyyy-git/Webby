@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHIVAM.SHARMA [MAYA_ACTIVE]</title>
+<meta name="description" content="AI Product Manager. This is not a portfolio. This is an interface.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #000;
+    --bg-elev: #0a0a0a;
+    --text: #f0f0f0;
+    --text-dim: #888;
+    --text-muted: #444;
+    --cyan: #00fff0;
+    --magenta: #ff00aa;
+    --yellow: #ffe600;
+    --blue: #0080ff;
+    --lime: #b6ff00;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.2);
+    --serif: 'Instrument Serif', Georgia, serif;
+    --mono: 'JetBrains Mono', 'SF Mono', monospace;
+    --sans: 'Space Grotesk', -apple-system, sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--mono); font-weight: 400;
+    line-height: 1.55; font-size: 14px;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    cursor: none;
+  }
+  a { color: inherit; text-decoration: none; cursor: none; }
+  button, input, textarea { cursor: none; }
+
+  /* CRT scanlines */
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 3; opacity: 0.04;
+    background: repeating-linear-gradient(0deg, transparent 0, transparent 2px, #fff 2px, #fff 3px);
+  }
+  /* Grain */
+  body::after {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 4; opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+  }
+
+  /* Custom cursor */
+  .cursor-dot { position: fixed; width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 9998; mix-blend-mode: difference; transition: transform 0.08s ease; box-shadow: 0 0 20px var(--cyan); }
+  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--cyan); border-radius: 50%; pointer-events: none; z-index: 9997; mix-blend-mode: difference; transition: transform 0.2s ease, width 0.2s ease, height 0.2s ease; }
+  .cursor-dot.hover { transform: scale(0); }
+  .cursor-ring.hover { width: 64px; height: 64px; border-color: var(--magenta); }
+  #trailCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 9996; }
+
+  /* BOOT */
+  #boot {
+    position: fixed; inset: 0; background: #000; z-index: 99999;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+  #boot.done { opacity: 0; visibility: hidden; }
+  .boot-box {
+    border: 1px solid var(--cyan); padding: 24px 32px; max-width: 90vw;
+    color: var(--cyan); font-size: 13px; line-height: 1.8;
+    min-width: 360px; box-shadow: 0 0 60px rgba(0, 255, 240, 0.3);
+  }
+  .boot-box b { color: var(--magenta); }
+  .boot-line { opacity: 0; animation: bootLine 0.1s forwards; }
+  .boot-progress { margin-top: 16px; height: 6px; background: #111; border: 1px solid var(--cyan); position: relative; overflow: hidden; }
+  .boot-progress::after { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 0; background: var(--cyan); animation: bootFill 2.4s linear forwards; box-shadow: 0 0 20px var(--cyan); }
+  @keyframes bootLine { to { opacity: 1; } }
+  @keyframes bootFill { to { width: 100%; } }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; padding: 16px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100; background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+  }
+  .nav-left { display: flex; gap: 16px; align-items: center; }
+  .nav-logo { color: var(--text); font-weight: 700; }
+  .nav-logo em { font-family: var(--serif); font-style: italic; text-transform: none; font-size: 18px; color: var(--cyan); font-weight: 400; margin: 0 4px; }
+  .nav-status { color: var(--lime); display: flex; align-items: center; gap: 6px; }
+  .nav-status .dot { width: 6px; height: 6px; background: var(--lime); border-radius: 50%; box-shadow: 0 0 10px var(--lime); animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: 0.3; } }
+  .nav-right { display: flex; gap: 20px; color: var(--text-dim); }
+  .nav-right a:hover { color: var(--cyan); }
+  .nav-clock { color: var(--text-muted); }
+
+  /* HERO */
+  .hero { position: relative; min-height: 100vh; overflow: hidden; }
+  #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+  .hero-content {
+    position: absolute; bottom: 48px; left: 32px; right: 32px; z-index: 2;
+    pointer-events: none;
+  }
+  .hero-meta { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-dim); margin-bottom: 16px; display: flex; gap: 20px; flex-wrap: wrap; }
+  .hero-meta b { color: var(--cyan); font-weight: 400; }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 400; line-height: 0.88;
+    letter-spacing: -0.04em;
+    font-size: clamp(72px, 14vw, 220px);
+    position: relative; display: inline-block;
+  }
+  .hero h1 em { font-style: italic; color: var(--cyan); }
+  .hero h1::before, .hero h1::after {
+    content: attr(data-text); position: absolute; top: 0; left: 0;
+    opacity: 0.6; mix-blend-mode: screen;
+  }
+  .hero h1::before { color: var(--magenta); transform: translateX(-2px); animation: glitchL 4s infinite; }
+  .hero h1::after { color: var(--cyan); transform: translateX(2px); animation: glitchR 4s infinite; }
+  @keyframes glitchL { 0%, 92%, 100% { transform: translateX(-1px); } 95% { transform: translateX(-6px) skewX(5deg); } 97% { transform: translateX(2px); } }
+  @keyframes glitchR { 0%, 92%, 100% { transform: translateX(1px); } 95% { transform: translateX(6px) skewX(-5deg); } 97% { transform: translateX(-2px); } }
+  .hero-sub {
+    font-family: var(--serif); font-size: clamp(18px, 2vw, 24px);
+    font-style: italic; color: var(--text); max-width: 640px; margin-top: 16px;
+    line-height: 1.35;
+  }
+  .hero-sub em { color: var(--cyan); font-style: normal; }
+
+  .hero-instruction {
+    position: absolute; top: 50%; right: 32px; transform: translateY(-50%);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-dim); text-align: right; z-index: 2;
+    writing-mode: vertical-rl;
+    pointer-events: none;
+  }
+  .hero-instruction b { color: var(--cyan); font-weight: 400; }
+
+  /* SECTIONS */
+  section {
+    position: relative; max-width: 1400px; margin: 0 auto;
+    padding: 120px 32px; z-index: 2;
+  }
+  .section-tag { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; color: var(--cyan); margin-bottom: 8px; }
+  .section-tag.magenta { color: var(--magenta); }
+  .section-tag.yellow { color: var(--yellow); }
+  .section-tag.lime { color: var(--lime); }
+  h2 {
+    font-family: var(--serif); font-size: clamp(56px, 8vw, 120px);
+    font-weight: 400; line-height: 0.92; letter-spacing: -0.03em;
+    margin-bottom: 48px;
+  }
+  h2 em { font-style: italic; }
+  h2 .cyan { color: var(--cyan); }
+  h2 .magenta { color: var(--magenta); }
+  h2 .yellow { color: var(--yellow); }
+
+  /* CHAT — Oracle style */
+  .oracle-wrap {
+    border: 1px solid var(--border-strong); border-radius: 16px;
+    background: linear-gradient(180deg, rgba(0, 255, 240, 0.02), rgba(255, 0, 170, 0.02));
+    padding: 32px; position: relative; overflow: hidden;
+  }
+  .oracle-wrap::before, .oracle-wrap::after {
+    content: ''; position: absolute; height: 1px; left: 0; right: 0;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    animation: scanH 4s linear infinite;
+  }
+  .oracle-wrap::before { top: 0; }
+  .oracle-wrap::after { bottom: 0; animation-delay: 2s; }
+  @keyframes scanH { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+  .oracle-corners::before, .oracle-corners::after {
+    content: ''; position: absolute; width: 20px; height: 20px; border: 2px solid var(--cyan);
+  }
+  .oracle-corners::before { top: 12px; left: 12px; border-right: none; border-bottom: none; }
+  .oracle-corners::after { bottom: 12px; right: 12px; border-left: none; border-top: none; }
+  .oracle-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; color: var(--cyan); margin-bottom: 20px; display: flex; justify-content: space-between; }
+  .oracle-label b { color: var(--magenta); font-weight: 400; }
+  #oracle-viz {
+    height: 120px; border: 1px solid var(--border); border-radius: 8px;
+    margin-bottom: 20px; position: relative; overflow: hidden; background: #000;
+  }
+  #oracle-viz canvas { width: 100%; height: 100%; }
+  .oracle-row { display: flex; gap: 12px; align-items: stretch; }
+  .oracle-input {
+    flex: 1; background: #000; border: 1px solid var(--border-strong);
+    border-radius: 10px; color: var(--text); padding: 16px;
+    font-family: var(--mono); font-size: 14px; resize: none;
+    min-height: 56px; max-height: 160px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .oracle-input::placeholder { color: var(--text-muted); }
+  .oracle-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0, 255, 240, 0.1); }
+  .oracle-send {
+    padding: 16px 24px; background: var(--cyan); color: #000;
+    border: none; border-radius: 10px; font-family: var(--mono);
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.15em; transition: all 0.15s;
+  }
+  .oracle-send:hover { background: var(--magenta); color: #fff; box-shadow: 0 0 40px var(--magenta); }
+  .oracle-send:disabled { opacity: 0.5; }
+  .oracle-answer-wrap {
+    display: none; margin-top: 20px; border: 1px solid var(--cyan);
+    border-radius: 10px; padding: 20px; background: rgba(0, 255, 240, 0.02);
+    font-family: var(--mono); font-size: 14px; line-height: 1.7; white-space: pre-wrap;
+    max-height: 42vh; overflow: auto;
+  }
+  .oracle-cursor { display: inline-block; width: 8px; height: 1.1em; background: var(--cyan); margin-left: 2px; animation: blinkC 0.9s step-end infinite; vertical-align: middle; }
+  @keyframes blinkC { 50% { opacity: 0; } }
+  .oracle-loader { display: none; margin-top: 16px; font-family: var(--mono); font-size: 12px; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.15em; }
+  .oracle-again { display: none; margin-top: 12px; text-align: right; }
+  .oracle-again button { background: none; border: 1px solid var(--border-strong); color: var(--text-dim); padding: 8px 16px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; border-radius: 6px; }
+  .oracle-again button:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  /* NOW PLAYING */
+  .np {
+    display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: stretch;
+    border: 1px solid var(--border); border-radius: 16px; padding: 24px;
+    background: var(--bg-elev);
+  }
+  .np-meta { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; color: var(--magenta); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .np-meta .eq { display: flex; gap: 2px; align-items: end; height: 16px; }
+  .np-meta .eq span { width: 3px; background: var(--magenta); animation: eqBar 0.6s ease-in-out infinite alternate; }
+  .np-meta .eq span:nth-child(1) { animation-delay: 0s; } .np-meta .eq span:nth-child(2) { animation-delay: 0.15s; }
+  .np-meta .eq span:nth-child(3) { animation-delay: 0.3s; } .np-meta .eq span:nth-child(4) { animation-delay: 0.2s; }
+  @keyframes eqBar { 0% { height: 3px; } 100% { height: 16px; } }
+  .np h3 { font-family: var(--serif); font-size: 32px; font-weight: 400; line-height: 1.1; margin-bottom: 8px; }
+  .np p { color: var(--text-dim); font-size: 12px; }
+  #npViz { width: 100%; height: 80px; margin-top: 20px; }
+  .np iframe { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
+
+  /* ABOUT */
+  .about-txt {
+    font-family: var(--serif); font-size: clamp(28px, 3.2vw, 44px);
+    line-height: 1.3; font-weight: 400;
+  }
+  .about-txt em { font-style: italic; color: var(--cyan); }
+  .about-txt .glitch { position: relative; display: inline-block; color: var(--magenta); font-style: italic; transition: all 0.2s; }
+  .about-txt .glitch:hover { animation: glitchText 0.4s steps(2); }
+  @keyframes glitchText {
+    0%, 100% { transform: translate(0); text-shadow: none; }
+    25% { transform: translate(-3px, 2px); text-shadow: 3px 0 var(--cyan), -3px 0 var(--yellow); }
+    50% { transform: translate(3px, -2px); text-shadow: -3px 0 var(--cyan), 3px 0 var(--yellow); }
+    75% { transform: translate(-1px, 1px); text-shadow: 2px 0 var(--magenta); }
+  }
+  .about-strong { color: var(--text); font-family: var(--mono); font-size: 0.6em; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 12px; border: 1px solid var(--cyan); border-radius: 999px; display: inline-block; vertical-align: middle; margin: 0 6px; }
+
+  /* CURRENTLY */
+  .curr { display: grid; gap: 0; }
+  .curr-row {
+    display: grid; grid-template-columns: 200px 1fr auto; gap: 32px;
+    padding: 40px 0; border-top: 1px solid var(--border); align-items: start;
+    transition: all 0.3s ease; position: relative;
+  }
+  .curr-row:hover { padding-left: 16px; }
+  .curr-row:hover::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--cyan);
+  }
+  .curr-row:last-child { border-bottom: 1px solid var(--border); }
+  .curr-meta { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--cyan); padding-top: 8px; }
+  .curr-body h3 { font-family: var(--serif); font-size: 48px; font-weight: 400; line-height: 1.05; margin-bottom: 10px; }
+  .curr-body p { color: var(--text-dim); font-size: 15px; line-height: 1.65; max-width: 700px; }
+  .curr-date { font-family: var(--mono); font-size: 11px; color: var(--text-muted); padding-top: 12px; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* WORK cards */
+  .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .work-card {
+    padding: 32px; border: 1px solid var(--border); border-radius: 16px;
+    background: var(--bg-elev); position: relative; overflow: hidden;
+    transition: all 0.3s ease; cursor: none;
+  }
+  .work-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(500px at var(--mx, 50%) var(--my, 50%), var(--g, rgba(0, 255, 240, 0.15)), transparent 40%);
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  .work-card:hover { border-color: var(--hc, var(--cyan)); transform: translateY(-6px); }
+  .work-card:hover::after { opacity: 1; }
+  .work-card[data-accent="cyan"] { --hc: var(--cyan); --g: rgba(0, 255, 240, 0.15); }
+  .work-card[data-accent="magenta"] { --hc: var(--magenta); --g: rgba(255, 0, 170, 0.15); }
+  .work-card[data-accent="yellow"] { --hc: var(--yellow); --g: rgba(255, 230, 0, 0.15); }
+  .work-card[data-accent="lime"] { --hc: var(--lime); --g: rgba(182, 255, 0, 0.12); }
+  .wm { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-bottom: 32px; position: relative; z-index: 1; }
+  .work-card h3 { font-family: var(--serif); font-size: 40px; font-weight: 400; line-height: 1; letter-spacing: -0.01em; margin-bottom: 16px; position: relative; z-index: 1; }
+  .work-card p { color: var(--text-dim); font-size: 14px; line-height: 1.65; position: relative; z-index: 1; }
+  .wstats { display: flex; gap: 28px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); position: relative; z-index: 1; }
+  .wstat-v { font-family: var(--serif); font-style: italic; font-size: 28px; color: var(--hc, var(--cyan)); display: block; }
+  .wstat-l { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-top: 4px; }
+
+  /* GAME */
+  .game {
+    border: 1px solid var(--border); border-radius: 16px;
+    background: var(--bg-elev); padding: 32px; position: relative; overflow: hidden;
+  }
+  .game::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow), var(--cyan));
+    background-size: 300% 100%; animation: gscan 4s linear infinite;
+  }
+  @keyframes gscan { 0% { background-position: 0% 0%; } 100% { background-position: 300% 0%; } }
+  .game-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+  .game-hdr h3 { font-family: var(--serif); font-size: 36px; font-weight: 400; }
+  .game-scr { font-family: var(--mono); font-size: 11px; display: flex; gap: 20px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); }
+  .game-scr b { color: var(--cyan); font-family: var(--serif); font-style: italic; font-size: 20px; font-weight: 400; margin-left: 6px; }
+  .game-grid { display: grid; grid-template-columns: 1fr 300px; gap: 24px; }
+  @media (max-width: 860px) { .game-grid { grid-template-columns: 1fr; } }
+  .ec {
+    background: #000; border: 1px solid var(--border-strong); border-radius: 12px;
+    padding: 24px; min-height: 220px;
+  }
+  .ecf { font-family: var(--mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 8px; }
+  .ecs { font-family: var(--serif); font-size: 22px; margin-bottom: 16px; }
+  .ecb { color: var(--text-dim); font-size: 13px; line-height: 1.6; }
+  .ems { margin-top: 16px; padding: 12px 14px; background: rgba(0, 255, 240, 0.08); border-left: 2px solid var(--cyan); border-radius: 4px; font-family: var(--mono); font-size: 11px; display: none; }
+  .ems.v { display: block; animation: fu 0.4s; }
+  @keyframes fu { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .ems b { color: var(--cyan); }
+  .cl { display: grid; gap: 8px; }
+  .cb {
+    padding: 14px 16px; background: #000; border: 1px solid var(--border-strong);
+    border-radius: 10px; color: var(--text); text-align: left;
+    font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+    transition: all 0.15s ease; display: flex; justify-content: space-between; align-items: center;
+  }
+  .cb:hover { border-color: var(--cyan); background: rgba(0, 255, 240, 0.05); }
+  .cb.ok { border-color: var(--lime); background: rgba(182, 255, 0, 0.1); color: var(--lime); }
+  .cb.bad { border-color: var(--magenta); background: rgba(255, 0, 170, 0.1); color: var(--magenta); }
+  .cb.mpick { border-color: var(--cyan); background: rgba(0, 255, 240, 0.05); }
+  .kbd { font-size: 9px; opacity: 0.5; }
+
+  /* TIMELINE */
+  .tl { display: grid; }
+  .tl-i {
+    display: grid; grid-template-columns: 200px 1fr; gap: 40px;
+    padding: 28px 0; border-top: 1px solid var(--border);
+    align-items: baseline; transition: all 0.2s;
+  }
+  .tl-i:last-child { border-bottom: 1px solid var(--border); }
+  .tl-i:hover { padding-left: 16px; }
+  .tl-i:hover .tl-d { color: var(--cyan); }
+  .tl-d { font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; transition: color 0.2s; }
+  .tl-r h4 { font-family: var(--serif); font-size: 28px; font-weight: 400; line-height: 1.15; margin-bottom: 4px; }
+  .tl-r .co { color: var(--text-dim); font-size: 12px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* EDU */
+  .tc { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .cardl { display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .ci { background: var(--bg); padding: 24px; transition: all 0.2s; }
+  .ci:hover { background: var(--bg-elev); }
+  .ci h5 { font-family: var(--serif); font-size: 22px; font-weight: 400; margin-bottom: 6px; }
+  .ci .sub { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--cyan); margin-bottom: 10px; }
+  .ci p { color: var(--text-dim); font-size: 13px; line-height: 1.55; }
+
+  /* CONTACT */
+  .contact {
+    background: var(--bg-elev); border-top: 1px solid var(--border);
+    padding: 100px 32px 40px; position: relative; z-index: 2; overflow: hidden;
+  }
+  .contact::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(900px at 50% -200px, rgba(255, 0, 170, 0.12), transparent 70%);
+    pointer-events: none;
+  }
+  .contact-inner { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+  .contact h2 em { color: var(--magenta); }
+  .cg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 60px 0; }
+  .citem { padding: 24px 0; border-top: 1px solid var(--border); }
+  .citem .lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-bottom: 8px; }
+  .citem .val { font-family: var(--serif); font-size: 22px; }
+  .footer-row { display: flex; justify-content: space-between; align-items: center; padding-top: 32px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; flex-wrap: wrap; gap: 20px; }
+  .footer-row .build { color: var(--cyan); }
+
+  /* COPILOT */
+  .copilot {
+    position: fixed; bottom: 20px; right: 20px; z-index: 90; width: 340px;
+    max-width: calc(100vw - 40px);
+    background: rgba(5, 5, 5, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--cyan); border-radius: 16px; padding: 16px;
+    transform: translateY(140%); transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 255, 240, 0.25);
+  }
+  .copilot.visible { transform: translateY(0); }
+  .cphead { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .cpav {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--cyan), #000);
+    box-shadow: 0 0 20px var(--cyan); position: relative;
+  }
+  .cpav::after { content: ''; position: absolute; inset: 4px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); animation: rot 4s linear infinite; border-right-color: transparent; border-bottom-color: transparent; }
+  @keyframes rot { to { transform: rotate(360deg); } }
+  .cptitle { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--cyan); }
+  .cpx { margin-left: auto; background: none; border: none; color: var(--text-dim); font-size: 18px; padding: 4px 8px; border-radius: 4px; }
+  .cpx:hover { color: var(--text); background: var(--border); }
+  .cpbody { font-size: 13px; color: var(--text); line-height: 1.55; min-height: 36px; font-family: var(--mono); }
+  .cpchips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .cpchip {
+    font-family: var(--mono); font-size: 10px; padding: 6px 10px;
+    border-radius: 999px; background: var(--border); border: 1px solid var(--border-strong);
+    color: var(--text); transition: all 0.15s; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .cpchip:hover { background: var(--cyan); color: #000; border-color: var(--cyan); }
+
+  /* EASTER EGG */
+  .secret { display: none; position: fixed; inset: 0; background: #000; z-index: 9999999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; font-family: var(--serif); font-size: 32px; color: var(--cyan); text-align: center; padding: 40px; }
+  .secret.show { display: flex; animation: secretIn 0.6s; }
+  @keyframes secretIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.seen { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 860px) {
+    body { cursor: auto; }
+    a, button, input, textarea { cursor: auto; }
+    .cursor-dot, .cursor-ring, #trailCanvas { display: none; }
+    nav { padding: 12px 16px; font-size: 9px; }
+    .nav-right { display: none; }
+    .nav-status .dot-label { display: none; }
+    .hero-content { left: 16px; right: 16px; bottom: 32px; }
+    .hero-instruction { display: none; }
+    section { padding: 80px 16px; }
+    .work-grid { grid-template-columns: 1fr; }
+    .tc { grid-template-columns: 1fr; gap: 32px; }
+    .curr-row { grid-template-columns: 1fr; gap: 12px; padding: 24px 0; }
+    .curr-body h3 { font-size: 36px; }
+    .tl-i { grid-template-columns: 1fr; gap: 6px; padding: 20px 0; }
+    .cg { grid-template-columns: 1fr 1fr; }
+    .np { grid-template-columns: 1fr; }
+    .copilot { width: calc(100vw - 24px); bottom: 12px; right: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BOOT -->
+<div id="boot">
+  <div class="boot-box">
+    <div class="boot-line" style="animation-delay:0.0s">&gt; SYSTEM :: <b>MAYA-OS v1.0</b></div>
+    <div class="boot-line" style="animation-delay:0.3s">&gt; loading shivam.sharma.brain...</div>
+    <div class="boot-line" style="animation-delay:0.6s">&gt; connecting to Vercel endpoint... <b>OK</b></div>
+    <div class="boot-line" style="animation-delay:1.0s">&gt; loading projects [maya · cloud · approach · rochester]</div>
+    <div class="boot-line" style="animation-delay:1.4s">&gt; calibrating cursor vectors... <b>OK</b></div>
+    <div class="boot-line" style="animation-delay:1.8s">&gt; rendering infrastructure...</div>
+    <div class="boot-progress"></div>
+    <div class="boot-line" style="animation-delay:2.2s; color: var(--magenta); margin-top: 16px;">&gt; ready. welcome.</div>
+  </div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+<canvas id="trailCanvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <div class="nav-logo">SHIVAM<em>·</em>SHARMA</div>
+    <div class="nav-status"><span class="dot"></span><span class="dot-label">MAYA_LIVE</span></div>
+  </div>
+  <div class="nav-right">
+    <a href="#oracle">Ask</a>
+    <a href="#work">Work</a>
+    <a href="#game">Play</a>
+    <a href="#contact">Contact</a>
+    <span class="nav-clock" id="clock">--:--:--</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-instruction">
+    <b>DRAG</b> to rotate · <b>CLICK</b> a node to explore
+  </div>
+  <div class="hero-content">
+    <div class="hero-meta">
+      <span>COORDS: <b>40.7°N / 77.6°W</b></span>
+      <span>ROLE: <b>AI_PRODUCT_MANAGER</b></span>
+      <span>CLIENT: <b>ESC_PARTNERS</b></span>
+      <span>STATE: <b>SHIPPING</b></span>
+    </div>
+    <h1 data-text="Shivam.">Shivam<em>.</em></h1>
+    <p class="hero-sub">This isn't a portfolio. It's an interface. Built on the same stack I use to ship <em>Maya AI</em>. Ask it anything. Play with it. Break it.</p>
+  </div>
+</header>
+
+<!-- ORACLE -->
+<section id="oracle">
+  <div class="section-tag reveal">01 / ORACLE</div>
+  <h2 class="reveal">Ask the <em class="cyan">oracle</em>.</h2>
+  <div class="oracle-wrap oracle-corners reveal">
+    <div class="oracle-label">
+      <span>WAITING_FOR_INPUT</span>
+      <span>MODEL: <b>SHIVAM_v1</b></span>
+    </div>
+    <div id="oracle-viz"><canvas id="vizCanvas"></canvas></div>
+    <div class="oracle-row">
+      <textarea class="oracle-input" id="cq" rows="1" placeholder="Would Shivam fit an AI PM role at my startup? Why did you leave CloudApproach? What's the hardest part of Maya AI?"></textarea>
+      <button class="oracle-send" id="csend">QUERY</button>
+    </div>
+    <div class="oracle-loader" id="cloader">&gt; processing through shivam_v1 model...</div>
+    <div class="oracle-answer-wrap" id="canswer-wrap"><div id="canswer"></div></div>
+    <div class="oracle-again" id="cagain"><button onclick="resetChat()">&lt; NEW QUERY</button></div>
+  </div>
+</section>
+
+<!-- NOW PLAYING -->
+<section id="music">
+  <div class="section-tag magenta reveal">02 / AUDIO_STREAM</div>
+  <h2 class="reveal">Currently <em class="magenta">listening to</em>.</h2>
+  <div class="np reveal">
+    <div>
+      <div class="np-meta">
+        <span class="eq"><span></span><span></span><span></span><span></span></span>
+        LIVE_QUEUE
+      </div>
+      <h3>The build soundtrack</h3>
+      <p>What's actually playing while I ship Maya. Signal-over-noise.</p>
+      <canvas id="npViz"></canvas>
+    </div>
+    <iframe src="https://open.spotify.com/embed/playlist/4FidzePzkgudGlOJknEjhN?utm_source=generator&theme=0" height="220" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-tag yellow reveal">03 / ABOUT</div>
+  <h2 class="reveal">The short <em class="yellow">version</em>.</h2>
+  <div class="about-txt reveal">
+    Entrepreneur-turned-<em>AI Product Manager</em>. Founded and exited two startups for <span class="glitch">$575K combined</span>, serving 200+ clients across five countries before 25. Now at ESC Partners, owning <span class="about-strong">Maya AI</span> end-to-end — strategy, architecture, n8n engineering, AWS Bedrock integration, UI/UX, deployment. <em>MS in AI in Business (STEM, Dec 2025)</em>, Simon Business School.
+  </div>
+</section>
+
+<!-- CURRENTLY -->
+<section id="now">
+  <div class="section-tag lime reveal">04 / CURRENTLY_BUILDING</div>
+  <h2 class="reveal">Right <em class="cyan">now</em>.</h2>
+  <div class="curr reveal">
+    <div class="curr-row">
+      <div class="curr-meta">AI_PRODUCT_MANAGER</div>
+      <div class="curr-body">
+        <h3>ESC Partners</h3>
+        <p>Leading Maya AI — autonomous email triage for a major US utility. Owning product strategy, architecture, n8n engineering, AWS Bedrock integration, UI/UX, deployment. Also running conference outreach automation for leadership.</p>
+      </div>
+      <div class="curr-date">JAN_2026 → NOW</div>
+    </div>
+    <div class="curr-row">
+      <div class="curr-meta">PARALLEL_TRACK</div>
+      <div class="curr-body">
+        <h3>HometownHUB</h3>
+        <p>Recruiting coordination and marketing operations for a community-focused platform alongside ESC Partners.</p>
+      </div>
+      <div class="curr-date">ONGOING</div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-tag reveal">05 / SHIPPED</div>
+  <h2 class="reveal">Things I've <em class="cyan">shipped</em>.</h2>
+  <div class="work-grid reveal">
+    <div class="work-card" data-tilt data-accent="cyan">
+      <div class="wm"><span>MAYA_AI</span><span>2026</span></div>
+      <h3>Autonomous email triage at utility scale</h3>
+      <p>Four-workflow n8n system processing customer support emails via AWS Bedrock (Nova Pro): intent classification, templated or AI-generated replies, Teams adaptive card approval routing, Outlook send. Plus a customer-facing chat widget and internal agent console on FastAPI + React + DynamoDB.</p>
+      <div class="wstats">
+        <div><span class="wstat-v">4</span><span class="wstat-l">Workflows</span></div>
+        <div><span class="wstat-v">24/7</span><span class="wstat-l">Autonomous</span></div>
+        <div><span class="wstat-v">1</span><span class="wstat-l">Owner (me)</span></div>
+      </div>
+    </div>
+    <div class="work-card" data-tilt data-accent="magenta">
+      <div class="wm"><span>CLOUDAPPROACH</span><span>2022 — 2024</span></div>
+      <h3>AI CRM for real estate. Acquired.</h3>
+      <p>Co-founded a marketing automation platform serving 100+ real estate clients across UK, India, Saudi Arabia, and Poland. Built it from scratch, ran $500K+ in campaigns, facilitated 250+ property sales. Acquired by a leading Saudi developer.</p>
+      <div class="wstats">
+        <div><span class="wstat-v">$325K</span><span class="wstat-l">Exit</span></div>
+        <div><span class="wstat-v">100+</span><span class="wstat-l">Clients</span></div>
+        <div><span class="wstat-v">95%</span><span class="wstat-l">Retention</span></div>
+      </div>
+    </div>
+    <div class="work-card" data-tilt data-accent="yellow">
+      <div class="wm"><span>APPROACHABLES</span><span>2019 — 2022</span></div>
+      <h3>Bootstrapped. Exited.</h3>
+      <p>Second-year university project at UCLan's Propeller Hub. Grew to 10+ designers and marketers serving Shark Tank India, Pro Kabaddi, Sony TV. Sold the full agency — team, clients, playbooks — for $250K.</p>
+      <div class="wstats">
+        <div><span class="wstat-v">$250K</span><span class="wstat-l">Exit</span></div>
+        <div><span class="wstat-v">10+</span><span class="wstat-l">Team</span></div>
+        <div><span class="wstat-v">95%</span><span class="wstat-l">Post-exit</span></div>
+      </div>
+    </div>
+    <div class="work-card" data-tilt data-accent="lime">
+      <div class="wm"><span>CITY_OF_ROCHESTER</span><span>2024</span></div>
+      <h3>AI fraud detection for public services</h3>
+      <p>Data Strategy Consultant via Simon Vision. Built an AI fraud detection model (XGBoost + Isolation Forest) for the City of Rochester. 15% error reduction. Presented AI governance insights to city officials.</p>
+      <div class="wstats">
+        <div><span class="wstat-v">15%</span><span class="wstat-l">Error ↓</span></div>
+        <div><span class="wstat-v">25%</span><span class="wstat-l">Efficiency ↑</span></div>
+        <div><span class="wstat-v">Public</span><span class="wstat-l">Sector</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GAME -->
+<section id="game">
+  <div class="section-tag magenta reveal">06 / PLAYGROUND</div>
+  <h2 class="reveal">Train <em class="magenta">Maya</em>.</h2>
+  <p class="reveal" style="color: var(--text-dim); font-size: 15px; max-width: 680px; margin-bottom: 32px; line-height: 1.6; font-family: var(--mono);">Real emails. Real categories. Classify. Maya learns. After a few rounds she'll call it before you do.</p>
+  <div class="game reveal">
+    <div class="game-hdr">
+      <h3>&gt; email_triage.exe</h3>
+      <div class="game-scr">
+        <span>ROUND<b id="gameRound">1</b></span>
+        <span>CORRECT<b id="gameCorrect">0</b></span>
+        <span>MAYA<b id="mayaConf">0%</b></span>
+      </div>
+    </div>
+    <div class="game-grid">
+      <div class="ec" id="emailCard">
+        <div class="ecf" id="emailFrom"></div>
+        <div class="ecs" id="emailSubject"></div>
+        <div class="ecb" id="emailBody"></div>
+        <div class="ems" id="mayaSuggest"></div>
+      </div>
+      <div class="cl" id="categoryList"></div>
+    </div>
+    <div style="margin-top: 20px; font-family: var(--mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; text-align: center;">Keys 1-4 for fast classification</div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section id="experience">
+  <div class="section-tag yellow reveal">07 / RUN_HISTORY</div>
+  <h2 class="reveal">The full <em class="yellow">run</em>.</h2>
+  <div class="tl reveal">
+    <div class="tl-i"><div class="tl-d">JAN_2026 → NOW</div><div class="tl-r"><h4>AI Product Manager</h4><div class="co">ESC Partners · New York</div></div></div>
+    <div class="tl-i"><div class="tl-d">MAY—DEC 2025</div><div class="tl-r"><h4>Summer Associate, Product &amp; Strategy (AI)</h4><div class="co">Stealth AI Startup · Pleasanton, CA</div></div></div>
+    <div class="tl-i"><div class="tl-d">MAR—DEC 2025</div><div class="tl-r"><h4>AI Product Lead, Ain Foundry</h4><div class="co">Ain Center · University of Rochester</div></div></div>
+    <div class="tl-i"><div class="tl-d">JAN—DEC 2025</div><div class="tl-r"><h4>Marketing Assistant</h4><div class="co">Int'l Student Office · UR</div></div></div>
+    <div class="tl-i"><div class="tl-d">SEP 2024—AUG 2025</div><div class="tl-r"><h4>VP of Events</h4><div class="co">Simon Master's Advisory Council</div></div></div>
+    <div class="tl-i"><div class="tl-d">OCT—DEC 2024</div><div class="tl-r"><h4>Product Consultant</h4><div class="co">Simon Vision · City of Rochester</div></div></div>
+    <div class="tl-i"><div class="tl-d">JAN 2022—JUL 2024</div><div class="tl-r"><h4>Co-Founder</h4><div class="co">CloudApproach · → $325K acquisition</div></div></div>
+    <div class="tl-i"><div class="tl-d">JUN 2019—JUL 2022</div><div class="tl-r"><h4>Founder</h4><div class="co">Approachables · → $250K acquisition</div></div></div>
+  </div>
+</section>
+
+<!-- EDU -->
+<section id="education">
+  <div class="section-tag lime reveal">08 / CREDENTIALS</div>
+  <h2 class="reveal">Formation <em class="cyan">log</em>.</h2>
+  <div class="tc reveal">
+    <div>
+      <div class="section-tag" style="margin-bottom: 16px;">EDUCATION</div>
+      <div class="cardl">
+        <div class="ci"><div class="sub">AUG_2024 → DEC_2025</div><h5>MS, AI in Business (STEM)</h5><p>University of Rochester, Simon Business School. VP of Events, Master's Advisory Council.</p></div>
+        <div class="ci"><div class="sub">2019 → 2022</div><h5>BA (Hons), International Business Management</h5><p>University of Central Lancashire, UK.</p></div>
+        <div class="ci"><div class="sub">NEW_DELHI, INDIA</div><h5>The Army Public School</h5><p>Dhaula Kuan · Business &amp; Commerce.</p></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-tag magenta" style="margin-bottom: 16px;">HONORS</div>
+      <div class="cardl">
+        <div class="ci"><div class="sub">SIMON_BUSINESS_SCHOOL</div><h5>#SimonStrong Community Builder Award</h5><p>Recognized for respect, humility, support, integrity, professionalism.</p></div>
+        <div class="ci"><div class="sub">UK_DIT</div><h5>Board of Trade Ideas Hack</h5><p>UCLan · representing Approachables.</p></div>
+        <div class="ci"><div class="sub">CERTIFICATIONS</div><h5>Product Management stack</h5><p>Lean Six Sigma White Belt · Technical Product Management · Product Strategy · Product Roadmap.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="section-tag magenta reveal">09 / CONTACT</div>
+    <h2 class="reveal">Let's <em>talk</em>.</h2>
+    <div class="cg reveal">
+      <div class="citem"><div class="lbl">EMAIL</div><a href="mailto:shivamsharma2023@gmail.com" class="val">shivamsharma2023@gmail.com</a></div>
+      <div class="citem"><div class="lbl">PHONE</div><a href="tel:+15854819927" class="val">+1 585-481-9927</a></div>
+      <div class="citem"><div class="lbl">LINKEDIN</div><a href="https://www.linkedin.com/in/shivamsharma-ai" target="_blank" rel="noopener" class="val">shivamsharma-ai</a></div>
+      <div class="citem"><div class="lbl">LANG</div><div class="val">EN · HI · PA</div></div>
+    </div>
+    <div class="footer-row">
+      <div>© 2026 SHIVAM SHARMA · ROC_NY</div>
+      <div class="build">↑↑↓↓←→←→BA · built with Claude</div>
+    </div>
+  </div>
+</section>
+
+<!-- AI COPILOT -->
+<div class="copilot" id="copilot">
+  <div class="cphead">
+    <div class="cpav"></div>
+    <div class="cptitle" id="cptitle">MAYA</div>
+    <button class="cpx" onclick="document.getElementById('copilot').classList.remove('visible')">×</button>
+  </div>
+  <div class="cpbody" id="cpbody"></div>
+  <div class="cpchips" id="cpchips"></div>
+</div>
+
+<!-- EASTER EGG -->
+<div class="secret" id="secret">
+  <div style="font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--magenta);">KONAMI ACCEPTED</div>
+  <div style="max-width: 600px; line-height: 1.3;">You found it.<br><em>Pizza is always the answer.</em></div>
+  <div style="font-size: 80px;">🍕</div>
+  <button onclick="document.getElementById('secret').classList.remove('show')" style="padding: 12px 24px; background: var(--cyan); color: #000; border: none; border-radius: 8px; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700;">CLOSE</button>
+</div>
+
+<script>
+/* ============ BOOT ============ */
+setTimeout(() => document.getElementById('boot').classList.add('done'), 2600);
+
+/* ============ CUSTOM CURSOR ============ */
+const dot = document.querySelector('.cursor-dot');
+const ring = document.querySelector('.cursor-ring');
+let mx = -100, my = -100, rx = -100, ry = -100;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
+});
+
+function followRing() {
+  rx += (mx - rx) * 0.15;
+  ry += (my - ry) * 0.15;
+  ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
+  requestAnimationFrame(followRing);
+}
+followRing();
+
+document.querySelectorAll('a, button, .work-card, [data-tilt], input, textarea').forEach(el => {
+  el.addEventListener('mouseenter', () => { dot.classList.add('hover'); ring.classList.add('hover'); });
+  el.addEventListener('mouseleave', () => { dot.classList.remove('hover'); ring.classList.remove('hover'); });
+});
+
+/* ============ PARTICLE TRAIL ============ */
+const trailCanvas = document.getElementById('trailCanvas');
+const tctx = trailCanvas.getContext('2d');
+function sizeTrail() { trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight; }
+sizeTrail();
+window.addEventListener('resize', sizeTrail);
+
+const particles = [];
+const colors = ['#00fff0', '#ff00aa', '#ffe600', '#b6ff00'];
+let lastX = null, lastY = null;
+
+document.addEventListener('mousemove', e => {
+  if (lastX !== null) {
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist > 3) {
+      particles.push({
+        x: e.clientX, y: e.clientY,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        life: 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        size: 2 + Math.random() * 2
+      });
+    }
+  }
+  lastX = e.clientX; lastY = e.clientY;
+});
+
+function drawTrail() {
+  tctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy; p.life -= 0.015;
+    if (p.life <= 0) { particles.splice(i, 1); continue; }
+    tctx.globalAlpha = p.life;
+    tctx.fillStyle = p.color;
+    tctx.beginPath();
+    tctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+    tctx.fill();
+  }
+  tctx.globalAlpha = 1;
+  requestAnimationFrame(drawTrail);
+}
+drawTrail();
+
+/* ============ CLOCK ============ */
+function updateClock() {
+  const d = new Date();
+  const h = String(d.getHours()).padStart(2, '0');
+  const m = String(d.getMinutes()).padStart(2, '0');
+  const s = String(d.getSeconds()).padStart(2, '0');
+  const el = document.getElementById('clock');
+  if (el) el.textContent = h + ':' + m + ':' + s;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* ============ 3D HERO — Orbital scene ============ */
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 2, 22);
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Core (Maya)
+  const coreGeo = new THREE.IcosahedronGeometry(1.2, 0);
+  const coreMat = new THREE.MeshBasicMaterial({ color: 0x00fff0, wireframe: true });
+  const core = new THREE.Mesh(coreGeo, coreMat);
+  scene.add(core);
+
+  // Core glow
+  const glowGeo = new THREE.SphereGeometry(1.8, 32, 32);
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0x00fff0, transparent: true, opacity: 0.15 });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  scene.add(glow);
+
+  // Orbital rings
+  const ringColors = [0xff00aa, 0xffe600, 0xb6ff00, 0x0080ff];
+  const ringRadii = [4.5, 6.5, 8.5, 10.5];
+  for (let i = 0; i < 4; i++) {
+    const ringGeo = new THREE.RingGeometry(ringRadii[i] - 0.02, ringRadii[i] + 0.02, 128);
+    const ringMat = new THREE.MeshBasicMaterial({ color: ringColors[i], transparent: true, opacity: 0.3, side: THREE.DoubleSide });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.4;
+    ring.rotation.z = Math.random() * Math.PI;
+    scene.add(ring);
+  }
+
+  // Planets (projects)
+  const planets = [
+    { name: 'Maya AI', color: 0x00fff0, r: 0.45, orbit: 4.5, speed: 0.015 },
+    { name: 'CloudApproach', color: 0xff00aa, r: 0.5, orbit: 6.5, speed: 0.01 },
+    { name: 'Approachables', color: 0xffe600, r: 0.4, orbit: 8.5, speed: 0.007 },
+    { name: 'City of Rochester', color: 0xb6ff00, r: 0.35, orbit: 10.5, speed: 0.005 }
+  ];
+
+  const planetMeshes = planets.map((p, i) => {
+    const geo = new THREE.SphereGeometry(p.r, 24, 24);
+    const mat = new THREE.MeshBasicMaterial({ color: p.color });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.userData = { ...p, angle: (i / planets.length) * Math.PI * 2 };
+    scene.add(mesh);
+    return mesh;
+  });
+
+  // Stars
+  const starGeo = new THREE.BufferGeometry();
+  const starCount = 600;
+  const positions = new Float32Array(starCount * 3);
+  for (let i = 0; i < starCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 100;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.05 }));
+  scene.add(stars);
+
+  // Drag controls
+  let isDragging = false, lastMx = 0, lastMy = 0;
+  let rotX = 0.3, rotY = 0;
+  let targetRotX = 0.3, targetRotY = 0;
+
+  canvas.addEventListener('mousedown', e => { isDragging = true; lastMx = e.clientX; lastMy = e.clientY; });
+  window.addEventListener('mouseup', () => { isDragging = false; });
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    targetRotY += (e.clientX - lastMx) * 0.006;
+    targetRotX += (e.clientY - lastMy) * 0.006;
+    targetRotX = Math.max(-0.8, Math.min(0.8, targetRotX));
+    lastMx = e.clientX; lastMy = e.clientY;
+  });
+
+  // Touch
+  canvas.addEventListener('touchstart', e => { isDragging = true; lastMx = e.touches[0].clientX; lastMy = e.touches[0].clientY; });
+  window.addEventListener('touchend', () => { isDragging = false; });
+  window.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    targetRotY += (e.touches[0].clientX - lastMx) * 0.006;
+    targetRotX += (e.touches[0].clientY - lastMy) * 0.006;
+    targetRotX = Math.max(-0.8, Math.min(0.8, targetRotX));
+    lastMx = e.touches[0].clientX; lastMy = e.touches[0].clientY;
+  });
+
+  let t = 0;
+  function animate() {
+    t += 0.01;
+    core.rotation.x = t * 0.3;
+    core.rotation.y = t * 0.4;
+    glow.scale.setScalar(1 + Math.sin(t * 2) * 0.1);
+
+    planetMeshes.forEach(p => {
+      p.userData.angle += p.userData.speed;
+      p.position.x = Math.cos(p.userData.angle) * p.userData.orbit;
+      p.position.z = Math.sin(p.userData.angle) * p.userData.orbit;
+      p.position.y = Math.sin(p.userData.angle * 0.5) * 0.8;
+    });
+
+    stars.rotation.y += 0.0003;
+
+    rotX += (targetRotX - rotX) * 0.08;
+    rotY += (targetRotY - rotY) * 0.08;
+    scene.rotation.x = rotX;
+    scene.rotation.y = rotY + t * 0.04;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+/* ============ REVEAL ============ */
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('seen'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ============ WORK CARD SPOTLIGHT ============ */
+document.querySelectorAll('[data-tilt]').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
+    card.style.setProperty('--my', ((e.clientY - r.top) / r.height) * 100 + '%');
+  });
+});
+
+/* ============ ORACLE CHAT + VIZ ============ */
+const API = 'https://shivam-backend-gdfoie5u2-shivams-projects-e3809917.vercel.app/api/shivam';
+const q = document.getElementById('cq');
+const send = document.getElementById('csend');
+const loader = document.getElementById('cloader');
+const wrap = document.getElementById('canswer-wrap');
+const a = document.getElementById('canswer');
+const again = document.getElementById('cagain');
+
+function autoresize() {
+  q.style.height = 'auto';
+  q.style.height = Math.min(q.scrollHeight, 160) + 'px';
+}
+q.addEventListener('input', autoresize);
+
+// Oracle viz — processing animation canvas
+const vizCanvas = document.getElementById('vizCanvas');
+const vctx = vizCanvas.getContext('2d');
+let vizMode = 'idle';
+function sizeViz() {
+  vizCanvas.width = vizCanvas.offsetWidth * 2;
+  vizCanvas.height = vizCanvas.offsetHeight * 2;
+  vctx.scale(2, 2);
+}
+setTimeout(sizeViz, 100);
+window.addEventListener('resize', sizeViz);
+
+const vizNodes = [];
+for (let i = 0; i < 40; i++) {
+  vizNodes.push({
+    x: Math.random(), y: Math.random(),
+    vx: (Math.random() - 0.5) * 0.002,
+    vy: (Math.random() - 0.5) * 0.002,
+    active: 0
+  });
+}
+
+function drawViz() {
+  const w = vizCanvas.offsetWidth, h = vizCanvas.offsetHeight;
+  vctx.clearRect(0, 0, w, h);
+
+  vizNodes.forEach(n => {
+    n.x += n.vx; n.y += n.vy;
+    if (n.x < 0 || n.x > 1) n.vx *= -1;
+    if (n.y < 0 || n.y > 1) n.vy *= -1;
+    if (vizMode === 'processing') {
+      n.active = Math.min(1, n.active + (Math.random() > 0.98 ? 1 : 0));
+      n.active = Math.max(0, n.active - 0.02);
+    } else {
+      n.active = Math.max(0, n.active - 0.01);
+    }
+  });
+
+  // Draw connections
+  for (let i = 0; i < vizNodes.length; i++) {
+    for (let j = i + 1; j < vizNodes.length; j++) {
+      const a = vizNodes[i], b = vizNodes[j];
+      const dx = (a.x - b.x) * w, dy = (a.y - b.y) * h;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 80) {
+        const op = (1 - d / 80) * 0.25 * (1 + Math.max(a.active, b.active));
+        vctx.strokeStyle = `rgba(0, 255, 240, ${op})`;
+        vctx.lineWidth = 0.5;
+        vctx.beginPath();
+        vctx.moveTo(a.x * w, a.y * h);
+        vctx.lineTo(b.x * w, b.y * h);
+        vctx.stroke();
+      }
+    }
+  }
+
+  // Draw nodes
+  vizNodes.forEach(n => {
+    const size = 1.5 + n.active * 3;
+    vctx.fillStyle = n.active > 0.5 ? '#ff00aa' : '#00fff0';
+    vctx.globalAlpha = 0.4 + n.active * 0.6;
+    vctx.beginPath();
+    vctx.arc(n.x * w, n.y * h, size, 0, Math.PI * 2);
+    vctx.fill();
+    vctx.globalAlpha = 1;
+  });
+
+  requestAnimationFrame(drawViz);
+}
+drawViz();
+
+function typewriter(text, el, speed = 14) {
+  return new Promise(resolve => {
+    el.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'oracle-cursor';
+    el.appendChild(cursor);
+    let i = 0;
+    const id = setInterval(() => {
+      if (i >= text.length) {
+        clearInterval(id);
+        cursor.remove();
+        resolve();
+        return;
+      }
+      cursor.insertAdjacentText('beforebegin', text[i]);
+      i++;
+    }, speed);
+  });
+}
+
+async function ask(questionOverride) {
+  const question = (questionOverride || q.value || '').trim();
+  if (!question) return;
+  if (questionOverride) q.value = questionOverride;
+  loader.style.display = 'block';
+  wrap.style.display = 'none';
+  again.style.display = 'none';
+  a.innerHTML = '';
+  send.disabled = true;
+  vizMode = 'processing';
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ question })
+    });
+    if (!res.ok) throw new Error('Failed');
+    const data = await res.json();
+    loader.style.display = 'none';
+    vizMode = 'idle';
+    wrap.style.display = 'block';
+    await typewriter(data.answer || 'No answer returned.', a);
+    again.style.display = 'block';
+  } catch (e) {
+    loader.style.display = 'none';
+    vizMode = 'idle';
+    wrap.style.display = 'block';
+    a.textContent = 'Error: connection failed. Retry?';
+    again.style.display = 'block';
+  } finally {
+    send.disabled = false;
+  }
+}
+
+function resetChat() {
+  a.innerHTML = '';
+  wrap.style.display = 'none';
+  again.style.display = 'none';
+  q.value = '';
+  autoresize();
+  q.focus();
+}
+
+send.addEventListener('click', () => ask());
+q.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(); }
+});
+
+/* ============ NP VIZ (fake audio bars) ============ */
+const npv = document.getElementById('npViz');
+const npctx = npv.getContext('2d');
+function sizeNp() { npv.width = npv.offsetWidth * 2; npv.height = npv.offsetHeight * 2; npctx.scale(2,2); }
+setTimeout(sizeNp, 100);
+window.addEventListener('resize', sizeNp);
+
+function drawNp() {
+  const w = npv.offsetWidth, h = npv.offsetHeight;
+  npctx.clearRect(0, 0, w, h);
+  const bars = 48, gap = 2;
+  const bw = (w - gap * (bars - 1)) / bars;
+  for (let i = 0; i < bars; i++) {
+    const amp = Math.sin(Date.now() * 0.004 + i * 0.3) * 0.5 + 0.5;
+    const amp2 = Math.sin(Date.now() * 0.008 + i * 0.7) * 0.3 + 0.3;
+    const bh = (amp * 0.7 + amp2 * 0.3) * h;
+    const grad = npctx.createLinearGradient(0, h, 0, h - bh);
+    grad.addColorStop(0, '#ff00aa');
+    grad.addColorStop(1, '#00fff0');
+    npctx.fillStyle = grad;
+    npctx.fillRect(i * (bw + gap), h - bh, bw, bh);
+  }
+  requestAnimationFrame(drawNp);
+}
+drawNp();
+
+/* ============ SCROLL COPILOT ============ */
+const copilot = document.getElementById('copilot');
+const cpbody = document.getElementById('cpbody');
+const cpchips = document.getElementById('cpchips');
+const cptitle = document.getElementById('cptitle');
+
+const ctxMap = {
+  'oracle': { msg: '> Ask me anything. I live here.', chips: ['tell me about Maya', 'your biggest win', 'what was Approachables'] },
+  'music': { msg: '> Yes, this is actually my playlist.', chips: ['tell me about Maya', 'what are you building', 'hiring story'] },
+  'about': { msg: '> You want the extended version?', chips: ['why AI PM?', 'what shaped you', 'typical day'] },
+  'now': { msg: '> Ask what I\'m working on right this second.', chips: ['how Maya works', 'what\'s next', 'biggest challenge'] },
+  'work': { msg: '> Click anything. Ask about it.', chips: ['tell me about Maya', 'CloudApproach exit', 'Rochester project'] },
+  'game': { msg: '> This is literally how Maya classifies. Play a round.', chips: ['what\'s AWS Bedrock', 'what\'s n8n', 'is this real Maya?'] },
+  'experience': { msg: '> Every role has a story. Ask.', chips: ['Stealth AI work', 'Ain Foundry?', 'favorite role'] },
+  'education': { msg: '> STEM grad, Simon, Dec 2025.', chips: ['why Simon?', 'worth it?', 'advice for grads'] },
+  'contact': { msg: '> The real Shivam will reply fast.', chips: ['roles of interest', 'consulting?', 'fastest way to reach'] }
+};
+
+let lastSection = null, copilotShown = false;
+
+function showCopilot(id) {
+  const ctx = ctxMap[id];
+  if (!ctx) return;
+  cpbody.textContent = ctx.msg;
+  cpchips.innerHTML = '';
+  ctx.chips.forEach(chip => {
+    const b = document.createElement('button');
+    b.className = 'cpchip';
+    b.textContent = chip;
+    b.onclick = () => {
+      document.getElementById('oracle').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => ask(chip), 800);
+      copilot.classList.remove('visible');
+    };
+    cpchips.appendChild(b);
+  });
+  copilot.classList.add('visible');
+}
+
+const sectionObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
+      const id = entry.target.id;
+      if (id && id !== lastSection && ctxMap[id]) {
+        lastSection = id;
+        if (!copilotShown) {
+          setTimeout(() => { copilotShown = true; showCopilot(id); }, 3500);
+        } else {
+          showCopilot(id);
+        }
+      }
+    }
+  });
+}, { threshold: [0.3, 0.6] });
+document.querySelectorAll('section[id]').forEach(s => sectionObserver.observe(s));
+
+/* ============ MAYA GAME ============ */
+const emails = [
+  { from: 'j.torres@comcast-energy.net', subject: 'Double-charged on last month\'s bill', body: 'I was billed twice for the same service period in March. Need this refunded to my card ending 4411. Please advise.', category: 'Billing' },
+  { from: 'maria.chen@gmail.com', subject: 'Power outage in Albany area?', body: 'Just lost power for the third time this week. Is there a known issue? No storms, nothing.', category: 'Technical' },
+  { from: 'admin@smbh-realty.com', subject: 'Transferring service to new tenant', body: 'Our tenant at 44 Oak Lane moves out Oct 31. New tenant starts Nov 1. Need to transfer without gap.', category: 'Account' },
+  { from: 'complaints@cityhall-buffalo.gov', subject: 'Formal complaint — billing dispute', body: 'Resident Ms. Patel (acct #88172) incorrectly billed for 6 months. Fourth escalation. Need resolution.', category: 'Billing' },
+  { from: 'dan.oliveira@protonmail.com', subject: 'New construction — service install', body: 'Building a single-family home in Henrietta. Schedule install for Q1. Process and lead time?', category: 'Account' },
+  { from: 'supportfeedback@utility-review.com', subject: 'Your rep was amazing', body: 'Monica handled my issue like a pro. Pass along the kudos to her supervisor.', category: 'Other' },
+  { from: 'angelo.w@yahoo.com', subject: 'Meter reading looks wrong', body: 'Meter has been showing same kWh for 3 days. Is it broken?', category: 'Technical' },
+  { from: 'unsub@newsletter-spam.xyz', subject: 'You won a prize', body: 'Click here to claim your $5000 Amazon gift card!!!', category: 'Other' }
+];
+
+const categories = ['Billing', 'Technical', 'Account', 'Other'];
+let emailIdx = 0, correct = 0, round = 1, confidence = 0;
+
+function renderEmail() {
+  if (emailIdx >= emails.length) emailIdx = 0;
+  const e = emails[emailIdx];
+  document.getElementById('emailFrom').textContent = 'FROM · ' + e.from;
+  document.getElementById('emailSubject').textContent = e.subject;
+  document.getElementById('emailBody').textContent = e.body;
+  document.getElementById('gameRound').textContent = round;
+  document.getElementById('gameCorrect').textContent = correct;
+  document.getElementById('mayaConf').textContent = Math.min(confidence, 95) + '%';
+
+  const list = document.getElementById('categoryList');
+  list.innerHTML = '';
+  categories.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'cb';
+    btn.innerHTML = `${c} <span class="kbd">[${i+1}]</span>`;
+    btn.onclick = () => classify(c, btn);
+    list.appendChild(btn);
+  });
+
+  const sug = document.getElementById('mayaSuggest');
+  if (confidence >= 40) {
+    const mayaCorrect = Math.random() < (confidence / 100);
+    const actualPick = mayaCorrect ? e.category : categories[Math.floor(Math.random() * categories.length)];
+    sug.innerHTML = `<b>&gt; MAYA_SUGGESTS:</b> ${actualPick} · ${Math.min(confidence, 95)}% confident`;
+    sug.classList.add('v');
+    list.querySelectorAll('.cb').forEach(b => {
+      if (b.textContent.trim().startsWith(actualPick)) b.classList.add('mpick');
+    });
+  } else {
+    sug.classList.remove('v');
+  }
+}
+
+function classify(pick, btn) {
+  const e = emails[emailIdx];
+  const isCorrect = pick === e.category;
+  btn.classList.add(isCorrect ? 'ok' : 'bad');
+  if (isCorrect) {
+    correct++;
+    confidence = Math.min(confidence + 15, 95);
+  } else {
+    confidence = Math.max(confidence - 5, 0);
+  }
+  document.getElementById('gameCorrect').textContent = correct;
+  document.getElementById('mayaConf').textContent = Math.min(confidence, 95) + '%';
+
+  setTimeout(() => {
+    emailIdx++;
+    round++;
+    renderEmail();
+  }, 900);
+}
+
+window.addEventListener('keydown', e => {
+  if (document.activeElement === q) return;
+  const n = parseInt(e.key);
+  if (n >= 1 && n <= 4) {
+    const btns = document.querySelectorAll('.cb');
+    if (btns[n-1]) btns[n-1].click();
+  }
+});
+
+renderEmail();
+
+/* ============ KONAMI CODE ============ */
+const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+let kIdx = 0;
+window.addEventListener('keydown', e => {
+  if (e.key === konami[kIdx]) {
+    kIdx++;
+    if (kIdx === konami.length) {
+      document.getElementById('secret').classList.add('show');
+      kIdx = 0;
+    }
+  } else {
+    kIdx = (e.key === konami[0]) ? 1 : 0;
+  }
+});
+</script>
+
+</body>
+</html>

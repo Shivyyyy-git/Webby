@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Option C — Wall, then receipts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Space+Grotesk:wght@300;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{--cream:#ede4d3;--paper:#f4ecdb;--ink:#1d2e22;--moss:#2d4533;--terra:#c25a3a;--terra-deep:#9a3f24;--rust:#7a3220;--acid:#e8ff3a;--bone:#e8e6dc;--mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;--serif:'Fraunces',serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--ink);color:var(--cream);font-family:var(--sans);font-weight:300;min-height:100vh;overflow-x:hidden;}
+
+.bar{position:fixed;top:0;left:0;right:0;background:var(--ink);border-bottom:1px solid rgba(237,228,211,.12);padding:14px 32px;display:flex;justify-content:space-between;align-items:center;z-index:1000;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;}
+.bar a{color:var(--terra);text-decoration:none;}
+.bar .which{color:rgba(237,228,211,.7);}
+.bar .which b{color:var(--terra);font-weight:500;}
+
+.grain{position:fixed;inset:0;pointer-events:none;z-index:5;opacity:.08;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+
+main{padding:80px 60px 120px;max-width:1480px;margin:0 auto;}
+
+.cap{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(237,228,211,.55);display:flex;align-items:center;gap:14px;}
+.cap::before{content:'';width:32px;height:1px;background:var(--terra);}
+.cap b{color:var(--terra);font-weight:500;}
+
+.work-mast{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin:52px 0 24px;border-bottom:1px solid rgba(237,228,211,.18);padding-bottom:20px;}
+.wm-inner{display:flex;gap:clamp(8px,1.6vw,28px);}
+.wm-letter{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(72px,14vw,220px);line-height:.86;letter-spacing:-.04em;color:var(--cream);font-variation-settings:'opsz' 144,'ital' 1,'wght' 300;display:inline-block;}
+.wm-letter:nth-child(2){color:var(--terra);}
+.wm-meta{display:flex;flex-direction:column;gap:4px;align-items:flex-end;padding-bottom:18px;color:rgba(237,228,211,.55);font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;}
+.wm-count{font-family:var(--serif);font-style:italic;font-size:18px;letter-spacing:0;text-transform:none;color:var(--terra);font-variation-settings:'opsz' 24,'ital' 1,'wght' 400;}
+
+.work-head{display:grid;grid-template-columns:2fr 1fr;gap:60px;margin:24px 0 60px;align-items:end;}
+.work-h{font-family:var(--serif);font-weight:500;font-size:clamp(46px,7vw,118px);line-height:.94;letter-spacing:-.04em;color:var(--cream);text-wrap:balance;font-variation-settings:'opsz' 144,'wght' 500,'SOFT' 80;}
+.work-h em{font-style:italic;font-weight:300;color:var(--terra);font-variation-settings:'opsz' 144,'ital' 1,'wght' 300,'SOFT' 100;}
+.work-blurb{font-size:16px;color:rgba(237,228,211,.7);line-height:1.55;}
+.work-blurb b{background:var(--acid);color:var(--ink);padding:0 .2em;font-weight:500;}
+
+/* WALL — polaroid evidence row, hung on a string */
+.wall{position:relative;margin:40px 0 80px;padding:60px 0 40px;border-top:1px dashed rgba(237,228,211,.22);border-bottom:1px dashed rgba(237,228,211,.22);}
+.wall-eye{position:absolute;top:-12px;left:32px;background:var(--ink);padding:0 14px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--terra);}
+.wall-tag{position:absolute;top:-12px;right:32px;background:var(--ink);padding:0 14px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(237,228,211,.45);}
+/* string (subtle line behind the polaroids) */
+.wall::after{content:'';position:absolute;top:100px;left:48px;right:48px;height:1px;background:rgba(237,228,211,.2);z-index:0;}
+
+.wall-row{display:flex;gap:32px;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;flex-wrap:wrap;}
+.mini{position:relative;background:var(--paper);color:var(--ink);padding:9px 9px 30px;border:1px solid rgba(0,0,0,.4);box-shadow:5px 7px 0 rgba(0,0,0,.18),0 14px 24px -10px rgba(0,0,0,.5);width:170px;flex-shrink:0;will-change:transform;transition:transform .45s cubic-bezier(.2,.9,.2,1),box-shadow .35s;}
+.mini:nth-child(1){transform:rotate(-3.4deg);margin-top:8px;}
+.mini:nth-child(2){transform:rotate(2.6deg);margin-top:-6px;}
+.mini:nth-child(3){transform:rotate(-1.8deg);margin-top:14px;}
+.mini:nth-child(4){transform:rotate(3.2deg);margin-top:0;}
+.mini:nth-child(5){transform:rotate(-2.4deg);margin-top:10px;}
+.mini:hover{transform:rotate(0deg) translateY(-8px) scale(1.06);z-index:30;box-shadow:8px 12px 0 rgba(0,0,0,.22),0 24px 40px -12px rgba(0,0,0,.6);}
+
+.mini .frame{aspect-ratio:4/3;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,0,0,.2);}
+.mini .frame.t{background:linear-gradient(135deg,var(--terra) 0%,var(--terra-deep) 100%);}
+.mini .frame.m{background:linear-gradient(135deg,#5a8a6a 0%,var(--moss) 60%,#15201a 100%);}
+.mini .frame.i{background:linear-gradient(135deg,#4a5a52 0%,#2a3a32 60%,#0f1812 100%);}
+.mini .mark{font-family:var(--serif);font-style:italic;font-weight:300;font-size:34px;letter-spacing:-.03em;color:var(--paper);font-variation-settings:'opsz' 60,'ital' 1,'wght' 300;text-shadow:0 2px 4px rgba(0,0,0,.4);}
+.mini .mark em{font-weight:400;}
+.mini .tape{position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(-2deg);background:var(--acid);padding:2px 14px;font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);border:1px dashed rgba(0,0,0,.4);}
+.mini .lbl{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.7);}
+.mini.has-pin .frame::after{content:'';position:absolute;top:6px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.5);z-index:5;}
+
+/* RECEIPTS — close to current v3 rows, lightly bumped */
+.receipts-eye{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(237,228,211,.55);display:inline-flex;align-items:center;gap:14px;margin-bottom:24px;}
+.receipts-eye::before{content:'';width:32px;height:1px;background:var(--terra);}
+
+.proj{display:grid;grid-template-columns:80px 160px 1.3fr 1.5fr 1fr;gap:32px;padding:36px 0;border-top:1px solid rgba(237,228,211,.15);position:relative;align-items:start;transition:padding .5s cubic-bezier(.2,.9,.2,1),background .5s;}
+.proj:last-child{border-bottom:1px solid rgba(237,228,211,.15);}
+.proj:hover{padding-left:30px;background:linear-gradient(90deg,rgba(194,90,58,.06),transparent 70%);}
+
+.proj-num{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:rgba(237,228,211,.4);padding-top:8px;}
+.proj:hover .proj-num{color:var(--terra);}
+
+.proj-visual{position:relative;width:160px;height:100px;border-radius:4px;overflow:hidden;transform:rotate(-1.2deg) scale(.96);transition:transform .6s cubic-bezier(.2,.9,.2,1),box-shadow .6s;box-shadow:0 12px 32px -8px rgba(0,0,0,.4);}
+.pv-grad{position:absolute;inset:0;background:linear-gradient(135deg,var(--terra) 0%,var(--terra-deep) 60%,var(--rust) 100%);}
+.proj--moss .pv-grad{background:linear-gradient(135deg,#5a8a6a 0%,var(--moss) 60%,#15201a 100%);}
+.proj--ink .pv-grad{background:linear-gradient(135deg,#4a5a52 0%,#2a3a32 60%,#0f1812 100%);}
+.pv-mark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-style:italic;font-weight:300;font-size:46px;letter-spacing:-.03em;color:rgba(244,236,219,.92);font-variation-settings:'opsz' 60,'ital' 1,'wght' 300;text-shadow:0 2px 4px rgba(0,0,0,.3);}
+.proj:hover .proj-visual{transform:rotate(0) scale(1.02);box-shadow:0 24px 48px -10px rgba(0,0,0,.55);}
+
+.proj-name{font-family:var(--serif);font-weight:400;font-size:clamp(36px,4.6vw,68px);line-height:.96;color:var(--cream);font-variation-settings:'opsz' 96,'wght' 500;letter-spacing:-.03em;text-wrap:balance;}
+.proj-name em{font-style:italic;font-weight:300;color:var(--terra);font-variation-settings:'opsz' 96,'ital' 1,'wght' 300;}
+.proj:hover .proj-name em{color:var(--cream);}
+.proj-role{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(237,228,211,.5);margin-top:14px;line-height:1.6;}
+.proj-role .sep{opacity:.4;margin:0 6px;}
+
+.proj-desc{font-size:14.5px;color:rgba(237,228,211,.78);line-height:1.55;}
+.proj-desc b{color:var(--cream);font-weight:500;}
+.proj-tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;}
+.proj-tag{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(237,228,211,.6);padding:4px 9px;border:1px solid rgba(237,228,211,.2);border-radius:99px;}
+
+.proj-stat{display:flex;flex-direction:column;gap:18px;align-items:flex-end;}
+.ps{text-align:right;}
+.pv-val{font-family:var(--serif);font-weight:300;font-size:clamp(28px,3vw,46px);color:var(--terra);line-height:1;font-variation-settings:'opsz' 60,'wght' 300;letter-spacing:-.02em;}
+.pl-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(237,228,211,.5);margin-top:4px;}
+
+@media (max-width:1100px){
+  .wall-row{justify-content:flex-start;gap:24px;overflow-x:auto;padding-bottom:8px;}
+  .mini{width:160px;}
+}
+@media (max-width:900px){
+  .work-mast{flex-direction:column;align-items:flex-start;gap:16px;}
+  .wm-meta{align-items:flex-start;padding-bottom:0;}
+  .work-head{grid-template-columns:1fr;gap:24px;}
+  .proj{grid-template-columns:1fr;gap:14px;}
+  .proj-visual{width:100%;max-width:320px;height:120px;transform:none;}
+  main{padding:60px 24px 80px;}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="bar"><span class="which"><b>Option C</b> · Wall, then receipts</span><a href="index.html">← Back · <a href="option-a.html" style="opacity:.6">A</a> | <a href="option-b.html" style="opacity:.6">B</a> | C</a></div>
+
+<main>
+  <div class="cap"><b>Section 03</b> · Selected work</div>
+
+  <h2 class="work-mast" aria-label="Work">
+    <span class="wm-inner">
+      <span class="wm-letter">W</span>
+      <span class="wm-letter">O</span>
+      <span class="wm-letter">R</span>
+      <span class="wm-letter">K</span>
+    </span>
+    <span class="wm-meta">
+      <span class="wm-count">05 / 05</span>
+      <span>Selected</span>
+    </span>
+  </h2>
+
+  <div class="work-head">
+    <h3 class="work-h">Things I built<br/><em>end-to-end.</em></h3>
+    <p class="work-blurb">Five places I owned product. Maya AI is the headline. Two ventures before that, both sold, where I learned what it actually takes. <b>The numbers I quote here I can defend on a call.</b></p>
+  </div>
+
+  <!-- WALL: five small polaroids pinned across the top -->
+  <div class="wall">
+    <span class="wall-eye">Evidence · on a wall</span>
+    <span class="wall-tag">Five polaroids · receipts below</span>
+    <div class="wall-row">
+      <div class="mini has-pin">
+        <span class="tape">2026</span>
+        <div class="frame t"><span class="mark">M<em>A</em></span></div>
+        <div class="lbl">Maya AI</div>
+      </div>
+      <div class="mini has-pin">
+        <span class="tape">2025</span>
+        <div class="frame m"><span class="mark">A<em>L</em></span></div>
+        <div class="lbl">Assisted Living</div>
+      </div>
+      <div class="mini has-pin">
+        <span class="tape">2025</span>
+        <div class="frame t"><span class="mark">V<em>I</em></span></div>
+        <div class="lbl">Vollie Inc.</div>
+      </div>
+      <div class="mini has-pin">
+        <span class="tape">2025</span>
+        <div class="frame i"><span class="mark">A<em>C</em></span></div>
+        <div class="lbl">Ain Center</div>
+      </div>
+      <div class="mini has-pin">
+        <span class="tape">2019→24</span>
+        <div class="frame m"><span class="mark">C<em>A</em></span></div>
+        <div class="lbl">Founder · 2 exits</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECEIPTS: structured rows -->
+  <div class="receipts-eye">The receipts · in detail</div>
+
+  <article class="proj">
+    <div class="proj-num">01 / 05</div>
+    <div class="proj-visual"><div class="pv-grad"></div><div class="pv-mark">M<em>A</em></div></div>
+    <div>
+      <h3 class="proj-name">Maya <em>AI</em></h3>
+      <div class="proj-role">AI Product Manager <span class="sep">·</span> ESC Partners <span class="sep">·</span> Jan 2026 → now</div>
+    </div>
+    <div>
+      <p class="proj-desc">Two-sided AI customer support platform for utility companies. <b>Customer-facing assistant across voice, chat, SMS, email, and mobile.</b> Internal agent console integrated with Oracle CCS for the human team.</p>
+      <div class="proj-tags"><span class="proj-tag">FastAPI</span><span class="proj-tag">React</span><span class="proj-tag">AWS Bedrock</span><span class="proj-tag">DynamoDB</span><span class="proj-tag">Oracle CCS</span><span class="proj-tag">n8n</span></div>
+    </div>
+    <div class="proj-stat">
+      <div class="ps"><div class="pv-val">70 to 80%</div><div class="pl-lbl">First-touch coverage</div></div>
+      <div class="ps"><div class="pv-val">40+</div><div class="pl-lbl">Agents in pilot</div></div>
+    </div>
+  </article>
+
+  <article class="proj proj--moss">
+    <div class="proj-num">02 / 05</div>
+    <div class="proj-visual"><div class="pv-grad"></div><div class="pv-mark">A<em>L</em></div></div>
+    <div>
+      <h3 class="proj-name">Assisted <em>Living Locators</em></h3>
+      <div class="proj-role">AI Product Consultant (Builder) <span class="sep">·</span> Remote, CA <span class="sep">·</span> Oct 2025 → Jan 2026</div>
+    </div>
+    <div>
+      <p class="proj-desc">Marketplace product matching families with care options. Owned the matching flow, the agent-facing console, and the data work behind both.</p>
+      <div class="proj-tags"><span class="proj-tag">Marketplace</span><span class="proj-tag">Healthcare</span><span class="proj-tag">B2C</span><span class="proj-tag">Agent tools</span></div>
+    </div>
+    <div class="proj-stat">
+      <div class="ps"><div class="pv-val">2</div><div class="pl-lbl">Surfaces owned</div></div>
+      <div class="ps"><div class="pv-val">B2C</div><div class="pl-lbl">Marketplace</div></div>
+    </div>
+  </article>
+
+  <article class="proj">
+    <div class="proj-num">03 / 05</div>
+    <div class="proj-visual"><div class="pv-grad"></div><div class="pv-mark">V<em>I</em></div></div>
+    <div>
+      <h3 class="proj-name">Vollie <em>Inc.</em></h3>
+      <div class="proj-role">Founding Product Manager <span class="sep">·</span> Buffalo, NY <span class="sep">·</span> May → Dec 2025</div>
+    </div>
+    <div>
+      <p class="proj-desc">Founding PM on Vollie. <b>Voice AI moderator that runs structured coaching sessions between employee pairs and auto-generates post-session reports.</b></p>
+      <div class="proj-tags"><span class="proj-tag">Founding PM</span><span class="proj-tag">0 → 1</span><span class="proj-tag">Voice AI</span><span class="proj-tag">AI coaching</span></div>
+    </div>
+    <div class="proj-stat">
+      <div class="ps"><div class="pv-val">0 → 1</div><div class="pl-lbl">PM</div></div>
+      <div class="ps"><div class="pv-val">30</div><div class="pl-lbl">Pilot users</div></div>
+    </div>
+  </article>
+
+  <article class="proj proj--ink">
+    <div class="proj-num">04 / 05</div>
+    <div class="proj-visual"><div class="pv-grad"></div><div class="pv-mark">A<em>C</em></div></div>
+    <div>
+      <h3 class="proj-name">Ain <em>Center</em></h3>
+      <div class="proj-role">Product Lead <span class="sep">·</span> Simon Business School <span class="sep">·</span> Jan → Dec 2025</div>
+    </div>
+    <div>
+      <p class="proj-desc">Product Lead at Ain Center. <b>Built VentureForge (AI-graded airline strategy simulation) and a self-serve AI validation tool.</b></p>
+      <div class="proj-tags"><span class="proj-tag">VentureForge</span><span class="proj-tag">AI simulation</span><span class="proj-tag">Validation tool</span><span class="proj-tag">Self-serve</span></div>
+    </div>
+    <div class="proj-stat">
+      <div class="ps"><div class="pv-val">Strategy</div><div class="pl-lbl">Simulation</div></div>
+      <div class="ps"><div class="pv-val">Validation</div><div class="pl-lbl">Tool</div></div>
+    </div>
+  </article>
+
+  <article class="proj proj--moss">
+    <div class="proj-num">05 / 05</div>
+    <div class="proj-visual"><div class="pv-grad"></div><div class="pv-mark">C<em>A</em></div></div>
+    <div>
+      <h3 class="proj-name">CloudApproach <em>+ Approachables</em></h3>
+      <div class="proj-role">Founder <span class="sep">·</span> UK + MENA <span class="sep">·</span> 2019 → 2024</div>
+    </div>
+    <div>
+      <p class="proj-desc">Two companies, five years. <b>CloudApproach: AI real estate CRM. Approachables: product-led marketing agency.</b> Sold both. Roughly $5M influenced in deals closed.</p>
+      <div class="proj-tags"><span class="proj-tag">Founder</span><span class="proj-tag">UK</span><span class="proj-tag">MENA</span><span class="proj-tag">Sales</span><span class="proj-tag">Exits</span></div>
+    </div>
+    <div class="proj-stat">
+      <div class="ps"><div class="pv-val">Two</div><div class="pl-lbl">Exits</div></div>
+      <div class="ps"><div class="pv-val">$575K</div><div class="pl-lbl">Combined</div></div>
+    </div>
+  </article>
+
+</main>
+</body>
+</html>

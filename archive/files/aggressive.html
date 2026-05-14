@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shivam Sharma — AI Product Manager</title>
+<meta name="description" content="AI Product Manager at ESC Partners. Building Maya AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #050505;
+    --bg-elev: #0e0e0e;
+    --surface: #f5f2ea;
+    --text: #f0eee8;
+    --text-dim: #8a8780;
+    --text-muted: #55534e;
+    --accent: #0080ff;
+    --accent-glow: rgba(0, 128, 255, 0.4);
+    --magenta: #ff0080;
+    --border: rgba(255, 255, 255, 0.06);
+    --border-strong: rgba(255, 255, 255, 0.15);
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Geist', -apple-system, system-ui, sans-serif;
+    --mono: 'Geist Mono', 'SF Mono', Menlo, monospace;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 400;
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; transition: color 0.15s ease; }
+  a:hover { color: var(--accent); }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 3; opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+  }
+
+  /* Loading */
+  #loader {
+    position: fixed; inset: 0; background: #050505; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #loader.done { opacity: 0; visibility: hidden; }
+  .loader-text { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.2em; }
+  .loader-bar { width: 240px; height: 1px; background: var(--border); margin-top: 16px; overflow: hidden; position: relative; }
+  .loader-bar::after { content: ''; position: absolute; top: 0; left: 0; width: 30%; height: 100%; background: var(--accent); animation: loadSweep 1.2s ease-in-out infinite; }
+  @keyframes loadSweep { 0% { left: -30%; } 100% { left: 100%; } }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; padding: 20px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100; background: rgba(5, 5, 5, 0.6);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: var(--serif); font-size: 22px; letter-spacing: -0.01em; display: flex; gap: 8px; align-items: center; }
+  .nav-logo em { font-style: italic; color: var(--accent); }
+  .nav-live { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-left: 16px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .nav-live .dot { width: 6px; height: 6px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 8px #00ff88; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .nav-links { display: flex; gap: 28px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+  .nav-links a:hover { color: var(--text); }
+
+  /* Hero with 3D canvas */
+  .hero {
+    position: relative; min-height: 100vh; display: flex; align-items: center;
+    padding: 0 40px; overflow: hidden;
+  }
+  #hero-canvas {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    z-index: 1;
+  }
+  .hero-content {
+    position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; width: 100%;
+    padding-top: 80px;
+  }
+  .hero-meta {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.15em; color: var(--text-muted);
+    display: flex; gap: 24px; align-items: center; margin-bottom: 32px;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-meta .live { color: #00ff88; display: flex; align-items: center; gap: 6px; }
+  .hero-meta .live::before { content: ''; width: 6px; height: 6px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 8px #00ff88; animation: pulse 2s infinite; }
+  h1 {
+    font-family: var(--serif); font-size: clamp(72px, 12vw, 180px);
+    font-weight: 400; line-height: 0.9; letter-spacing: -0.04em;
+    opacity: 0; animation: fadeUp 1s 0.3s forwards;
+  }
+  h1 em {
+    font-style: italic; color: var(--accent);
+    text-shadow: 0 0 40px var(--accent-glow);
+  }
+  .hero-sub {
+    font-family: var(--serif); font-size: clamp(20px, 2.4vw, 28px);
+    font-style: italic; color: var(--text-dim);
+    max-width: 680px; line-height: 1.35; margin-top: 28px;
+    opacity: 0; animation: fadeUp 1s 0.5s forwards;
+  }
+  .hero-sub em { color: var(--text); font-style: normal; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-cta {
+    display: flex; gap: 16px; margin-top: 40px; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 1s 0.7s forwards;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px;
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    border-radius: 999px; border: 1px solid var(--border-strong);
+    background: transparent; color: var(--text); cursor: pointer;
+    transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px var(--accent-glow); }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: #0066cc; border-color: #0066cc; color: #fff; box-shadow: 0 8px 32px var(--accent-glow); }
+
+  .hero-scroll-hint {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+    color: var(--text-muted); text-transform: uppercase;
+    opacity: 0; animation: fadeUp 1s 1.5s forwards;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .hero-scroll-hint::after { content: ''; width: 1px; height: 40px; background: linear-gradient(to bottom, var(--accent), transparent); animation: scrollLine 2s ease-in-out infinite; }
+  @keyframes scrollLine { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+
+  /* AI Copilot - fixed bottom right */
+  .copilot {
+    position: fixed; bottom: 24px; right: 24px; z-index: 90;
+    width: 360px; max-width: calc(100vw - 48px);
+    background: rgba(14, 14, 14, 0.85);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    padding: 16px;
+    transform: translateY(120%);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px var(--accent-glow);
+  }
+  .copilot.visible { transform: translateY(0); }
+  .copilot-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .copilot-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--accent), #000);
+    box-shadow: 0 0 20px var(--accent-glow); position: relative;
+  }
+  .copilot-avatar::after { content: ''; position: absolute; inset: 4px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); animation: rotate 4s linear infinite; border-right-color: transparent; border-bottom-color: transparent; }
+  @keyframes rotate { to { transform: rotate(360deg); } }
+  .copilot-title { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); }
+  .copilot-close { margin-left: auto; background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 18px; line-height: 1; padding: 4px 8px; border-radius: 6px; }
+  .copilot-close:hover { color: var(--text); background: var(--border); }
+  .copilot-body { font-size: 14px; color: var(--text); line-height: 1.5; min-height: 40px; }
+  .copilot-suggest {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;
+  }
+  .copilot-chip {
+    font-family: var(--mono); font-size: 11px; padding: 6px 12px;
+    border-radius: 999px; background: var(--border); border: 1px solid var(--border-strong);
+    color: var(--text); cursor: pointer; transition: all 0.15s ease;
+  }
+  .copilot-chip:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Sections */
+  section { position: relative; max-width: 1400px; margin: 0 auto; padding: 120px 40px; z-index: 2; }
+  .section-head {
+    display: grid; grid-template-columns: 200px 1fr; gap: 40px;
+    align-items: baseline; margin-bottom: 60px;
+  }
+  .section-tag {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.2em; color: var(--accent);
+  }
+  h2 {
+    font-family: var(--serif); font-size: clamp(48px, 7vw, 96px);
+    font-weight: 400; line-height: 0.95; letter-spacing: -0.03em;
+  }
+  h2 em { font-style: italic; color: var(--accent); }
+
+  /* Chat section */
+  .chat-section { max-width: 1400px; margin: 60px auto 0; padding: 0 40px 40px; position: relative; z-index: 2; }
+  .chat-card {
+    background: rgba(245, 242, 234, 0.98);
+    border-radius: 24px; padding: 24px; color: #050505;
+    box-shadow: 0 40px 100px rgba(0, 128, 255, 0.08), 0 0 60px rgba(0, 128, 255, 0.1);
+    position: relative; overflow: hidden;
+  }
+  .chat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: chatScan 3s ease-in-out infinite;
+  }
+  @keyframes chatScan { 0%, 100% { transform: translateX(-100%); } 50% { transform: translateX(100%); } }
+  .chat-row { display: flex; gap: 12px; align-items: center; }
+  .chat-input {
+    flex: 1; border: 1px solid rgba(0,0,0,0.12); background: #fff;
+    border-radius: 14px; color: #050505; padding: 14px 18px; outline: none;
+    resize: none; min-height: 52px; max-height: 160px; font-size: 16px;
+    line-height: 1.55; font-family: var(--sans); font-weight: 400;
+    transition: all 0.15s ease;
+  }
+  .chat-input::placeholder { color: #777; }
+  .chat-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 128, 255, 0.15); }
+  .chat-send {
+    border: none; border-radius: 999px; cursor: pointer; background: #050505;
+    color: #fff; padding: 14px 28px; font-family: var(--mono); font-size: 12px;
+    font-weight: 500; transition: all 0.15s ease; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .chat-send:hover { background: var(--accent); transform: translateY(-1px); }
+  .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+  .chat-loader { display: none; margin-top: 14px; font-family: var(--mono); font-size: 13px; color: #555; }
+  .scan { height: 2px; margin-top: 8px; border-radius: 1px; background: var(--accent); width: 40%; animation: scan 0.9s ease-in-out infinite; }
+  @keyframes scan { 0% { margin-left: 0; } 50% { margin-left: 60%; } 100% { margin-left: 0; } }
+  .chat-answer-wrap { display: none; margin-top: 14px; border: 1px solid rgba(0,0,0,0.08); border-radius: 14px; background: #fff; max-height: 42vh; overflow: auto; }
+  .chat-answer { padding: 18px 20px; white-space: pre-wrap; color: #050505; font-size: 15.5px; line-height: 1.65; }
+  .chat-answer .cursor { display: inline-block; width: 8px; height: 1.1em; background: var(--accent); margin-left: 2px; animation: blink 0.9s step-end infinite; vertical-align: middle; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .chat-again { display: none; margin-top: 10px; text-align: right; }
+  .chat-again button { background: transparent; border: none; color: #555; cursor: pointer; font-family: var(--mono); font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
+  .chat-again button:hover { color: #050505; }
+
+  /* Now playing */
+  .now-playing {
+    display: grid; grid-template-columns: 160px 1fr; gap: 40px;
+    align-items: center; padding: 32px;
+    background: var(--bg-elev); border: 1px solid var(--border);
+    border-radius: 20px;
+  }
+  .now-playing-meta { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .now-playing-meta .eq { display: flex; gap: 2px; align-items: end; height: 14px; }
+  .now-playing-meta .eq span { width: 2px; background: var(--accent); animation: eqBar 0.6s ease-in-out infinite alternate; }
+  .now-playing-meta .eq span:nth-child(1) { animation-delay: 0s; }
+  .now-playing-meta .eq span:nth-child(2) { animation-delay: 0.15s; }
+  .now-playing-meta .eq span:nth-child(3) { animation-delay: 0.3s; }
+  .now-playing-meta .eq span:nth-child(4) { animation-delay: 0.2s; }
+  @keyframes eqBar { 0% { height: 3px; } 100% { height: 14px; } }
+  .now-playing h3 { font-family: var(--serif); font-size: 32px; font-weight: 400; line-height: 1.1; margin-bottom: 8px; }
+  .now-playing p { color: var(--text-dim); font-size: 14px; font-family: var(--mono); }
+  .now-playing iframe { width: 100%; border-radius: 14px; }
+
+  /* About */
+  .about-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 60px; align-items: start; }
+  .about-text {
+    font-family: var(--serif); font-size: clamp(24px, 2.8vw, 36px);
+    line-height: 1.35; color: var(--text); font-weight: 400;
+  }
+  .about-text em { font-style: italic; color: var(--accent); }
+  .about-text strong { font-weight: 400; color: var(--text); border-bottom: 2px solid var(--accent); padding-bottom: 2px; }
+
+  /* Current */
+  .current-list { display: grid; gap: 2px; background: var(--border); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+  .current-item {
+    background: var(--bg); padding: 40px;
+    display: grid; grid-template-columns: 200px 1fr auto; gap: 32px;
+    align-items: start; transition: all 0.3s ease; position: relative;
+  }
+  .current-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 0.3s ease; }
+  .current-item:hover { background: var(--bg-elev); }
+  .current-item:hover::before { transform: scaleY(1); }
+  .current-role { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); padding-top: 6px; }
+  .current-body h3 { font-family: var(--serif); font-size: 40px; font-weight: 400; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 12px; }
+  .current-body p { color: var(--text-dim); font-size: 16px; max-width: 680px; line-height: 1.6; }
+  .current-date { font-family: var(--mono); font-size: 12px; color: var(--text-muted); padding-top: 12px; white-space: nowrap; }
+
+  /* Work grid */
+  .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .work-card {
+    background: var(--bg-elev); border: 1px solid var(--border);
+    border-radius: 24px; padding: 40px; transition: all 0.3s ease;
+    cursor: pointer; position: relative; overflow: hidden;
+  }
+  .work-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(600px at var(--mx, 50%) var(--my, 50%), rgba(0, 128, 255, 0.12), transparent 40%);
+    opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+  }
+  .work-card:hover { border-color: var(--border-strong); transform: translateY(-4px); }
+  .work-card:hover::after { opacity: 1; }
+  .work-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: 32px; position: relative; z-index: 1; }
+  .work-card h3 { font-family: var(--serif); font-size: 40px; font-weight: 400; line-height: 1; letter-spacing: -0.01em; margin-bottom: 16px; position: relative; z-index: 1; }
+  .work-card p { color: var(--text-dim); font-size: 15px; line-height: 1.65; position: relative; z-index: 1; }
+  .work-stats { display: flex; gap: 32px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); position: relative; z-index: 1; }
+  .stat { font-family: var(--mono); font-size: 13px; }
+  .stat-value { color: var(--accent); font-size: 28px; display: block; font-family: var(--serif); font-style: italic; font-weight: 400; }
+  .stat-label { color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; margin-top: 4px; }
+
+  /* Maya Game */
+  .game-container {
+    background: var(--bg-elev); border: 1px solid var(--border);
+    border-radius: 24px; padding: 40px;
+    position: relative; overflow: hidden;
+  }
+  .game-container::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--magenta), var(--accent));
+    background-size: 200% 100%; animation: gameScan 3s linear infinite;
+  }
+  @keyframes gameScan { 0% { background-position: 0% 0%; } 100% { background-position: 200% 0%; } }
+  .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+  .game-header h3 { font-family: var(--serif); font-size: 32px; font-weight: 400; }
+  .game-score { font-family: var(--mono); font-size: 13px; display: flex; gap: 20px; }
+  .game-score span { display: flex; gap: 6px; align-items: center; }
+  .game-score b { color: var(--accent); font-weight: 500; font-family: var(--serif); font-style: italic; font-size: 20px; }
+  .game-grid { display: grid; grid-template-columns: 1fr 300px; gap: 24px; }
+  @media (max-width: 860px) { .game-grid { grid-template-columns: 1fr; } }
+  .email-card {
+    background: #0a0a0a; border: 1px solid var(--border-strong);
+    border-radius: 16px; padding: 24px; min-height: 240px;
+    position: relative;
+  }
+  .email-from { font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .email-subject { font-family: var(--serif); font-size: 22px; margin-bottom: 16px; }
+  .email-body { color: var(--text-dim); font-size: 14px; line-height: 1.6; }
+  .email-maya-suggest {
+    margin-top: 16px; padding: 12px 14px; background: rgba(0, 128, 255, 0.1);
+    border-left: 2px solid var(--accent); border-radius: 4px;
+    font-family: var(--mono); font-size: 12px;
+    display: none;
+  }
+  .email-maya-suggest.visible { display: block; animation: fadeUp 0.4s ease; }
+  .email-maya-suggest b { color: var(--accent); }
+  .category-list { display: grid; gap: 10px; }
+  .category-btn {
+    padding: 14px 18px; background: #0a0a0a;
+    border: 1px solid var(--border-strong); border-radius: 12px;
+    color: var(--text); cursor: pointer; text-align: left;
+    font-family: var(--mono); font-size: 13px;
+    transition: all 0.15s ease; display: flex; justify-content: space-between; align-items: center;
+  }
+  .category-btn:hover { border-color: var(--accent); background: rgba(0, 128, 255, 0.08); }
+  .category-btn.correct { border-color: #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88; }
+  .category-btn.wrong { border-color: #ff4444; background: rgba(255, 68, 68, 0.1); color: #ff4444; }
+  .category-btn.maya-pick { border-color: var(--accent); background: rgba(0, 128, 255, 0.08); }
+  .category-kbd { font-size: 10px; opacity: 0.5; }
+  .game-caption { margin-top: 20px; font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-align: center; }
+
+  /* Timeline */
+  .timeline { display: grid; }
+  .timeline-item {
+    display: grid; grid-template-columns: 200px 1fr; gap: 40px;
+    padding: 32px 0; border-bottom: 1px solid var(--border);
+    align-items: baseline; transition: all 0.2s ease;
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-item:hover { padding-left: 16px; }
+  .timeline-date { font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .timeline-role h4 { font-family: var(--serif); font-size: 28px; font-weight: 400; line-height: 1.2; margin-bottom: 4px; }
+  .timeline-role .co { color: var(--text-dim); font-size: 14px; font-family: var(--mono); }
+
+  /* Two col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+  .card-list { display: grid; gap: 2px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .card-item { background: var(--bg); padding: 28px; transition: background 0.2s ease; }
+  .card-item:hover { background: var(--bg-elev); }
+  .card-item h5 { font-family: var(--serif); font-size: 24px; font-weight: 400; margin-bottom: 6px; }
+  .card-item .sub { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 12px; }
+  .card-item p { color: var(--text-dim); font-size: 14px; line-height: 1.55; }
+
+  /* Contact */
+  .contact {
+    background: var(--bg-elev); border-top: 1px solid var(--border);
+    padding: 120px 40px 60px; position: relative; z-index: 2; overflow: hidden;
+  }
+  .contact::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(800px at 50% 0%, rgba(0, 128, 255, 0.15), transparent 70%);
+    pointer-events: none;
+  }
+  .contact-inner { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+  .contact h2 { margin-bottom: 60px; }
+  .contact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 80px; }
+  .contact-item { padding: 24px 0; border-top: 1px solid var(--border); }
+  .contact-item .label { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: 8px; }
+  .contact-item .value { font-family: var(--serif); font-size: 22px; }
+  .footer-row { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; flex-wrap: wrap; gap: 20px; }
+  .footer-row .build { color: var(--accent); }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.seen { opacity: 1; transform: translateY(0); }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    nav { padding: 14px 16px; }
+    .nav-live { display: none; }
+    .nav-links { display: none; }
+    .hero { padding: 0 16px; }
+    .hero-scroll-hint { display: none; }
+    section { padding: 80px 20px; }
+    .section-head { grid-template-columns: 1fr; gap: 12px; }
+    .about-grid, .two-col { grid-template-columns: 1fr; gap: 32px; }
+    .work-grid { grid-template-columns: 1fr; }
+    .current-item { grid-template-columns: 1fr; gap: 12px; padding: 28px; }
+    .current-date { padding-top: 0; }
+    .timeline-item { grid-template-columns: 1fr; gap: 6px; padding: 24px 0; }
+    .contact-grid { grid-template-columns: 1fr 1fr; }
+    .now-playing { grid-template-columns: 1fr; gap: 20px; }
+    .copilot { width: calc(100vw - 32px); bottom: 16px; right: 16px; }
+    .chat-section { padding: 0 16px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div style="text-align:center;">
+    <div class="loader-text">INITIALIZING</div>
+    <div class="loader-bar"></div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-logo">
+    Shivam <em>Sharma</em>
+    <span class="nav-live"><span class="dot"></span> Online</span>
+  </div>
+  <div class="nav-links">
+    <a href="#work">Work</a>
+    <a href="#game">Play</a>
+    <a href="#experience">History</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-meta">
+      <span class="live">System active</span>
+      <span>NYC · Rochester</span>
+      <span>ESC Partners</span>
+    </div>
+    <h1>Shivam<br>Sharma<em>.</em></h1>
+    <p class="hero-sub">AI Product Manager building <em>Maya AI</em> — an autonomous email triage platform now handling thousands of utility customer emails every day. This site is itself a live AI interface. Try it.</p>
+    <div class="hero-cta">
+      <a href="#work" class="btn btn-primary">Enter the work →</a>
+      <a href="#chat" class="btn">Ask the AI</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">Scroll</div>
+</header>
+
+<section id="chat" style="padding-top: 80px;">
+  <div class="section-head reveal">
+    <div class="section-tag">01 — Live AI</div>
+    <h2>Ask anything. <em>Anything.</em></h2>
+  </div>
+  <div class="reveal">
+    <div class="chat-card">
+      <div class="chat-row">
+        <textarea id="cq" class="chat-input" rows="1" placeholder="Would Shivam be a good fit for an AI PM role at my startup?"></textarea>
+        <button id="csend" class="chat-send">Ask</button>
+      </div>
+      <div id="cloader" class="chat-loader">
+        Consulting Shivam's brain…
+        <div class="scan"></div>
+      </div>
+      <div id="canswer-wrap" class="chat-answer-wrap"><div id="canswer" class="chat-answer"></div></div>
+      <div id="cagain" class="chat-again"><button onclick="resetChat()">Ask another question</button></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head reveal">
+    <div class="section-tag">02 — Now playing</div>
+    <h2>What I'm <em>listening to</em></h2>
+  </div>
+  <div class="now-playing reveal">
+    <div>
+      <div class="now-playing-meta">
+        <span class="eq"><span></span><span></span><span></span><span></span></span>
+        Live queue
+      </div>
+      <h3>Work soundtrack</h3>
+      <p>Updated in real time. The actual playlist I have going while I'm building Maya AI.</p>
+    </div>
+    <iframe src="https://open.spotify.com/embed/playlist/4FidzePzkgudGlOJknEjhN?utm_source=generator&theme=0" height="200" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-head reveal">
+    <div class="section-tag">03 — About</div>
+    <h2>The short <em>version</em></h2>
+  </div>
+  <div class="about-grid reveal">
+    <div class="section-tag" style="padding-top: 12px;">TL;DR</div>
+    <div class="about-text">
+      Entrepreneur-turned-AI Product Manager. Founded and exited two startups for <em>$575K combined</em>, serving 200+ clients across five countries before 25. Now at ESC Partners, owning <strong>Maya AI</strong> end-to-end — product strategy, architecture, n8n engineering, AWS Bedrock integration, UI/UX, deployment. <em>MS in AI in Business</em>, Simon Business School (STEM, Dec 2025).
+    </div>
+  </div>
+</section>
+
+<section id="now">
+  <div class="section-head reveal">
+    <div class="section-tag">04 — Currently</div>
+    <h2>What I'm <em>building</em></h2>
+  </div>
+  <div class="current-list reveal">
+    <div class="current-item">
+      <div class="current-role">AI Product Manager</div>
+      <div class="current-body">
+        <h3>ESC Partners</h3>
+        <p>Leading Maya AI — autonomous email triage for a major US utility. Owning product strategy, architecture, n8n engineering, AWS Bedrock integration, UI/UX, and deployment. Also driving conference outreach automation for leadership.</p>
+      </div>
+      <div class="current-date">Jan 2026 — Now</div>
+    </div>
+    <div class="current-item">
+      <div class="current-role">Parallel track</div>
+      <div class="current-body">
+        <h3>HometownHUB</h3>
+        <p>Recruiting coordination and marketing operations for a community-focused platform alongside the ESC Partners role.</p>
+      </div>
+      <div class="current-date">Ongoing</div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="section-head reveal">
+    <div class="section-tag">05 — Selected work</div>
+    <h2>Things I've <em>shipped</em></h2>
+  </div>
+  <div class="work-grid reveal">
+    <div class="work-card" data-tilt data-topic="Maya AI">
+      <div class="work-meta"><span>Maya AI</span><span>2026</span></div>
+      <h3>Autonomous email triage at utility scale</h3>
+      <p>Four-workflow n8n system processing customer support emails via AWS Bedrock (Nova Pro): intent classification, templated or AI-generated replies, Teams adaptive card approval routing, Outlook send. Plus a customer-facing chat widget and internal agent console on FastAPI + React + DynamoDB.</p>
+      <div class="work-stats">
+        <div class="stat"><span class="stat-value">4</span><span class="stat-label">Workflows</span></div>
+        <div class="stat"><span class="stat-value">24/7</span><span class="stat-label">Autonomous</span></div>
+        <div class="stat"><span class="stat-value">1</span><span class="stat-label">Owner (me)</span></div>
+      </div>
+    </div>
+    <div class="work-card" data-tilt data-topic="CloudApproach">
+      <div class="work-meta"><span>CloudApproach</span><span>2022 — 2024</span></div>
+      <h3>AI-powered CRM for real estate. Acquired.</h3>
+      <p>Co-founded a marketing automation platform serving 100+ real estate clients across UK, India, Saudi Arabia, and Poland. Built the product from scratch, ran $500K+ in campaigns, facilitated the sale of 250+ properties. Acquired by a leading Saudi developer.</p>
+      <div class="work-stats">
+        <div class="stat"><span class="stat-value">$325K</span><span class="stat-label">Exit</span></div>
+        <div class="stat"><span class="stat-value">100+</span><span class="stat-label">Clients</span></div>
+        <div class="stat"><span class="stat-value">95%</span><span class="stat-label">Retention</span></div>
+      </div>
+    </div>
+    <div class="work-card" data-tilt data-topic="Approachables">
+      <div class="work-meta"><span>Approachables</span><span>2019 — 2022</span></div>
+      <h3>Design &amp; marketing agency. Bootstrapped. Exited.</h3>
+      <p>Started as a second-year university project at UCLan's Propeller Hub. Grew to 10+ designers and marketers serving clients including Shark Tank India, Pro Kabaddi, Sony TV. Sold the full agency — team, clients, playbooks — for $250K.</p>
+      <div class="work-stats">
+        <div class="stat"><span class="stat-value">$250K</span><span class="stat-label">Exit</span></div>
+        <div class="stat"><span class="stat-value">10+</span><span class="stat-label">Team</span></div>
+        <div class="stat"><span class="stat-value">95%</span><span class="stat-label">Post-exit</span></div>
+      </div>
+    </div>
+    <div class="work-card" data-tilt data-topic="City of Rochester">
+      <div class="work-meta"><span>City of Rochester</span><span>2024</span></div>
+      <h3>AI fraud detection for public services</h3>
+      <p>As a Data Strategy Consultant via Simon Vision Consulting, developed an AI fraud detection model (XGBoost + Isolation Forest) for the City of Rochester. Reduced errors by 15%. Presented AI governance insights to city officials.</p>
+      <div class="work-stats">
+        <div class="stat"><span class="stat-value">15%</span><span class="stat-label">Error reduction</span></div>
+        <div class="stat"><span class="stat-value">25%</span><span class="stat-label">Efficiency gain</span></div>
+        <div class="stat"><span class="stat-value">Public</span><span class="stat-label">Sector</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="game">
+  <div class="section-head reveal">
+    <div class="section-tag">06 — Play</div>
+    <h2>Train <em>Maya AI</em></h2>
+  </div>
+  <div class="reveal">
+    <p style="color: var(--text-dim); font-size: 17px; max-width: 680px; margin-bottom: 32px; line-height: 1.6;">Here's what I actually ship. Classify the email. Maya learns from your pick. After a few rounds, she starts suggesting on her own — just like the real thing.</p>
+    <div class="game-container">
+      <div class="game-header">
+        <h3>Email triage — live</h3>
+        <div class="game-score">
+          <span>Round <b id="gameRound">1</b></span>
+          <span>Correct <b id="gameCorrect">0</b></span>
+          <span>Maya confidence <b id="mayaConf">0%</b></span>
+        </div>
+      </div>
+      <div class="game-grid">
+        <div class="email-card" id="emailCard">
+          <div class="email-from" id="emailFrom"></div>
+          <div class="email-subject" id="emailSubject"></div>
+          <div class="email-body" id="emailBody"></div>
+          <div class="email-maya-suggest" id="mayaSuggest"></div>
+        </div>
+        <div class="category-list" id="categoryList"></div>
+      </div>
+      <div class="game-caption">Maya's confidence grows each round. After 3+ correct picks, she suggests the category before you click.</div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="section-head reveal">
+    <div class="section-tag">07 — History</div>
+    <h2>The full <em>run</em></h2>
+  </div>
+  <div class="timeline reveal">
+    <div class="timeline-item"><div class="timeline-date">Jan 2026 — Now</div><div class="timeline-role"><h4>AI Product Manager</h4><div class="co">ESC Partners · New York</div></div></div>
+    <div class="timeline-item"><div class="timeline-date">May — Dec 2025</div><div class="timeline-role"><h4>Summer Associate, Product &amp; Strategy (AI)</h4><div class="co">Stealth AI Startup · Pleasanton, CA</div></div></div>
+    <div class="timeline-item"><div class="timeline-date">Mar — Dec 2025</div><div class="timeline-role"><h4>AI Product Lead, Ain Foundry</h4><div class="co">Ain Center · University of Rochester</div></div></div>
+    <div class="timeline-item"><div class="timeline-date">Jan — Dec 2025</div><div class="timeline-role"><h4>Marketing Assistant</h4><div class="co">International Student Office · UR</div></div></div>
+    <div class="timeline-item"><div class="timeline-date">Sep 2024 — Aug 2025</div><div class="timeline-role"><h4>VP of Events</h4><div class="co">Simon Master's Advisory Council</div></div></div>
+    <div class="timeline-item"><div class="timeline-date">Oct — Dec 2024</div><div class="timeline-role"><h4>Product Consultant</h4><div class="co">Simon Vision · City of Rochester</div></div></div>
+    <div class="timeline-item"><div class="timeline-date">Jan 2022 — Jul 2024</div><div class="timeline-role"><h4>Co-Founder</h4><div class="co">CloudApproach · → $325K acquisition</div></div></div>
+    <div class="timeline-item"><div class="timeline-date">Jun 2019 — Jul 2022</div><div class="timeline-role"><h4>Founder</h4><div class="co">Approachables · → $250K acquisition</div></div></div>
+  </div>
+</section>
+
+<section id="education" style="padding-bottom: 60px;">
+  <div class="section-head reveal">
+    <div class="section-tag">08 — Education &amp; honors</div>
+    <h2>What shaped <em>me</em></h2>
+  </div>
+  <div class="two-col reveal">
+    <div>
+      <div class="section-tag" style="margin-bottom: 20px;">Education</div>
+      <div class="card-list">
+        <div class="card-item">
+          <div class="sub">Aug 2024 — Dec 2025</div>
+          <h5>MS, AI in Business (STEM)</h5>
+          <p>University of Rochester, Simon Business School. Internship track. VP of Events, Master's Advisory Council.</p>
+        </div>
+        <div class="card-item">
+          <div class="sub">2019 — 2022</div>
+          <h5>BA (Hons), International Business Management</h5>
+          <p>University of Central Lancashire, UK. Student &amp; Assistive Technology Ambassador.</p>
+        </div>
+        <div class="card-item">
+          <div class="sub">New Delhi, India</div>
+          <h5>The Army Public School, Dhaula Kuan</h5>
+          <p>Business &amp; Commerce.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-tag" style="margin-bottom: 20px;">Honors &amp; awards</div>
+      <div class="card-list">
+        <div class="card-item">
+          <div class="sub">Simon Business School</div>
+          <h5>#SimonStrong Community Builder Award</h5>
+          <p>Recognized for respect, humility, support, integrity, and professionalism.</p>
+        </div>
+        <div class="card-item">
+          <div class="sub">UK Dept. for International Trade</div>
+          <h5>Board of Trade Ideas Hack</h5>
+          <p>Awarded at University of Central Lancashire, representing Approachables.</p>
+        </div>
+        <div class="card-item">
+          <div class="sub">Certifications</div>
+          <h5>Product Management stack</h5>
+          <p>Lean Six Sigma White Belt · Technical Product Management · Product Strategy · Product Roadmap.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="section-tag reveal">09 — Contact</div>
+    <h2 class="reveal">Let's <em>talk</em>.</h2>
+    <div class="contact-grid reveal">
+      <div class="contact-item">
+        <div class="label">Email</div>
+        <a href="mailto:shivamsharma2023@gmail.com" class="value">shivamsharma2023@gmail.com</a>
+      </div>
+      <div class="contact-item">
+        <div class="label">Phone</div>
+        <a href="tel:+15854819927" class="value">+1 585-481-9927</a>
+      </div>
+      <div class="contact-item">
+        <div class="label">LinkedIn</div>
+        <a href="https://www.linkedin.com/in/shivamsharma-ai" target="_blank" rel="noopener" class="value">shivamsharma-ai</a>
+      </div>
+      <div class="contact-item">
+        <div class="label">Languages</div>
+        <div class="value">EN · HI · PA</div>
+      </div>
+    </div>
+    <div class="footer-row">
+      <div>© 2026 Shivam Sharma</div>
+      <div class="build">This site is a live AI interface · built with Claude</div>
+    </div>
+  </div>
+</section>
+
+<!-- AI Copilot -->
+<div class="copilot" id="copilot">
+  <div class="copilot-head">
+    <div class="copilot-avatar"></div>
+    <div class="copilot-title" id="copilotTitle">Maya</div>
+    <button class="copilot-close" onclick="document.getElementById('copilot').classList.remove('visible')">×</button>
+  </div>
+  <div class="copilot-body" id="copilotBody">Hey — want me to tell you about what you're looking at?</div>
+  <div class="copilot-suggest" id="copilotSuggest"></div>
+</div>
+
+<script>
+/* ============================================================
+   3D HERO — Neural network floating in space
+============================================================ */
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 18;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Create nodes
+  const NODE_COUNT = 70;
+  const nodes = [];
+  const nodeGeo = new THREE.SphereGeometry(0.08, 16, 16);
+  const nodeMat = new THREE.MeshBasicMaterial({ color: 0x0080ff });
+  const nodeMatBright = new THREE.MeshBasicMaterial({ color: 0x66c0ff });
+
+  for (let i = 0; i < NODE_COUNT; i++) {
+    const r = 8 + Math.random() * 4;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const x = r * Math.sin(phi) * Math.cos(theta);
+    const y = r * Math.sin(phi) * Math.sin(theta);
+    const z = r * Math.cos(phi);
+    const m = new THREE.Mesh(nodeGeo, Math.random() > 0.7 ? nodeMatBright : nodeMat);
+    m.position.set(x, y, z);
+    m.userData = { orig: new THREE.Vector3(x, y, z), offset: Math.random() * Math.PI * 2 };
+    scene.add(m);
+    nodes.push(m);
+  }
+
+  // Connect close nodes
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x0080ff, transparent: true, opacity: 0.15 });
+  const connections = [];
+  for (let i = 0; i < NODE_COUNT; i++) {
+    for (let j = i + 1; j < NODE_COUNT; j++) {
+      const d = nodes[i].position.distanceTo(nodes[j].position);
+      if (d < 4.2) {
+        const g = new THREE.BufferGeometry().setFromPoints([nodes[i].position, nodes[j].position]);
+        const line = new THREE.Line(g, lineMat);
+        scene.add(line);
+        connections.push({ line, a: i, b: j });
+      }
+    }
+  }
+
+  // Mouse tracking
+  let mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  // Animate
+  let t = 0;
+  function animate() {
+    t += 0.005;
+    nodes.forEach((n, i) => {
+      const o = n.userData.orig;
+      n.position.x = o.x + Math.sin(t + n.userData.offset) * 0.3;
+      n.position.y = o.y + Math.cos(t * 0.8 + n.userData.offset) * 0.3;
+      n.position.z = o.z + Math.sin(t * 1.2 + n.userData.offset) * 0.3;
+    });
+    // Update connection lines
+    connections.forEach(c => {
+      const g = c.line.geometry;
+      g.setFromPoints([nodes[c.a].position, nodes[c.b].position]);
+      g.attributes.position.needsUpdate = true;
+    });
+    // Rotate scene
+    scene.rotation.y += 0.001;
+    scene.rotation.x = mouseY * 0.1;
+    scene.rotation.z = mouseX * 0.05;
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+/* ============================================================
+   LOADER HIDE
+============================================================ */
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('done'), 600);
+});
+
+/* ============================================================
+   SCROLL REVEAL
+============================================================ */
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('seen'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ============================================================
+   WORK CARD SPOTLIGHT
+============================================================ */
+document.querySelectorAll('[data-tilt]').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width) * 100 + '%');
+    card.style.setProperty('--my', ((e.clientY - rect.top) / rect.height) * 100 + '%');
+  });
+});
+
+/* ============================================================
+   LIVE CHAT — Vercel backend
+============================================================ */
+const API = 'https://shivam-backend-gdfoie5u2-shivams-projects-e3809917.vercel.app/api/shivam';
+const q = document.getElementById('cq');
+const send = document.getElementById('csend');
+const loader = document.getElementById('cloader');
+const wrap = document.getElementById('canswer-wrap');
+const a = document.getElementById('canswer');
+const again = document.getElementById('cagain');
+
+function autoresize() {
+  q.style.height = 'auto';
+  q.style.height = Math.min(q.scrollHeight, 160) + 'px';
+}
+q.addEventListener('input', autoresize);
+
+function typewriter(text, el, speed = 12) {
+  return new Promise(resolve => {
+    el.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    el.appendChild(cursor);
+    let i = 0;
+    const id = setInterval(() => {
+      if (i >= text.length) {
+        clearInterval(id);
+        cursor.remove();
+        resolve();
+        return;
+      }
+      cursor.insertAdjacentText('beforebegin', text[i]);
+      i++;
+    }, speed);
+  });
+}
+
+async function ask(questionOverride) {
+  const question = (questionOverride || q.value || '').trim();
+  if (!question) return;
+  if (questionOverride) q.value = questionOverride;
+  loader.style.display = 'block';
+  wrap.style.display = 'none';
+  again.style.display = 'none';
+  a.innerHTML = '';
+  send.disabled = true;
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ question })
+    });
+    if (!res.ok) throw new Error('Failed');
+    const data = await res.json();
+    loader.style.display = 'none';
+    wrap.style.display = 'block';
+    await typewriter(data.answer || 'No answer returned.', a);
+    again.style.display = 'block';
+  } catch (e) {
+    loader.style.display = 'none';
+    wrap.style.display = 'block';
+    a.textContent = 'Something went wrong. Try again?';
+    again.style.display = 'block';
+  } finally {
+    send.disabled = false;
+  }
+}
+
+function resetChat() {
+  a.innerHTML = '';
+  wrap.style.display = 'none';
+  again.style.display = 'none';
+  q.value = '';
+  autoresize();
+  q.focus();
+}
+
+send.addEventListener('click', () => ask());
+q.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(); }
+});
+
+/* ============================================================
+   AI COPILOT — scroll-aware suggestions
+============================================================ */
+const copilot = document.getElementById('copilot');
+const copilotBody = document.getElementById('copilotBody');
+const copilotSuggest = document.getElementById('copilotSuggest');
+const copilotTitle = document.getElementById('copilotTitle');
+
+const sectionContext = {
+  'chat': { title: 'Maya', greeting: 'Want me to answer one myself?', chips: ['Tell me about Maya AI', 'What are your biggest wins?', 'Would you fit at a Series B?'] },
+  'about': { title: 'Maya', greeting: 'Want the extended version?', chips: ['Why AI product management?', 'What was the CloudApproach exit like?', 'How do you pick what to build?'] },
+  'now': { title: 'Maya', greeting: 'Curious about what we\'re building right now?', chips: ['How does Maya AI work?', 'What stack is Maya built on?', 'What\'s next for ESC Partners?'] },
+  'work': { title: 'Maya', greeting: 'Ask me about any of these projects.', chips: ['Tell me about Maya AI', 'How did CloudApproach exit?', 'What did you ship at the City of Rochester?'] },
+  'game': { title: 'Maya', greeting: 'This is literally me — a working email classifier. Play a round.', chips: ['How does real Maya work?', 'What\'s AWS Bedrock Nova Pro?', 'What\'s n8n?'] },
+  'experience': { title: 'Maya', greeting: 'I can give you context on any role.', chips: ['What did you do at Stealth?', 'What\'s Ain Foundry?', 'Best role so far?'] },
+  'contact': { title: 'Maya', greeting: 'Tell Shivam why you reached out.', chips: ['What kind of roles interest you?', 'Best way to reach you?', 'Open to consulting?'] }
+};
+
+let lastSection = null;
+let copilotShown = false;
+
+function showCopilot(sectionId) {
+  const ctx = sectionContext[sectionId];
+  if (!ctx) return;
+  copilotTitle.textContent = ctx.title;
+  copilotBody.textContent = ctx.greeting;
+  copilotSuggest.innerHTML = '';
+  ctx.chips.forEach(chip => {
+    const b = document.createElement('button');
+    b.className = 'copilot-chip';
+    b.textContent = chip;
+    b.onclick = () => {
+      document.getElementById('chat').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => ask(chip), 800);
+      copilot.classList.remove('visible');
+    };
+    copilotSuggest.appendChild(b);
+  });
+  copilot.classList.add('visible');
+}
+
+const sectionObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
+      const id = entry.target.id;
+      if (id && id !== lastSection && sectionContext[id]) {
+        lastSection = id;
+        if (!copilotShown) {
+          setTimeout(() => { copilotShown = true; showCopilot(id); }, 3000);
+        } else {
+          showCopilot(id);
+        }
+      }
+    }
+  });
+}, { threshold: [0.3, 0.6] });
+document.querySelectorAll('section[id]').forEach(s => sectionObserver.observe(s));
+
+/* ============================================================
+   MAYA AI GAME — Email triage
+============================================================ */
+const emails = [
+  { from: 'j.torres@comcast-energy.net', subject: 'Double-charged on last month\'s bill', body: 'I was billed twice for the same service period in March. Need this refunded to my card ending 4411. Please advise.', category: 'Billing' },
+  { from: 'maria.chen@gmail.com', subject: 'Power outage in Albany area?', body: 'Just lost power for the third time this week. Is there a known issue? No storms, nothing. Already called the outage line.', category: 'Technical' },
+  { from: 'admin@smbh-realty.com', subject: 'Transferring service to new tenant', body: 'Our tenant at 44 Oak Lane moves out Oct 31. New tenant starts Nov 1. Need to transfer account without service gap.', category: 'Account' },
+  { from: 'complaints@cityhall-buffalo.gov', subject: 'Formal complaint — billing dispute', body: 'Resident Ms. Patel (acct #88172) has been incorrectly billed for 6 months. This is the fourth escalation. Need resolution today.', category: 'Billing' },
+  { from: 'dan.oliveira@protonmail.com', subject: 'New construction — electrical service install', body: 'Building a single-family home in Henrietta. Need to schedule service installation for Q1. What\'s the process and lead time?', category: 'Account' },
+  { from: 'supportfeedback@utility-review.com', subject: 'Your rep was amazing', body: 'Just wanted to say Monica from your team handled my issue like a pro. Please pass along the kudos to her supervisor.', category: 'Other' },
+  { from: 'angelo.w@yahoo.com', subject: 'Meter reading looks wrong', body: 'The meter reader came yesterday but my meter has been showing the same kWh for 3 days. Is it broken?', category: 'Technical' },
+  { from: 'unsub@newsletter-spam.xyz', subject: 'You won a prize', body: 'Click here to claim your $5000 Amazon gift card!!! Limited time offer, expires today!!!', category: 'Other' }
+];
+
+const categories = ['Billing', 'Technical', 'Account', 'Other'];
+let emailIdx = 0;
+let correct = 0;
+let round = 1;
+let confidence = 0;
+
+function renderEmail() {
+  if (emailIdx >= emails.length) emailIdx = 0;
+  const e = emails[emailIdx];
+  document.getElementById('emailFrom').textContent = 'FROM · ' + e.from;
+  document.getElementById('emailSubject').textContent = e.subject;
+  document.getElementById('emailBody').textContent = e.body;
+  document.getElementById('gameRound').textContent = round;
+  document.getElementById('gameCorrect').textContent = correct;
+  document.getElementById('mayaConf').textContent = Math.min(confidence, 95) + '%';
+
+  const list = document.getElementById('categoryList');
+  list.innerHTML = '';
+  categories.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'category-btn';
+    btn.innerHTML = `${c} <span class="category-kbd">${i+1}</span>`;
+    btn.onclick = () => classify(c, btn);
+    list.appendChild(btn);
+  });
+
+  // Maya suggests if confidence is high enough
+  const sug = document.getElementById('mayaSuggest');
+  if (confidence >= 40) {
+    const mayaPick = e.category;
+    const mayaCorrect = Math.random() < (confidence / 100);
+    const actualPick = mayaCorrect ? mayaPick : categories[Math.floor(Math.random() * categories.length)];
+    sug.innerHTML = `<b>Maya suggests:</b> ${actualPick} <span style="opacity:0.6;">(${Math.min(confidence, 95)}% confident)</span>`;
+    sug.classList.add('visible');
+    // Highlight her pick
+    list.querySelectorAll('.category-btn').forEach(b => {
+      if (b.textContent.trim().startsWith(actualPick)) b.classList.add('maya-pick');
+    });
+  } else {
+    sug.classList.remove('visible');
+  }
+}
+
+function classify(pick, btn) {
+  const e = emails[emailIdx];
+  const isCorrect = pick === e.category;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (isCorrect) {
+    correct++;
+    confidence = Math.min(confidence + 15, 95);
+  } else {
+    confidence = Math.max(confidence - 5, 0);
+  }
+  document.getElementById('gameCorrect').textContent = correct;
+  document.getElementById('mayaConf').textContent = Math.min(confidence, 95) + '%';
+
+  setTimeout(() => {
+    emailIdx++;
+    round++;
+    renderEmail();
+  }, 900);
+}
+
+// Keyboard shortcuts for game
+window.addEventListener('keydown', e => {
+  if (document.activeElement === q) return;
+  const n = parseInt(e.key);
+  if (n >= 1 && n <= 4) {
+    const btns = document.querySelectorAll('.category-btn');
+    if (btns[n-1]) btns[n-1].click();
+  }
+});
+
+renderEmail();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shivam Sharma — AI Product Manager</title>
+<meta name="description" content="AI Product Manager. Two startups, two acquisitions. 200,000+ residents, 26 languages.">
+<meta property="og:title" content="Shivam Sharma — AI PM">
+<meta property="og:description" content="Shipping Maya AI to 200,000+ residents in 26 languages.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Shivam Sharma","jobTitle":"AI Product Manager","worksFor":{"@type":"Organization","name":"ESC Partners"},"email":"shivamsharma2023@gmail.com","sameAs":["https://linkedin.com/in/shivamsharma-ai"]}</script>
+<style>
+:root{
+  --bg-primary:#f5efe7;--bg-inverse:#0a0a0a;
+  --text-primary:#0a0a0a;--text-inverse:#f5efe7;
+  --text-muted:#4a4a4a;--accent:#ff5c1f;
+  --depth:#1a2a52;--calm:#d8e4d0;
+  --g:80px;--mw:1440px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:auto;}
+body{
+  background:var(--bg-inverse);
+  color:var(--text-primary);
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:300;font-size:17px;line-height:1.55;
+  cursor:none;overflow-x:hidden;
+}
+/* FIXED OVERLAYS */
+#wgl{position:fixed;inset:0;z-index:0;pointer-events:none;}
+#splat{position:fixed;inset:0;z-index:100;pointer-events:none;}
+#cur{
+  position:fixed;width:8px;height:8px;border-radius:50%;
+  background:var(--bg-primary);mix-blend-mode:difference;
+  z-index:9999;pointer-events:none;transform:translate(-50%,-50%);
+  transition:transform 0.15s ease;
+}
+#smeta{
+  position:fixed;top:32px;left:var(--g);
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:#fff;z-index:50;mix-blend-mode:difference;
+  transition:opacity .4s;
+}
+#stog{
+  position:fixed;bottom:32px;right:var(--g);
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:#fff;z-index:50;mix-blend-mode:difference;
+  cursor:pointer;user-select:none;
+}
+#rbar{
+  display:none;position:fixed;bottom:32px;left:var(--g);
+  background:var(--bg-inverse);color:var(--text-inverse);
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.06em;padding:8px 16px;
+  z-index:50;gap:14px;align-items:center;border:1px solid rgba(245,239,231,.15);
+}
+#rbar.on{display:flex;}
+#rbar a{color:var(--accent);text-decoration:none;}
+/* WRAP */
+main{position:relative;z-index:10;}
+.w{max-width:var(--mw);margin:0 auto;padding:0 var(--g);}
+
+/* ═══ ACT I: HERO (cream) ═══ */
+#hero{
+  min-height:100vh;background:var(--bg-primary);
+  display:flex;align-items:flex-end;padding-bottom:120px;
+}
+.hero-inner{width:65%;}
+.h1{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:clamp(40px,4.8vw,72px);line-height:1.06;
+  color:var(--text-primary);letter-spacing:-.02em;
+  margin-bottom:32px;text-wrap:pretty;
+}
+.hrole{
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-muted);
+}
+
+/* ═══ ACT II: RECEIPTS (ink, particles show) ═══ */
+#receipts{min-height:100vh;padding:140px 0 120px;}
+.rl{display:grid;grid-template-columns:5fr 7fr;gap:0;align-items:start;}
+.rh{
+  font-family:'Fraunces',serif;
+  font-size:clamp(36px,4vw,58px);font-weight:700;
+  color:var(--text-inverse);line-height:1.02;
+  letter-spacing:-.03em;
+  font-variation-settings:'opsz' 72,'wght' 700;
+}
+.tickers{margin-top:96px;display:flex;flex-direction:column;gap:40px;}
+.tick{border-top:1px solid rgba(245,239,231,.12);padding-top:20px;}
+.tnum{
+  font-family:'Fraunces',serif;
+  font-size:clamp(48px,5.5vw,72px);font-weight:700;
+  color:var(--accent);line-height:1.0;
+  font-variant-numeric:tabular-nums;
+  font-variation-settings:'opsz' 72,'wght' 700;
+}
+.tlbl{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-inverse);opacity:.5;margin-top:6px;
+}
+
+/* ═══ ACT III: WORK (ink, particles show) ═══ */
+#work{}
+.wcard{
+  min-height:90vh;padding:100px 0;
+  border-top:1px solid rgba(245,239,231,.08);
+}
+.wcard:first-child{border-top:none;}
+.wmeta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-inverse);opacity:.35;margin-bottom:36px;
+}
+.wtit{
+  font-family:'Fraunces',serif;
+  font-size:clamp(44px,5.2vw,76px);font-weight:700;
+  color:var(--text-inverse);line-height:1.0;
+  letter-spacing:-.03em;
+  font-variation-settings:'opsz' 72,'wght' 700;
+  margin-bottom:60px;
+}
+.wlay{display:grid;grid-template-columns:7fr 5fr;gap:80px;align-items:start;}
+.wbody{font-size:20px;line-height:1.6;color:var(--text-inverse);opacity:.78;font-weight:300;}
+.wbody p+p{margin-top:20px;}
+.wout{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:22px;color:var(--text-inverse);opacity:.6;
+  margin-top:36px;line-height:1.45;
+}
+.wstats{display:flex;flex-direction:column;gap:20px;}
+.ws{border-top:1px solid rgba(245,239,231,.12);padding-top:14px;}
+.wsn{
+  font-family:'Fraunces',serif;font-size:38px;font-weight:600;
+  color:var(--accent);font-variation-settings:'opsz' 40,'wght' 600;
+  line-height:1.1;
+}
+.wsl{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-inverse);opacity:.45;margin-top:3px;
+}
+
+/* ═══ ACT IV: TIMELINE (cream) ═══ */
+#tl{min-height:100vh;background:var(--bg-primary);padding:120px 0;}
+.tlh{
+  font-family:'Fraunces',serif;
+  font-size:clamp(40px,4.2vw,60px);font-weight:700;
+  color:var(--text-primary);letter-spacing:-.03em;
+  font-variation-settings:'opsz' 60,'wght' 700;
+  margin-bottom:80px;
+}
+.tlg{display:grid;grid-template-columns:1fr 3fr;gap:0;}
+.tlrail{position:relative;padding-right:48px;}
+.tlrail::after{
+  content:'';position:absolute;right:0;top:0;bottom:0;
+  width:1px;background:var(--calm);
+}
+.tles{padding-left:64px;}
+.tle{
+  padding:28px 0;border-bottom:1px solid rgba(10,10,10,.07);
+  position:relative;
+}
+.tle::before{
+  content:'';position:absolute;left:-72px;top:38px;
+  width:7px;height:7px;border-radius:50%;background:var(--calm);
+}
+.tdate{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:6px;
+}
+.trole{
+  font-family:'Fraunces',serif;font-size:26px;font-weight:600;
+  color:var(--text-primary);
+  font-variation-settings:'opsz' 26,'wght' 600;
+  line-height:1.2;margin-bottom:3px;
+}
+.tco{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-muted);opacity:.7;margin-bottom:7px;
+}
+.tdesc{font-size:16px;line-height:1.5;color:var(--text-muted);font-weight:300;}
+
+/* ═══ ACT V: ASK AI (ink, particles show) ═══ */
+#askai{
+  min-height:80vh;padding:120px 0;
+  display:flex;align-items:center;
+}
+.aaw{width:100%;max-width:940px;}
+.aap{
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:clamp(28px,4vw,52px);font-weight:400;
+  color:var(--text-inverse);opacity:.35;line-height:1.2;
+  font-variation-settings:'opsz' 52,'ital' 1,'wght' 400;
+}
+.aai{
+  width:100%;background:transparent;border:none;
+  border-bottom:1px solid rgba(245,239,231,.25);
+  padding:14px 0;
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:clamp(28px,4vw,52px);font-weight:400;
+  color:var(--text-inverse);outline:none;cursor:none;
+  font-variation-settings:'opsz' 52,'ital' 1,'wght' 400;
+}
+.aai::placeholder{color:rgba(245,239,231,.25);}
+.aahint{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-inverse);opacity:.25;margin-top:14px;
+}
+#aaresp{
+  margin-top:44px;
+  font-family:'Fraunces',serif;font-size:22px;font-weight:400;
+  color:var(--text-inverse);line-height:1.6;
+  opacity:0;transition:opacity .6s ease;max-width:720px;
+}
+#aaresp.on{opacity:1;}
+
+/* ═══ ACT VI: CLOSE (cream) ═══ */
+#cls{background:var(--bg-primary);padding:120px 0 100px;}
+.clh{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:clamp(36px,4.2vw,60px);color:var(--text-primary);
+  line-height:1.08;margin-bottom:80px;
+}
+.clg{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:64px;margin-bottom:100px;
+}
+.cblbl{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:14px;
+}
+.cbt{
+  font-family:'Fraunces',serif;font-size:22px;font-weight:600;
+  color:var(--text-primary);
+  font-variation-settings:'opsz' 22,'wght' 600;
+  margin-bottom:4px;
+}
+.cbs{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-muted);opacity:.65;margin-bottom:8px;
+}
+.cbd{font-size:15px;color:var(--text-muted);font-weight:300;line-height:1.5;}
+.cmark{
+  display:inline-block;
+  font-family:'Fraunces',serif;
+  font-size:clamp(28px,3.8vw,52px);font-weight:700;
+  color:var(--accent);letter-spacing:-.02em;line-height:1.0;
+  font-variation-settings:'opsz' 52,'wght' 700;
+  cursor:pointer;text-decoration:none;
+  transition:opacity .2s;
+}
+.cmark:hover{opacity:.8;}
+.chint{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-muted);margin-top:10px;
+  opacity:0;transition:opacity .3s;
+}
+.cmark:hover+.chint{opacity:1;}
+.ccopied{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--accent);margin-top:10px;
+  opacity:0;transition:opacity .3s;
+  display:block;
+}
+.clinks{display:flex;gap:36px;margin-top:60px;}
+.clink{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-muted);text-decoration:none;
+  border-bottom:1px solid var(--calm);padding-bottom:3px;
+  transition:color .2s,border-color .2s;
+}
+.clink:hover{color:var(--accent);border-color:var(--accent);}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+.rv.in{opacity:1;transform:none;}
+
+/* MOBILE */
+@media(max-width:1023px){
+  :root{--g:24px;}
+  #wgl,#cur{display:none;}
+  body{cursor:auto;background:var(--bg-inverse);}
+  .hero-inner{width:100%;}
+  .rl,.wlay,.tlg,.clg{grid-template-columns:1fr;}
+  .tlers,.tles{padding-left:0;}
+  .tle::before,.tlrail::after{display:none;}
+  .tickers{margin-top:40px;}
+  #smeta,#stog{display:none;}
+}
+@media(prefers-reduced-motion:reduce){
+  #wgl{display:none;}
+  *{transition:none!important;animation:none!important;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="wgl"></canvas>
+<canvas id="splat"></canvas>
+<div id="cur"></div>
+<div id="smeta">01 / 06 — hero</div>
+<div id="stog">[ sound · off ]</div>
+<div id="rbar">
+  <span>currently open · target: senior ai pm</span>
+  <a href="mailto:shivamsharma2023@gmail.com">[book 15 min]</a>
+  <span>·</span>
+  <a href="#cls">[one-pager]</a>
+</div>
+
+<main>
+<!-- ═ ACT I ═ -->
+<section id="hero" data-si="01" data-sn="hero">
+  <div class="w">
+    <div class="hero-inner">
+      <h1 class="h1" id="hh">Two startups. Two acquisitions. Now I ship AI products that talk to 200,000 humans in 26 languages.</h1>
+      <p class="hrole">AI Product Manager · ESC Partners · currently shipping Maya AI</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═ ACT II ═ -->
+<section id="receipts" data-si="02" data-sn="receipts">
+  <div class="w">
+    <div class="rl">
+      <div>
+        <h2 class="rh">Maya AI.<br>Two and a half months.<br>Two hundred thousand residents.</h2>
+      </div>
+      <div class="tickers">
+        <div class="tick">
+          <div class="tnum" data-t="200000" data-s="+" data-fmt="comma">0</div>
+          <div class="tlbl">residents served at NEP</div>
+        </div>
+        <div class="tick">
+          <div class="tnum" data-t="26">0</div>
+          <div class="tlbl">languages via voice (11labs)</div>
+        </div>
+        <div class="tick">
+          <div class="tnum" data-t="225" data-p="$" data-s="K">0</div>
+          <div class="tlbl">projected monthly savings</div>
+        </div>
+        <div class="tick">
+          <div class="tnum" data-t="2.5" data-s=" months" data-dec="1">0</div>
+          <div class="tlbl">kickoff to live, solo build</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═ ACT III ═ -->
+<section id="work" data-si="03" data-sn="work">
+  <div class="wcard">
+    <div class="w">
+      <div class="wmeta">01 / 04 — 2026 · ESC Partners</div>
+      <h2 class="wtit">Maya AI</h2>
+      <div class="wlay">
+        <div>
+          <div class="wbody">
+            <p>Full AI operating layer on Oracle CCS. Unified voice, chat, SMS, email, and mobile into one agent autonomously handling billing, payments, service start/stop, and outage support across every resident channel.</p>
+            <p>Supervisor cockpit with 26-language voice via 11Labs, real-time sentiment, performance tracking, and one-click human takeover. Handles 70–80% of first-touch volume.</p>
+            <p>Live at NEP (200K+ residents), rolling out at Moreno Valley Electrical Utility, piloting at Delta Utilities. Spun off two derivatives: a standalone email triage agent and VaultIQ — an air-gapped Claude Opus platform inside customer VPC.</p>
+          </div>
+          <p class="wout">Built with the same stack I'm writing this portfolio in.</p>
+        </div>
+        <div class="wstats">
+          <div class="ws"><div class="wsn">200K+</div><div class="wsl">residents served</div></div>
+          <div class="ws"><div class="wsn">70–80%</div><div class="wsl">first-touch handled</div></div>
+          <div class="ws"><div class="wsn">3</div><div class="wsl">utilities deploying</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wcard">
+    <div class="w">
+      <div class="wmeta">02 / 04 — 2019–2024 · Founder</div>
+      <h2 class="wtit">CloudApproach<br>+ Approachables</h2>
+      <div class="wlay">
+        <div>
+          <div class="wbody">
+            <p>Bootstrapped two ventures: a design, web, and marketing agency (200+ clients) and a real-estate marketing plus CRM automation business serving 80+ agencies across UK and MENA.</p>
+            <p>Managed a $200K marketing and automation budget influencing $5M+ in closed deals across the Middle East and UK. Grew both to acquisition inside five years.</p>
+          </div>
+          <p class="wout">$575K combined exit. 95% retention post-acquisition.</p>
+        </div>
+        <div class="wstats">
+          <div class="ws"><div class="wsn">$575K</div><div class="wsl">combined exit</div></div>
+          <div class="ws"><div class="wsn">$5M+</div><div class="wsl">deals influenced</div></div>
+          <div class="ws"><div class="wsn">280+</div><div class="wsl">clients</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wcard">
+    <div class="w">
+      <div class="wmeta">03 / 04 — 2025 · Founding PM</div>
+      <h2 class="wtit">Vollie, Inc.</h2>
+      <div class="wlay">
+        <div>
+          <div class="wbody">
+            <p>Sole PM. Launched an AI-powered employee coaching platform for the company's first client (30 employees), owning 0-to-1 product strategy and personally shipping the working prototype.</p>
+            <p>Designed a voice AI moderator that runs structured coaching between employee pairs and auto-generates post-session reports on sentiment, engagement, and commitments — peer accountability without a human facilitator.</p>
+          </div>
+          <p class="wout">0-to-1 in one role. Privacy-first from day one.</p>
+        </div>
+        <div class="wstats">
+          <div class="ws"><div class="wsn">0→1</div><div class="wsl">product build</div></div>
+          <div class="ws"><div class="wsn">30</div><div class="wsl">first-client users</div></div>
+          <div class="ws"><div class="wsn">1</div><div class="wsl">PM (me)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wcard">
+    <div class="w">
+      <div class="wmeta">04 / 04 — 2025 · Product Lead</div>
+      <h2 class="wtit">AIN Center /<br>VentureForge</h2>
+      <div class="wlay">
+        <div>
+          <div class="wbody">
+            <p>Replaced $25K/year licensed simulators. Launched VentureForge, an AI airline strategy simulation for 50+ MBA students over 7 weeks, scoring decisions against real fuel prices, competitor moves, and market shocks.</p>
+            <p>Cut per-student mentoring prep by 75% for 200+ founders, launching a self-serve validation product that replaced manual exercises with AI-guided idea scoring, persona creation, and interview simulation.</p>
+          </div>
+          <p class="wout">Research-grade tools, product-grade execution.</p>
+        </div>
+        <div class="wstats">
+          <div class="ws"><div class="wsn">$25K</div><div class="wsl">replaced annually</div></div>
+          <div class="ws"><div class="wsn">75%</div><div class="wsl">prep time reduced</div></div>
+          <div class="ws"><div class="wsn">200+</div><div class="wsl">founders served</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═ ACT IV ═ -->
+<section id="tl" data-si="04" data-sn="timeline">
+  <div class="w">
+    <h2 class="tlh">The path.</h2>
+    <div class="tlg">
+      <div class="tlrail"></div>
+      <div class="tles">
+        <div class="tle rv"><div class="tdate">Jan 2026 → Now</div><div class="trole">AI Product Manager</div><div class="tco">ESC Partners (HometownHUB) · NYC</div><div class="tdesc">Shipping Maya AI. Oracle CCS integration. 200K+ residents across 3 utilities.</div></div>
+        <div class="tle rv"><div class="tdate">Oct 2025 — Jan 2026</div><div class="trole">Product Owner & Developer</div><div class="tco">Senior Assisted Living Locators · Remote, CA</div><div class="tdesc">Led product development and technical delivery for care-matching platform.</div></div>
+        <div class="tle rv"><div class="tdate">May — Dec 2025</div><div class="trole">Founding Product Manager</div><div class="tco">Vollie, Inc. · Buffalo, NY</div><div class="tdesc">0-to-1 AI coaching platform. Voice AI moderator. Privacy-first architecture.</div></div>
+        <div class="tle rv"><div class="tdate">Jan — Dec 2025</div><div class="trole">Product Lead, Ain Foundry</div><div class="tco">University of Rochester</div><div class="tdesc">VentureForge simulation. $25K license replaced. 200+ founders mentored.</div></div>
+        <div class="tle rv"><div class="tdate">Oct — Dec 2024</div><div class="trole">Product Consultant</div><div class="tco">Simon Vision · City of Rochester</div><div class="tdesc">Civic technology strategy and product consulting.</div></div>
+        <div class="tle rv"><div class="tdate">Jul 2019 — Mar 2024</div><div class="trole">Founder</div><div class="tco">CloudApproach + Approachables · UK + MENA</div><div class="tdesc">Built two ventures from zero. $575K combined exit. 95% retention post-acquisition.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═ ACT V ═ -->
+<section id="askai" data-si="05" data-sn="ask ai">
+  <div class="w">
+    <div class="aaw">
+      <p class="aap">ask me anything about the work</p>
+      <input class="aai" id="aainp" type="text" placeholder="→" autocomplete="off" spellcheck="false">
+      <p class="aahint">press enter · powered by claude</p>
+      <div id="aaresp"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═ ACT VI ═ -->
+<section id="cls" data-si="06" data-sn="close">
+  <div class="w">
+    <h2 class="clh">let's build something<br>that matters.</h2>
+    <div class="clg">
+      <div class="rv">
+        <div class="cblbl">Education</div>
+        <div class="cbt">Simon Business School</div>
+        <div class="cbs">MS, AI in Business (STEM) · Dec 2025 · University of Rochester</div>
+        <div class="cbd">VP Master's Advisory Council · #SimonStrong Community Builder Award — single recipient cohort-wide.</div>
+      </div>
+      <div class="rv">
+        <div class="cblbl">Continuing</div>
+        <div class="cbt">McKinsey Forward Program</div>
+        <div class="cbs">McKinsey & Company · 2026 → Now</div>
+        <div class="cbd">BA (Hons), International Business · University of Central Lancashire, UK · 2020</div>
+      </div>
+      <div class="rv">
+        <div class="cblbl">Contact</div>
+        <div class="cbt">NYC / Rochester, NY</div>
+        <div class="cbs">English · Hindi · Punjabi</div>
+        <div class="cbd">+1 585-481-9927</div>
+      </div>
+    </div>
+    <div>
+      <a class="cmark" id="cmark" href="mailto:shivamsharma2023@gmail.com">shivamsharma2023@gmail.com</a>
+      <div class="chint">click to copy</div>
+      <span class="ccopied" id="ccopied">copied →</span>
+    </div>
+    <div class="clinks">
+      <a href="https://linkedin.com/in/shivamsharma-ai" class="clink" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://github.com/shivamsharma" class="clink" target="_blank" rel="noopener">github</a>
+      <a href="https://read.cv/shivam" class="clink" target="_blank" rel="noopener">read.cv</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.14/lenis.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════
+//  LENIS + GSAP
+// ═══════════════════════════════════════════════
+const isMobile = window.innerWidth < 1024 || /Mobi|Android/i.test(navigator.userAgent);
+const prefersReduced = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+let lenis;
+if (!isMobile && !prefersReduced) {
+  lenis = new Lenis({ lerp: 0.1 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+gsap.registerPlugin(ScrollTrigger);
+
+// ═══════════════════════════════════════════════
+//  THREE.JS PARTICLE SYSTEM
+// ═══════════════════════════════════════════════
+const PC = isMobile ? 0 : 45000;
+let renderer, scene, camera, points, uniforms;
+let morphTargets = [];
+let currentMorph = 0;
+
+const VS = `
+uniform float uProg; uniform float uTime; uniform float uSz;
+attribute vec3 aTgt; attribute float aRnd; attribute float aAcc;
+varying float vAcc;
+void main(){
+  vAcc=aAcc;
+  float d=aRnd*.35;
+  float t=clamp((uProg-d)/(1.-d*.5),0.,1.);
+  t=t*t*(3.-2.*t);
+  vec3 p=mix(position,aTgt,t);
+  p.x+=sin(uTime*.4+aRnd*6.28)*.02;
+  p.y+=cos(uTime*.3+aRnd*3.14)*.02;
+  vec4 mv=modelViewMatrix*vec4(p,1.);
+  gl_PointSize=(uSz+aRnd*.8)*(280./-mv.z);
+  gl_Position=projectionMatrix*mv;
+}`;
+
+const FS = `
+uniform vec3 uClr; uniform vec3 uAcc;
+varying float vAcc;
+void main(){
+  float d=length(gl_PointCoord-vec2(.5));
+  if(d>.5)discard;
+  float a=1.-smoothstep(.25,.5,d);
+  vec3 c=mix(uClr,uAcc,vAcc*.8);
+  gl_FragColor=vec4(c,a*.88);
+}`;
+
+function sampleText(str, sz, count) {
+  const c = document.createElement('canvas'); c.width=512; c.height=512;
+  const x = c.getContext('2d');
+  x.fillStyle='#fff';
+  x.font=`bold ${sz}px serif`;
+  x.textAlign='center'; x.textBaseline='middle';
+  x.fillText(str,256,256);
+  const d=x.getImageData(0,0,512,512).data;
+  const px=[];
+  for(let y=0;y<512;y+=4) for(let j=0;j<512;j+=4)
+    if(d[(y*512+j)*4]>80) px.push([j,y]);
+  const pos=new Float32Array(count*3);
+  for(let i=0;i<count;i++){
+    const r=px[Math.floor(Math.random()*px.length)]||[256,256];
+    pos[i*3]=(r[0]-256)/52; pos[i*3+1]=(256-r[1])/52;
+    pos[i*3+2]=(Math.random()-.5)*.3;
+  }
+  return pos;
+}
+
+function sampleGlobe(count) {
+  const pos=new Float32Array(count*3);
+  for(let i=0;i<count;i++){
+    const th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1), r=4.2;
+    pos[i*3]=r*Math.sin(ph)*Math.cos(th);
+    pos[i*3+1]=r*Math.sin(ph)*Math.sin(th);
+    pos[i*3+2]=r*Math.cos(ph);
+  }
+  return pos;
+}
+
+function sampleHelix(count) {
+  const pos=new Float32Array(count*3);
+  for(let i=0;i<count;i++){
+    const t=(i/count)*Math.PI*10, r=3.2;
+    pos[i*3]=r*Math.cos(t);
+    pos[i*3+1]=t*.7-11;
+    pos[i*3+2]=r*Math.sin(t);
+  }
+  return pos;
+}
+
+function sampleScatter(count) {
+  const pos=new Float32Array(count*3);
+  for(let i=0;i<count;i++){
+    pos[i*3]=(Math.random()-.5)*22;
+    pos[i*3+1]=(Math.random()-.5)*16;
+    pos[i*3+2]=(Math.random()-.5)*8;
+  }
+  return pos;
+}
+
+function sampleRing(count) {
+  const pos=new Float32Array(count*3);
+  for(let i=0;i<count;i++){
+    const a=(i/count)*Math.PI*2, r=3.5+Math.random()*1.5;
+    pos[i*3]=r*Math.cos(a); pos[i*3+1]=(Math.random()-.5)*1.2;
+    pos[i*3+2]=r*Math.sin(a);
+  }
+  return pos;
+}
+
+function initParticles() {
+  if(!PC) return;
+  const canvas=document.getElementById('wgl');
+  renderer=new THREE.WebGLRenderer({canvas,antialias:false,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+
+  scene=new THREE.Scene();
+  scene.fog=new THREE.FogExp2(0x1a2a52,.028);
+
+  camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,100);
+  camera.position.set(0,0,10);
+
+  // Build morph targets
+  morphTargets=[
+    sampleText('S',380,PC),
+    sampleText('200K',220,PC),
+    sampleGlobe(PC),
+    sampleHelix(PC),
+    sampleScatter(PC)
+  ];
+
+  // Random attributes
+  const rnd=new Float32Array(PC), acc=new Float32Array(PC);
+  for(let i=0;i<PC;i++){
+    rnd[i]=Math.random();
+    acc[i]=Math.random()<.05?1:0;
+  }
+
+  const geo=new THREE.BufferGeometry();
+  const pos=new Float32Array(morphTargets[0]);
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('aTgt',new THREE.BufferAttribute(new Float32Array(morphTargets[1]),3));
+  geo.setAttribute('aRnd',new THREE.BufferAttribute(rnd,1));
+  geo.setAttribute('aAcc',new THREE.BufferAttribute(acc,1));
+
+  uniforms={
+    uProg:{value:0},uTime:{value:0},uSz:{value:1.8},
+    uClr:{value:new THREE.Color(0xf5efe7)},
+    uAcc:{value:new THREE.Color(0xff5c1f)}
+  };
+
+  const mat=new THREE.ShaderMaterial({
+    uniforms,vertexShader:VS,fragmentShader:FS,
+    transparent:true,depthWrite:false
+  });
+
+  points=new THREE.Points(geo,mat);
+  scene.add(points);
+
+  // Camera animation targets
+  const camPaths=[
+    {x:0,y:0,z:10},{x:-2,y:.5,z:8},{x:1,y:-1,z:8},
+    {x:3,y:1,z:10},{x:0,y:0,z:12}
+  ];
+
+  // Section-based morphing via ScrollTrigger
+  const sections=['#receipts','#work','#tl','#askai','#cls'];
+  sections.forEach((sel,i)=>{
+    ScrollTrigger.create({
+      trigger:sel, start:'top 60%',
+      onEnter:()=>doMorph(i+1),
+      onLeaveBack:()=>doMorph(i)
+    });
+  });
+
+  // Camera scroll
+  ScrollTrigger.create({
+    trigger:'main',start:'top top',end:'bottom bottom',scrub:1.5,
+    onUpdate:self=>{
+      const p=self.progress, n=camPaths.length-1;
+      const seg=Math.min(Math.floor(p*n),n-1);
+      const t=(p*n)-seg;
+      const a=camPaths[seg], b=camPaths[seg+1];
+      camera.position.x+=((a.x+(b.x-a.x)*t)-camera.position.x)*.08;
+      camera.position.y+=((a.y+(b.y-a.y)*t)-camera.position.y)*.08;
+      camera.position.z+=((a.z+(b.z-a.z)*t)-camera.position.z)*.08;
+    }
+  });
+
+  // Slow orbit
+  let orbitAngle=0;
+  function render(time) {
+    uniforms.uTime.value=time*.001;
+    orbitAngle+=.0004;
+    if(points) points.rotation.y=orbitAngle;
+    renderer.render(scene,camera);
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+
+  window.addEventListener('resize',()=>{
+    camera.aspect=innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight);
+  });
+}
+
+let morphing=false;
+function doMorph(idx) {
+  if(!points||idx===currentMorph||morphing) return;
+  morphing=true;
+  const geo=points.geometry;
+
+  // Bake current positions
+  const from=geo.attributes.position.array;
+  const to=geo.attributes.aTgt.array;
+  const prog=uniforms.uProg.value;
+  const baked=new Float32Array(PC*3);
+  for(let i=0;i<PC*3;i++) baked[i]=from[i]+(to[i]-from[i])*prog;
+
+  geo.attributes.position.array.set(baked);
+  geo.attributes.position.needsUpdate=true;
+  geo.attributes.aTgt.array.set(morphTargets[idx]);
+  geo.attributes.aTgt.needsUpdate=true;
+  uniforms.uProg.value=0;
+  currentMorph=idx;
+
+  gsap.to(uniforms.uProg,{value:1,duration:2.2,ease:'power2.inOut',
+    onComplete:()=>{morphing=false;}
+  });
+}
+
+// Init after load + idle
+window.addEventListener('load',()=>{
+  if(!isMobile && !prefersReduced){
+    if('requestIdleCallback' in window) requestIdleCallback(initParticles,{timeout:2000});
+    else setTimeout(initParticles,200);
+  }
+});
+
+// ═══════════════════════════════════════════════
+//  CLICK SPLAT
+// ═══════════════════════════════════════════════
+const splatC=document.getElementById('splat');
+const splatX=splatC.getContext('2d');
+splatC.width=innerWidth; splatC.height=innerHeight;
+window.addEventListener('resize',()=>{splatC.width=innerWidth;splatC.height=innerHeight;});
+
+document.addEventListener('click',e=>{
+  if(e.target.closest('input,a,button,.cmark')) return;
+  triggerSplat(e.clientX, e.clientY);
+});
+
+function triggerSplat(cx,cy){
+  let start=null;
+  const dur=1400;
+  function frame(ts){
+    if(!start)start=ts;
+    const t=(ts-start)/dur;
+    if(t>1){splatX.clearRect(0,0,splatC.width,splatC.height);return;}
+    splatX.clearRect(0,0,splatC.width,splatC.height);
+    const sz=t<.25?t/.25:1;
+    const a=t<.25?.32:.32*(1-(t-.25)/.75);
+    const maxR=Math.max(innerWidth,innerHeight)*.75;
+    const r=maxR*sz;
+    splatX.save();splatX.translate(cx,cy);
+    splatX.beginPath();
+    const sp=16;
+    for(let i=0;i<sp*2;i++){
+      const ang=(i/(sp*2))*Math.PI*2;
+      const nr=r*(i%2===0?1:.72+Math.sin(i*1.9+t*4)*.14);
+      const px=nr*Math.cos(ang), py=nr*Math.sin(ang);
+      i===0?splatX.moveTo(px,py):splatX.lineTo(px,py);
+    }
+    splatX.closePath();
+    splatX.fillStyle=`rgba(255,92,31,${a})`;
+    splatX.fill();splatX.restore();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+// ═══════════════════════════════════════════════
+//  CURSOR
+// ═══════════════════════════════════════════════
+const cur=document.getElementById('cur');
+if(!isMobile){
+  let mx=0,my=0,cx2=0,cy2=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function loop(){
+    cx2+=(mx-cx2)*.18; cy2+=(my-cy2)*.18;
+    cur.style.left=cx2+'px'; cur.style.top=cy2+'px';
+    requestAnimationFrame(loop);
+  })();
+}
+
+// ═══════════════════════════════════════════════
+//  MAGNETIC HOVER
+// ═══════════════════════════════════════════════
+document.querySelectorAll('a,.cmark').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r=el.getBoundingClientRect();
+    const dx=(e.clientX-r.left-r.width/2)*.35;
+    const dy=(e.clientY-r.top-r.height/2)*.35;
+    el.style.transform=`translate(${dx}px,${dy}px)`;
+    el.style.transition='transform 0s';
+  });
+  el.addEventListener('mouseleave',()=>{
+    el.style.transform='';
+    el.style.transition='transform .5s cubic-bezier(.23,1,.32,1)';
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  SECTION META
+// ═══════════════════════════════════════════════
+const smeta=document.getElementById('smeta');
+document.querySelectorAll('[data-si]').forEach(s=>{
+  ScrollTrigger.create({
+    trigger:s,start:'top 50%',end:'bottom 50%',
+    onEnter:()=>{smeta.textContent=`${s.dataset.si} / 06 — ${s.dataset.sn}`;},
+    onEnterBack:()=>{smeta.textContent=`${s.dataset.si} / 06 — ${s.dataset.sn}`;}
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  COUNT-UP TICKERS
+// ═══════════════════════════════════════════════
+document.querySelectorAll('.tnum').forEach(el=>{
+  const target=parseFloat(el.dataset.t);
+  const prefix=el.dataset.p||'';
+  const suffix=el.dataset.s||'';
+  const decimals=parseInt(el.dataset.dec||'0');
+  const fmt=el.dataset.fmt==='comma';
+  let done=false;
+
+  ScrollTrigger.create({
+    trigger:el,start:'top 85%',
+    onEnter:()=>{
+      if(done)return; done=true;
+      gsap.to({v:0},{v:target,duration:2.2,ease:'power2.out',
+        onUpdate:function(){
+          let v=this.targets()[0].v;
+          let str=decimals>0?v.toFixed(decimals):Math.round(v).toString();
+          if(fmt) str=parseInt(str).toLocaleString();
+          el.textContent=prefix+str+suffix;
+        }
+      });
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  SCROLL REVEAL
+// ═══════════════════════════════════════════════
+document.querySelectorAll('.rv').forEach(el=>{
+  ScrollTrigger.create({
+    trigger:el,start:'top 88%',
+    onEnter:()=>el.classList.add('in')
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  GSAP WORK CARD REVEALS
+// ═══════════════════════════════════════════════
+document.querySelectorAll('.wtit,.rh').forEach(el=>{
+  gsap.from(el,{
+    opacity:0,y:30,duration:.9,ease:'power3.out',
+    scrollTrigger:{trigger:el,start:'top 88%'}
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  ASK AI (stubbed — paste API key to activate)
+// ═══════════════════════════════════════════════
+const RESPONSES = {
+  default: "Shivam built Maya AI in 2.5 months solo — an AI operating layer serving 200K+ utility residents across voice, chat, SMS and email in 26 languages. Before that, he founded and exited two ventures for $575K combined. He's most useful when he can own a product from 0 to 1 without a committee.",
+  maya: "Maya AI is a full AI operating layer on Oracle CCS. It unifies every resident communication channel into one autonomous agent handling billing, payments, outages, and service requests — with a supervisor cockpit, real-time sentiment, and one-click human takeover. 70–80% first-touch resolution. Live at NEP (200K+ residents).",
+  exit: "CloudApproach was a design/web/marketing agency (200+ clients). Approachables was a real-estate CRM automation business across UK and MENA (80+ agencies, $5M+ in deals influenced). Sold both for $575K combined in 2024 with 95% client retention post-acquisition.",
+  hire: "Shivam is open to senior AI PM roles at companies building real products with AI — not retrofitting. Target: Anthropic, OpenAI, Linear, Vercel, Cursor, Mercury, or a frontier-AI startup where AI is the product, not a feature. NYC-based. Available now."
+};
+
+const inp=document.getElementById('aainp');
+const resp=document.getElementById('aaresp');
+
+inp.addEventListener('keydown',async e=>{
+  if(e.key!=='Enter'||!inp.value.trim()) return;
+  const q=inp.value.trim().toLowerCase();
+  inp.value='';
+  resp.classList.remove('on');
+
+  let answer=RESPONSES.default;
+  if(q.includes('maya')||q.includes('ai')||q.includes('utility')||q.includes('resident')) answer=RESPONSES.maya;
+  if(q.includes('exit')||q.includes('acqui')||q.includes('cloud')||q.includes('startup')) answer=RESPONSES.exit;
+  if(q.includes('hire')||q.includes('open')||q.includes('role')||q.includes('target')||q.includes('look')) answer=RESPONSES.hire;
+
+  // Stream word by word
+  const words=answer.split(' ');
+  resp.textContent='';
+  resp.classList.add('on');
+  for(let i=0;i<words.length;i++){
+    await new Promise(r=>setTimeout(r,38));
+    resp.textContent=(i===0?'':resp.textContent+' ')+words[i];
+  }
+});
+
+// ═══════════════════════════════════════════════
+//  CONTACT COPY
+// ═══════════════════════════════════════════════
+document.getElementById('cmark').addEventListener('click',e=>{
+  e.preventDefault();
+  navigator.clipboard.writeText('shivamsharma2023@gmail.com').catch(()=>{});
+  triggerSplat(e.clientX, e.clientY);
+  const c=document.getElementById('ccopied');
+  c.style.opacity='1';
+  setTimeout(()=>{c.style.opacity='0';},2200);
+});
+
+// ═══════════════════════════════════════════════
+//  SOUND TOGGLE (placeholder — no audio implemented)
+// ═══════════════════════════════════════════════
+let soundOn=localStorage.getItem('shivam-sound')==='true';
+const stog=document.getElementById('stog');
+stog.textContent=soundOn?'[ sound · on ]':'[ sound · off ]';
+stog.addEventListener('click',()=>{
+  soundOn=!soundOn;
+  localStorage.setItem('shivam-sound',soundOn);
+  stog.textContent=soundOn?'[ sound · on ]':'[ sound · off ]';
+});
+
+// ═══════════════════════════════════════════════
+//  RECRUITER MODE
+// ═══════════════════════════════════════════════
+(function(){
+  const p=new URLSearchParams(location.search);
+  const ref=document.referrer||'';
+  if(p.get('r')==='1'||p.get('utm_medium')==='recruiter'||ref.includes('linkedin.com')){
+    document.getElementById('rbar').classList.add('on');
+  }
+})();
+
+// ═══════════════════════════════════════════════
+//  TWEAKS
+// ═══════════════════════════════════════════════
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "particleSize": 0.9,
+  "particleCount": 45000,
+  "morphSpeed": 2.2,
+  "orbitSpeed": 0.4,
+  "splatOpacity": 0.32
+}/*EDITMODE-END*/;
+
+let tweakState = Object.assign({}, TWEAK_DEFAULTS);
+
+// Tweaks panel
+const tPanel = document.createElement('div');
+tPanel.id='tweaks-panel';
+tPanel.style.cssText=`
+  display:none;position:fixed;bottom:80px;right:24px;
+  background:#111;color:#f5efe7;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  padding:20px;z-index:9998;width:240px;
+  border:1px solid rgba(245,239,231,.15);
+  border-radius:2px;line-height:1.6;
+`;
+tPanel.innerHTML=`
+  <div style="display:flex;justify-content:space-between;margin-bottom:16px;letter-spacing:.07em;text-transform:uppercase;font-size:11px;">
+    <span>Tweaks</span>
+    <span id="tp-close" style="cursor:pointer;opacity:.5;">✕</span>
+  </div>
+  <label style="display:block;margin-bottom:12px;">
+    Particle Size
+    <input type="range" id="tp-sz" min="0.5" max="4" step="0.1" value="${TWEAK_DEFAULTS.particleSize}" style="width:100%;margin-top:4px;accent-color:#ff5c1f;">
+  </label>
+  <label style="display:block;margin-bottom:12px;">
+    Orbit Speed
+    <input type="range" id="tp-orb" min="0" max="2" step="0.1" value="${TWEAK_DEFAULTS.orbitSpeed}" style="width:100%;margin-top:4px;accent-color:#ff5c1f;">
+  </label>
+  <label style="display:block;margin-bottom:12px;">
+    Morph Speed
+    <input type="range" id="tp-msp" min="0.5" max="5" step="0.1" value="${TWEAK_DEFAULTS.morphSpeed}" style="width:100%;margin-top:4px;accent-color:#ff5c1f;">
+  </label>
+  <label style="display:block;">
+    Splat Opacity
+    <input type="range" id="tp-spl" min="0.05" max="0.6" step="0.01" value="${TWEAK_DEFAULTS.splatOpacity}" style="width:100%;margin-top:4px;accent-color:#ff5c1f;">
+  </label>
+`;
+document.body.appendChild(tPanel);
+
+document.getElementById('tp-close').onclick=()=>{
+  tPanel.style.display='none';
+  window.parent.postMessage({type:'__edit_mode_dismissed'},'*');
+};
+
+document.getElementById('tp-sz').oninput=e=>{
+  tweakState.particleSize=parseFloat(e.target.value);
+  if(uniforms) uniforms.uSz.value=tweakState.particleSize;
+  window.parent.postMessage({type:'__edit_mode_set_keys',edits:{particleSize:tweakState.particleSize}},'*');
+};
+
+let orbitSpeedVal=TWEAK_DEFAULTS.orbitSpeed*.001;
+document.getElementById('tp-orb').oninput=e=>{
+  orbitSpeedVal=parseFloat(e.target.value)*.001;
+};
+
+document.getElementById('tp-msp').oninput=e=>{
+  tweakState.morphSpeed=parseFloat(e.target.value);
+};
+
+let splatOpacityVal=TWEAK_DEFAULTS.splatOpacity;
+document.getElementById('tp-spl').oninput=e=>{
+  splatOpacityVal=parseFloat(e.target.value);
+};
+
+window.addEventListener('message',e=>{
+  if(e.data?.type==='__activate_edit_mode') tPanel.style.display='block';
+  if(e.data?.type==='__deactivate_edit_mode') tPanel.style.display='none';
+});
+window.parent.postMessage({type:'__edit_mode_available'},'*');
+</script>
+</body>
+</html>

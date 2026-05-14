@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Option B — Rows, but polaroid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Space+Grotesk:wght@300;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{--cream:#ede4d3;--paper:#f4ecdb;--ink:#1d2e22;--moss:#2d4533;--terra:#c25a3a;--terra-deep:#9a3f24;--rust:#7a3220;--acid:#e8ff3a;--bone:#e8e6dc;--mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;--serif:'Fraunces',serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--ink);color:var(--cream);font-family:var(--sans);font-weight:300;min-height:100vh;overflow-x:hidden;}
+
+.bar{position:fixed;top:0;left:0;right:0;background:var(--ink);border-bottom:1px solid rgba(237,228,211,.12);padding:14px 32px;display:flex;justify-content:space-between;align-items:center;z-index:1000;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;}
+.bar a{color:var(--terra);text-decoration:none;}
+.bar .which{color:rgba(237,228,211,.7);}
+.bar .which b{color:var(--terra);font-weight:500;}
+
+.grain{position:fixed;inset:0;pointer-events:none;z-index:5;opacity:.08;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+
+main{padding:80px 60px 120px;max-width:1480px;margin:0 auto;}
+
+.cap{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(237,228,211,.55);display:flex;align-items:center;gap:14px;}
+.cap::before{content:'';width:32px;height:1px;background:var(--terra);}
+.cap b{color:var(--terra);font-weight:500;}
+
+.work-mast{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin:52px 0 24px;border-bottom:1px solid rgba(237,228,211,.18);padding-bottom:20px;}
+.wm-inner{display:flex;gap:clamp(8px,1.6vw,28px);}
+.wm-letter{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(72px,14vw,220px);line-height:.86;letter-spacing:-.04em;color:var(--cream);font-variation-settings:'opsz' 144,'ital' 1,'wght' 300;display:inline-block;}
+.wm-letter:nth-child(2){color:var(--terra);}
+.wm-meta{display:flex;flex-direction:column;gap:4px;align-items:flex-end;padding-bottom:18px;color:rgba(237,228,211,.55);font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;}
+.wm-count{font-family:var(--serif);font-style:italic;font-size:18px;letter-spacing:0;text-transform:none;color:var(--terra);font-variation-settings:'opsz' 24,'ital' 1,'wght' 400;}
+
+.work-head{display:grid;grid-template-columns:2fr 1fr;gap:60px;margin:24px 0 80px;align-items:end;}
+.work-h{font-family:var(--serif);font-weight:500;font-size:clamp(46px,7vw,118px);line-height:.94;letter-spacing:-.04em;color:var(--cream);text-wrap:balance;font-variation-settings:'opsz' 144,'wght' 500,'SOFT' 80;}
+.work-h em{font-style:italic;font-weight:300;color:var(--terra);font-variation-settings:'opsz' 144,'ital' 1,'wght' 300,'SOFT' 100;}
+.work-blurb{font-size:16px;color:rgba(237,228,211,.7);line-height:1.55;}
+.work-blurb b{background:var(--acid);color:var(--ink);padding:0 .2em;font-weight:500;}
+
+/* PROJECT ROW — 5 columns, polaroid in col 2, stat-stubs in col 5 */
+.proj{display:grid;grid-template-columns:60px 220px 1.3fr 1.5fr 200px;gap:36px;padding:48px 0;border-top:1px solid rgba(237,228,211,.15);position:relative;align-items:start;transition:padding .5s cubic-bezier(.2,.9,.2,1),background .5s;}
+.proj:last-child{border-bottom:1px solid rgba(237,228,211,.15);}
+.proj:hover{padding-left:30px;background:linear-gradient(90deg,rgba(194,90,58,.07),transparent 70%);}
+
+.proj-num{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:rgba(237,228,211,.4);padding-top:24px;}
+.proj:hover .proj-num{color:var(--terra);}
+
+/* POLAROID — replaces .proj-visual */
+.polaroid{position:relative;background:var(--paper);color:var(--ink);padding:12px 12px 44px;border:1px solid rgba(0,0,0,.4);box-shadow:6px 8px 0 rgba(0,0,0,.18),0 18px 32px -14px rgba(0,0,0,.5);width:200px;transform:rotate(-2deg);transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .35s;will-change:transform;}
+.proj:nth-child(odd) .polaroid{transform:rotate(1.5deg);}
+.proj:hover .polaroid{transform:rotate(0deg) translateY(-4px) scale(1.03);box-shadow:8px 12px 0 rgba(0,0,0,.22),0 28px 48px -12px rgba(0,0,0,.6);}
+
+.polaroid .frame{aspect-ratio:4/3;position:relative;overflow:hidden;border:1px solid rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;}
+.polaroid .frame.acc-terra{background:linear-gradient(135deg,var(--terra) 0%,var(--terra-deep) 100%);}
+.polaroid .frame.acc-moss{background:linear-gradient(135deg,#5a8a6a 0%,var(--moss) 60%,#15201a 100%);}
+.polaroid .frame.acc-ink{background:linear-gradient(135deg,#4a5a52 0%,#2a3a32 60%,#0f1812 100%);}
+.polaroid .mark{font-family:var(--serif);font-style:italic;font-weight:300;font-size:42px;letter-spacing:-.03em;color:var(--paper);font-variation-settings:'opsz' 60,'ital' 1,'wght' 300;text-shadow:0 2px 4px rgba(0,0,0,.35);}
+.polaroid .mark em{font-weight:400;}
+
+.polaroid .tape{position:absolute;background:var(--acid);padding:3px 9px;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);border:1px dashed rgba(0,0,0,.4);box-shadow:0 2px 4px rgba(0,0,0,.18);top:-12px;left:18px;transform:rotate(-4deg);white-space:nowrap;}
+.proj:nth-child(odd) .polaroid .tape{transform:rotate(5deg);background:var(--terra);color:var(--paper);border-color:rgba(244,236,219,.4);top:-10px;right:14px;left:auto;}
+.polaroid .yr{position:absolute;left:-1px;top:-1px;background:var(--ink);color:var(--paper);padding:3px 8px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;}
+.polaroid .label{position:absolute;left:14px;right:14px;bottom:10px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.7);text-align:center;}
+
+/* NAME + ROLE column */
+.proj-name{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4vw,58px);line-height:.98;color:var(--cream);font-variation-settings:'opsz' 96,'wght' 500;letter-spacing:-.025em;text-wrap:balance;}
+.proj-name em{font-family:var(--serif);font-style:italic;font-weight:300;color:var(--terra);font-variation-settings:'opsz' 96,'ital' 1,'wght' 300;}
+.proj:hover .proj-name em{color:var(--cream);}
+.proj-role{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(237,228,211,.55);margin-top:18px;line-height:1.6;}
+.proj-role .sep{opacity:.4;margin:0 6px;}
+
+/* DESC + TAGS column */
+.proj-desc{font-size:15.5px;color:rgba(237,228,211,.82);line-height:1.55;}
+.proj-desc b{color:var(--cream);font-weight:500;}
+.proj-tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:7px;}
+.proj-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(237,228,211,.65);padding:5px 10px;border:1px solid rgba(237,228,211,.22);border-radius:99px;}
+
+/* STAT STUBS column — yellow sticky notes */
+.proj-stats{display:flex;flex-direction:column;gap:16px;align-items:flex-start;padding-top:8px;}
+.stub{position:relative;background:var(--acid);color:var(--ink);padding:11px 14px 10px;border:1px solid var(--ink);box-shadow:3px 4px 0 rgba(0,0,0,.28);display:inline-flex;flex-direction:column;align-items:flex-start;line-height:1;transform:rotate(-2deg);transition:transform .35s cubic-bezier(.2,.9,.2,1);}
+.proj:nth-child(even) .stub{transform:rotate(2deg);}
+.proj:nth-child(even) .stub:nth-child(2){transform:rotate(-3deg);}
+.proj:nth-child(odd) .stub:nth-child(2){transform:rotate(3deg);}
+.stub::before{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:7px;height:7px;background:var(--ink);border-radius:50%;}
+.proj:hover .stub{transform:rotate(0deg) translateY(-2px);}
+.stub .num{font-family:var(--serif);font-weight:900;font-size:1.55rem;letter-spacing:-.025em;font-variation-settings:'opsz' 60,'wght' 700,'SOFT' 100;white-space:nowrap;}
+.stub .num em{font-style:italic;font-weight:300;font-size:.7em;margin:0 1px;}
+.stub .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;margin-top:6px;opacity:.78;white-space:nowrap;}
+
+@media (max-width:1100px){
+  .proj{grid-template-columns:50px 180px 1fr 1fr 180px;gap:24px;}
+  .polaroid{width:180px;}
+}
+@media (max-width:900px){
+  .work-mast{flex-direction:column;align-items:flex-start;gap:16px;}
+  .wm-meta{align-items:flex-start;padding-bottom:0;}
+  .work-head{grid-template-columns:1fr;gap:24px;}
+  .proj{grid-template-columns:1fr;gap:18px;padding:32px 0;}
+  .proj-num{padding-top:0;}
+  .polaroid{width:100%;max-width:280px;transform:rotate(0) !important;}
+  .proj-stats{flex-direction:row;flex-wrap:wrap;}
+  main{padding:60px 24px 80px;}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="bar"><span class="which"><b>Option B</b> · Rows, but polaroid <span style="color:var(--terra);margin-left:8px">★ recommended</span></span><a href="index.html">← Back · <a href="option-a.html" style="opacity:.6">A</a> | B | <a href="option-c.html" style="opacity:.6">C</a></a></div>
+
+<main>
+  <div class="cap"><b>Section 03</b> · Selected work</div>
+
+  <h2 class="work-mast" aria-label="Work">
+    <span class="wm-inner">
+      <span class="wm-letter">W</span>
+      <span class="wm-letter">O</span>
+      <span class="wm-letter">R</span>
+      <span class="wm-letter">K</span>
+    </span>
+    <span class="wm-meta">
+      <span class="wm-count">05 / 05</span>
+      <span>Selected</span>
+    </span>
+  </h2>
+
+  <div class="work-head">
+    <h3 class="work-h">Things I built<br/><em>end-to-end.</em></h3>
+    <p class="work-blurb">Five places I owned product. Maya AI is the headline. Two ventures before that, both sold, where I learned what it actually takes. <b>The numbers I quote here I can defend on a call.</b></p>
+  </div>
+
+  <article class="proj">
+    <div class="proj-num">01 / 05</div>
+    <div class="polaroid">
+      <span class="yr">2026</span>
+      <span class="tape">Maya · AI</span>
+      <div class="frame acc-terra"><span class="mark">M<em>A</em></span></div>
+      <div class="label">01 · Maya AI</div>
+    </div>
+    <div>
+      <h3 class="proj-name">Maya <em>AI</em></h3>
+      <div class="proj-role">AI Product Manager <span class="sep">·</span> ESC Partners <span class="sep">·</span> Jan 2026 → now</div>
+    </div>
+    <div>
+      <p class="proj-desc">Two-sided AI customer support platform for utility companies. <b>Customer-facing assistant across voice, chat, SMS, email, and mobile.</b> Internal agent console integrated with Oracle CCS for the human team.</p>
+      <div class="proj-tags"><span class="proj-tag">FastAPI</span><span class="proj-tag">React</span><span class="proj-tag">AWS Bedrock</span><span class="proj-tag">DynamoDB</span><span class="proj-tag">Oracle CCS</span><span class="proj-tag">n8n</span></div>
+    </div>
+    <div class="proj-stats">
+      <div class="stub"><span class="num">70 <em>to</em> 80<em>%</em></span><span class="lbl">First-touch coverage</span></div>
+      <div class="stub"><span class="num">40<em>+</em></span><span class="lbl">Agents in pilot</span></div>
+    </div>
+  </article>
+
+  <article class="proj">
+    <div class="proj-num">02 / 05</div>
+    <div class="polaroid">
+      <span class="yr">2025</span>
+      <span class="tape">A·L·L</span>
+      <div class="frame acc-moss"><span class="mark">A<em>L</em></span></div>
+      <div class="label">02 · Assisted Living Locators</div>
+    </div>
+    <div>
+      <h3 class="proj-name">Assisted <em>Living Locators</em></h3>
+      <div class="proj-role">AI Product Consultant (Builder) <span class="sep">·</span> Remote, CA <span class="sep">·</span> Oct 2025 → Jan 2026</div>
+    </div>
+    <div>
+      <p class="proj-desc">Marketplace product matching families with care options. Owned the matching flow, the agent-facing console, and the data work behind both.</p>
+      <div class="proj-tags"><span class="proj-tag">Marketplace</span><span class="proj-tag">Healthcare</span><span class="proj-tag">B2C</span><span class="proj-tag">Agent tools</span></div>
+    </div>
+    <div class="proj-stats">
+      <div class="stub"><span class="num">2</span><span class="lbl">Surfaces owned</span></div>
+      <div class="stub"><span class="num">B2C</span><span class="lbl">Marketplace</span></div>
+    </div>
+  </article>
+
+  <article class="proj">
+    <div class="proj-num">03 / 05</div>
+    <div class="polaroid">
+      <span class="yr">2025</span>
+      <span class="tape">Vollie · Buffalo</span>
+      <div class="frame acc-terra"><span class="mark">V<em>I</em></span></div>
+      <div class="label">03 · Vollie Inc.</div>
+    </div>
+    <div>
+      <h3 class="proj-name">Vollie <em>Inc.</em></h3>
+      <div class="proj-role">Founding Product Manager <span class="sep">·</span> Buffalo, NY <span class="sep">·</span> May → Dec 2025</div>
+    </div>
+    <div>
+      <p class="proj-desc">Founding PM on Vollie, an AI-powered employee coaching platform. <b>Built a voice AI moderator that runs structured coaching sessions between employee pairs and auto-generates post-session reports.</b></p>
+      <div class="proj-tags"><span class="proj-tag">Founding PM</span><span class="proj-tag">0 → 1</span><span class="proj-tag">Voice AI</span><span class="proj-tag">AI coaching</span></div>
+    </div>
+    <div class="proj-stats">
+      <div class="stub"><span class="num">0 <em>→</em> 1</span><span class="lbl">PM</span></div>
+      <div class="stub"><span class="num">30</span><span class="lbl">Pilot users</span></div>
+    </div>
+  </article>
+
+  <article class="proj">
+    <div class="proj-num">04 / 05</div>
+    <div class="polaroid">
+      <span class="yr">2025</span>
+      <span class="tape">Ain Center</span>
+      <div class="frame acc-ink"><span class="mark">A<em>C</em></span></div>
+      <div class="label">04 · Ain Center</div>
+    </div>
+    <div>
+      <h3 class="proj-name">Ain <em>Center</em></h3>
+      <div class="proj-role">Product Lead <span class="sep">·</span> Simon Business School <span class="sep">·</span> Jan → Dec 2025</div>
+    </div>
+    <div>
+      <p class="proj-desc">Product Lead at Ain Center for Entrepreneurship at Simon Business School. <b>Built VentureForge (AI-graded airline strategy simulation) and a self-serve AI validation tool.</b></p>
+      <div class="proj-tags"><span class="proj-tag">VentureForge</span><span class="proj-tag">AI simulation</span><span class="proj-tag">Validation tool</span><span class="proj-tag">Self-serve</span></div>
+    </div>
+    <div class="proj-stats">
+      <div class="stub"><span class="num">Strategy</span><span class="lbl">Simulation</span></div>
+      <div class="stub"><span class="num">Validation</span><span class="lbl">Tool</span></div>
+    </div>
+  </article>
+
+  <article class="proj">
+    <div class="proj-num">05 / 05</div>
+    <div class="polaroid">
+      <span class="yr">2019 → 2024</span>
+      <span class="tape">CloudApproach</span>
+      <div class="frame acc-moss"><span class="mark">C<em>A</em></span></div>
+      <div class="label">05 · Founder</div>
+    </div>
+    <div>
+      <h3 class="proj-name">CloudApproach <em>+ Approachables</em></h3>
+      <div class="proj-role">Founder <span class="sep">·</span> UK + MENA <span class="sep">·</span> 2019 → 2024</div>
+    </div>
+    <div>
+      <p class="proj-desc">Two companies, five years. <b>CloudApproach: AI-powered real estate marketing CRM. Approachables: product-led marketing agency.</b> Hired teams across London and Dubai. Sold both. Roughly $5M influenced in deals closed.</p>
+      <div class="proj-tags"><span class="proj-tag">Founder</span><span class="proj-tag">UK</span><span class="proj-tag">MENA</span><span class="proj-tag">Sales</span><span class="proj-tag">Exits</span></div>
+    </div>
+    <div class="proj-stats">
+      <div class="stub"><span class="num">Two</span><span class="lbl">Exits</span></div>
+      <div class="stub"><span class="num">$575<em>K</em></span><span class="lbl">Combined</span></div>
+    </div>
+  </article>
+
+</main>
+</body>
+</html>

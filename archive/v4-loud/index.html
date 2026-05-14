@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shivam Sharma / Pressed on the web</title>
+<meta name="description" content="Shivam Sharma. AI Product Manager. Two-time founder. Currently shipping Maya AI. Loud edition." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<template id="__bundler_thumbnail" data-bg-color="#f4f1e8">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#f4f1e8"/>
+    <text x="600" y="420" text-anchor="middle" font-family="serif" font-style="italic" font-weight="900" font-size="220" fill="#0e0e0c">LOUD.</text>
+    <path d="M340 380 Q600 280 870 410 Q920 440 870 470 Q600 550 340 440 Q280 410 340 380 Z" fill="none" stroke="#d04a1f" stroke-width="6"/>
+    <text x="600" y="560" text-anchor="middle" font-family="monospace" font-size="20" letter-spacing="8" fill="#0e0e0c" opacity="0.5">SHIVAM · MMXXVI</text>
+  </svg>
+</template>
+
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  --paper:#f4f1e8;
+  --paper-2:#ece8d8;
+  --ink:#0e0e0c;
+  --burn:#d04a1f;
+  --acid:#e8ff3a;
+  --bruise:#2a2754;
+  --bone:#e8e6dc;
+  --stone:#8a8a82;
+
+  --serif:'Fraunces','Tiempos Headline',Georgia,serif;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --gutter:clamp(60px, 6vw, 110px);
+  --top:36px;
+  --left:36px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--paper);color:var(--ink);}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--sans);
+  font-size:1.0625rem;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+  position:relative;
+}
+::selection{background:var(--acid);color:var(--ink);}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+
+/* ============================================================
+   PAPER GRAIN OVERLAY
+   ============================================================ */
+.grain{
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:9000;
+  mix-blend-mode:multiply;
+  opacity:.06;
+  background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.15  0 0 0 0 0.13  0 0 0 0 0.1  0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ============================================================
+   CROP MARKS — fixed, print-design energy
+   ============================================================ */
+.crop{position:fixed;width:18px;height:18px;z-index:5000;pointer-events:none;}
+.crop::before,.crop::after{
+  content:'';position:absolute;background:var(--ink);
+}
+.crop::before{width:18px;height:1px;top:9px;left:0;}
+.crop::after{width:1px;height:18px;left:9px;top:0;}
+.crop.tl{top:var(--top);left:var(--left);}
+.crop.tr{top:var(--top);right:var(--left);}
+.crop.bl{bottom:var(--top);left:var(--left);}
+.crop.br{bottom:var(--top);right:var(--left);}
+
+/* ============================================================
+   TOP TICKER (horizontal marquee)
+   ============================================================ */
+.ticker{
+  position:fixed;top:0;left:0;right:0;
+  background:var(--paper);
+  border-bottom:1px solid rgba(14,14,12,.2);
+  z-index:4000;
+  font-family:var(--mono);
+  font-size:.7rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink);
+  height:24px;
+  display:flex;align-items:center;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.ticker-track{
+  display:flex;gap:60px;
+  animation:slide 60s linear infinite;
+  padding-left:60px;
+}
+.ticker:hover .ticker-track{animation-play-state:paused;}
+.ticker-track span{display:inline-flex;align-items:center;gap:14px;}
+.ticker-track .dot{
+  width:6px;height:6px;background:var(--burn);border-radius:50%;display:inline-block;
+}
+@keyframes slide{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+
+/* ============================================================
+   LEFT SIDEBAR (vertical marquee + crop label)
+   ============================================================ */
+.spine{
+  position:fixed;left:0;top:0;bottom:0;
+  width:34px;
+  z-index:4000;
+  pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;
+  padding:80px 0 80px;
+}
+.spine-marquee{
+  flex:1;
+  position:relative;
+  overflow:hidden;
+  pointer-events:auto;
+  cursor:none;
+}
+.spine-marquee .col{
+  position:absolute;
+  left:50%;transform:translateX(-50%);
+  writing-mode:vertical-rl;
+  font-family:var(--mono);
+  font-size:.7rem;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--ink);
+  white-space:nowrap;
+  animation:vmarq 28s linear infinite;
+}
+.spine-marquee:hover .col{animation-play-state:paused;}
+.spine-marquee .col .heart{color:var(--burn);}
+@keyframes vmarq{
+  from{top:0;}
+  to{top:-50%;}
+}
+
+/* ============================================================
+   RIGHT SIDEBAR (page number)
+   ============================================================ */
+.rspine{
+  position:fixed;right:0;top:0;bottom:0;
+  width:34px;z-index:4000;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;
+}
+.rspine span{
+  writing-mode:vertical-rl;
+  font-family:var(--mono);
+  font-size:.7rem;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--ink);
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+@media (hover:hover) and (pointer:fine){
+  body{cursor:none;}
+  .cur{
+    position:fixed;left:0;top:0;z-index:9999;pointer-events:none;
+    width:12px;height:12px;border-radius:50%;
+    background:var(--ink);
+    transition:width .25s, height .25s, background .25s, mix-blend-mode .25s;
+    will-change:transform;
+    transform:translate3d(0,0,0) translate(-50%,-50%);
+  }
+  body.cur-text .cur{
+    width:2px;height:22px;border-radius:0;
+  }
+  body.cur-link .cur{
+    width:44px;height:44px;
+    background:var(--ink);
+    mix-blend-mode:difference;
+  }
+  .cur-trail{
+    position:fixed;z-index:9998;pointer-events:none;
+    font-family:var(--mono);font-size:10px;
+    color:var(--ink);
+    transform:translate(-50%,-50%);
+    animation:trail .8s linear forwards;
+    will-change:opacity, transform;
+  }
+  @keyframes trail{
+    from{opacity:.4;}
+    to{opacity:0;transform:translate(-50%,calc(-50% - 12px));}
+  }
+}
+
+/* ============================================================
+   SHELL
+   ============================================================ */
+main{
+  padding:0 var(--gutter);
+  padding-top:24px;
+  position:relative;
+}
+
+section{
+  position:relative;
+  min-height:100vh;
+  padding:120px 0;
+}
+
+/* Giant ghosted section numbers */
+.bignum{
+  position:absolute;
+  font-family:var(--serif);
+  font-weight:900;
+  font-style:italic;
+  font-size:clamp(20rem, 44vw, 56rem);
+  line-height:.8;
+  color:var(--ink);
+  opacity:.05;
+  pointer-events:none;
+  user-select:none;
+  letter-spacing:-.06em;
+  font-variation-settings:'SOFT' 100;
+  z-index:0;
+}
+
+/* Section eyebrow */
+.eyebrow{
+  font-family:var(--mono);
+  font-size:.7rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--ink);
+  display:inline-flex;align-items:center;gap:14px;
+}
+.eyebrow .pill{
+  background:var(--ink);color:var(--paper);
+  padding:3px 8px;font-weight:500;letter-spacing:.18em;
+}
+.eyebrow .rule{
+  width:60px;height:1px;background:var(--ink);
+  display:inline-block;
+}
+
+/* Margin caption (rotated -90deg) */
+.margin-cap{
+  position:absolute;
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+  font-family:var(--mono);
+  font-size:.7rem;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--ink);
+  opacity:.7;
+}
+
+/* ============================================================
+   00 — COLD OPEN
+   ============================================================ */
+section.cold{
+  padding:100px 0 0;
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.cold .bignum{
+  top:-2vw;left:-3vw;
+  font-size:clamp(28rem, 58vw, 70rem);
+}
+
+.cold-top{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  position:relative;z-index:2;
+}
+.cold-top .clock{
+  font-family:var(--mono);
+  font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;
+}
+.cold-top .clock b{color:var(--burn);font-weight:500;}
+
+.cold-head{
+  position:relative;z-index:2;
+  margin-top:6vh;
+}
+h1.smash{
+  font-family:var(--serif);
+  font-weight:900;
+  font-size:clamp(4.5rem, 14vw, 14rem);
+  line-height:.86;
+  letter-spacing:-.045em;
+  color:var(--ink);
+  font-variation-settings:'SOFT' 100,'opsz' 144;
+  text-wrap:balance;
+  margin-left:-.04em;
+}
+h1.smash .ital{
+  font-style:italic;
+  font-weight:300;
+  letter-spacing:-.02em;
+}
+h1.smash .grot{
+  font-family:var(--sans);
+  font-weight:700;
+  font-stretch:75%;
+  text-transform:uppercase;
+  letter-spacing:-.01em;
+  font-size:.78em;
+  vertical-align:.06em;
+}
+h1.smash .burn{
+  color:var(--burn);
+  font-style:italic;
+  font-weight:400;
+  position:relative;
+  display:inline-block;
+  padding:0 .12em;
+  white-space:nowrap;
+}
+h1.smash .scribble{
+  position:absolute;
+  inset:-12% -6% -16% -6%;
+  pointer-events:none;
+}
+h1.smash .scribble path{
+  fill:none;
+  stroke:var(--burn);
+  stroke-width:3.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:1600;
+  stroke-dashoffset:1600;
+  animation:draw 1.4s cubic-bezier(.5,.05,.2,1) forwards;
+  animation-delay:2.4s;
+}
+@keyframes draw{
+  to{stroke-dashoffset:0;}
+}
+.cursor-blink{
+  display:inline-block;
+  width:.06em;height:.78em;
+  background:var(--ink);
+  vertical-align:-.04em;
+  margin-left:.06em;
+  animation:blink 1.05s steps(2,end) infinite;
+}
+@keyframes blink{50%{opacity:0;}}
+
+.cold-foot{
+  position:relative;z-index:2;
+  padding:6vh 0 80px;
+  display:flex;justify-content:space-between;align-items:flex-end;gap:32px;
+  flex-wrap:wrap;
+}
+.cold-foot .sub{
+  max-width:54ch;
+  font-family:var(--sans);
+  font-size:1.05rem;
+  color:var(--ink);
+  line-height:1.55;
+}
+.cold-foot .sub b{
+  background:var(--acid);
+  padding:0 .2em;
+  font-weight:500;
+}
+.cold-foot .meta{
+  text-align:right;
+  font-family:var(--mono);
+  font-size:.74rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  line-height:1.8;
+}
+.cold-foot .meta a{
+  display:inline-flex;align-items:center;gap:10px;
+  color:var(--ink);position:relative;padding-bottom:3px;
+}
+.cold-foot .meta a::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;
+  height:1px;background:var(--burn);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .3s ease-out;
+}
+.cold-foot .meta a:hover::after{transform:scaleX(1);}
+
+/* Paper-tear divider */
+.tear{
+  width:calc(100% + var(--gutter)*2);
+  margin-left:calc(var(--gutter)*-1);
+  display:block;
+  height:34px;
+}
+.tear path{
+  fill:none;stroke:var(--ink);stroke-width:1.2;
+  stroke-dasharray:2400;stroke-dashoffset:2400;
+  transition:stroke-dashoffset 1.6s cubic-bezier(.4,.0,.2,1);
+}
+.tear.in path{stroke-dashoffset:0;}
+
+/* ============================================================
+   01 — THE INDEX
+   ============================================================ */
+section.index{
+  padding-top:120px;
+  padding-bottom:80px;
+}
+.index .bignum{top:8%;right:-3vw;}
+.index-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:80px;flex-wrap:wrap;gap:24px;
+}
+.index-head h2{
+  font-family:var(--serif);
+  font-weight:300;
+  font-style:italic;
+  font-size:clamp(3rem, 7vw, 6rem);
+  line-height:1;
+  letter-spacing:-.025em;
+}
+.index-head h2 .grot{
+  font-family:var(--sans);
+  font-style:normal;
+  font-weight:700;
+  font-stretch:75%;
+  text-transform:uppercase;
+  letter-spacing:-.005em;
+  font-size:.72em;
+  color:var(--ink);
+}
+
+.toc{
+  position:relative;z-index:2;
+  border-top:1px solid var(--ink);
+}
+.toc-row{
+  display:grid;
+  grid-template-columns:60px 1fr 200px 100px;
+  align-items:center;
+  padding:24px 0;
+  border-bottom:1px solid rgba(14,14,12,.18);
+  position:relative;
+  overflow:hidden;
+  transition:transform .35s cubic-bezier(.6,.05,.05,1);
+  cursor:none;
+}
+.toc-row .num{
+  font-family:var(--mono);
+  font-size:.85rem;letter-spacing:.12em;
+  color:var(--ink);opacity:.6;
+}
+.toc-row .ttl{
+  font-family:var(--serif);
+  font-size:clamp(1.6rem, 3vw, 2.4rem);
+  font-weight:400;
+  line-height:1;letter-spacing:-.015em;
+  color:var(--ink);
+  position:relative;
+  z-index:2;
+}
+.toc-row .ttl em{font-style:italic;font-weight:300;}
+.toc-row .ttl .grot{
+  font-family:var(--sans);
+  font-style:normal;
+  font-weight:600;
+  font-stretch:75%;
+  text-transform:uppercase;
+  font-size:.62em;
+  letter-spacing:-.005em;
+  vertical-align:.18em;
+  margin-left:.4em;
+  color:var(--ink);
+}
+.toc-row .meta{
+  font-family:var(--mono);
+  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink);opacity:.6;
+}
+.toc-row .arrow{
+  font-family:var(--mono);
+  font-size:1rem;text-align:right;
+  color:var(--ink);opacity:.4;
+  transition:transform .35s, opacity .35s;
+}
+.toc-row::before{
+  content:'';position:absolute;
+  left:0;top:0;bottom:0;width:0;
+  background:var(--acid);
+  z-index:1;
+  transition:width .35s cubic-bezier(.5,.05,.05,1);
+}
+.toc-row:hover{transform:translateX(20px);}
+.toc-row:hover::before{width:100%;}
+.toc-row:hover .arrow{opacity:1;transform:translateX(6px);}
+.toc-row:hover .num{opacity:1;}
+
+/* TOC hover preview */
+#toc-preview{
+  position:fixed;
+  width:200px;height:140px;
+  pointer-events:none;
+  z-index:8000;
+  background:var(--paper);
+  border:1px solid var(--ink);
+  padding:6px;
+  opacity:0;
+  transition:opacity .25s;
+  transform:translate(-50%,-110%);
+  box-shadow:6px 6px 0 var(--ink);
+}
+#toc-preview .inner{
+  width:100%;height:100%;
+  background:
+    repeating-linear-gradient(45deg, rgba(14,14,12,.05) 0 1px, transparent 1px 10px),
+    var(--bone);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink);text-align:center;
+  padding:8px;
+}
+#toc-preview.on{opacity:1;}
+
+@media (max-width:780px){
+  .toc-row{grid-template-columns:40px 1fr 40px;}
+  .toc-row .meta{display:none;}
+  #toc-preview{display:none;}
+}
+
+/* ============================================================
+   02 — THE WORK (polaroid graveyard)
+   ============================================================ */
+section.work{
+  padding:140px 0 200px;
+}
+.work .bignum{top:0;left:-2vw;}
+.work-head{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:end;gap:32px;
+  margin-bottom:80px;
+}
+.work-head h2{
+  font-family:var(--serif);
+  font-weight:900;
+  font-size:clamp(2.6rem, 6vw, 5rem);
+  line-height:.95;letter-spacing:-.035em;
+  font-variation-settings:'SOFT' 100;
+  text-wrap:balance;
+}
+.work-head h2 em{
+  font-style:italic;font-weight:300;color:var(--burn);
+}
+.work-head h2 .grot{
+  font-family:var(--sans);font-weight:700;font-stretch:75%;
+  text-transform:uppercase;font-size:.6em;letter-spacing:-.005em;
+}
+.work-head .blurb{
+  font-family:var(--sans);font-size:1rem;color:var(--ink);
+  max-width:42ch;line-height:1.6;
+  text-align:right;justify-self:end;
+}
+.work-head .blurb b{
+  background:var(--acid);padding:0 .2em;font-weight:500;
+}
+
+.corkboard{
+  position:relative;
+  min-height:1100px;
+}
+.card{
+  position:absolute;
+  background:var(--paper);
+  padding:14px 14px 56px;
+  border:1px solid var(--ink);
+  box-shadow:6px 8px 0 rgba(14,14,12,.15), 0 18px 32px -18px rgba(14,14,12,.3);
+  width:300px;
+  transition:transform .55s cubic-bezier(.2,.7,.2,1), z-index 0s .35s, box-shadow .35s;
+  cursor:none;
+  will-change:transform;
+}
+.card:hover{
+  z-index:10 !important;
+  transform:rotate(0deg) translateY(-10px) scale(1.04) !important;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1), z-index 0s, box-shadow .35s;
+  box-shadow:10px 14px 0 rgba(14,14,12,.18), 0 28px 48px -18px rgba(14,14,12,.4);
+}
+.card .frame{
+  aspect-ratio:4/3;
+  background:var(--paper-2);
+  position:relative;overflow:hidden;
+  border:1px solid rgba(14,14,12,.2);
+}
+.card .frame .ph{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink);opacity:.5;text-align:center;padding:14px;
+  background:repeating-linear-gradient(45deg, rgba(14,14,12,.04) 0 1px, transparent 1px 9px);
+}
+.card .frame .heat{
+  position:absolute;inset:0;
+  background:var(--burn);opacity:0;mix-blend-mode:multiply;
+  transition:opacity .35s;
+}
+.card:nth-child(odd) .frame .heat{background:var(--bruise);}
+.card:hover .frame .heat{opacity:.0;}
+.card .tape{
+  position:absolute;
+  background:var(--acid);
+  padding:4px 10px;
+  font-family:var(--mono);
+  font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink);
+  border:1px dashed rgba(14,14,12,.4);
+  box-shadow:0 2px 6px rgba(14,14,12,.15);
+}
+.card .clip{
+  position:absolute;top:-22px;right:18px;
+  width:30px;height:46px;
+  z-index:2;
+}
+.card .label{
+  position:absolute;left:14px;right:14px;bottom:14px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+}
+.card .label .where{color:var(--ink);opacity:.6;}
+.card .label .tit{font-weight:500;}
+.card .yr{
+  position:absolute;left:-1px;top:-1px;
+  background:var(--ink);color:var(--paper);
+  padding:4px 10px;
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;
+}
+
+/* Evidence stub — one defendable number, pinned like a sticky note */
+.card .stub{
+  position:absolute;
+  background:var(--acid);
+  color:var(--ink);
+  padding:9px 13px 8px;
+  border:1px solid var(--ink);
+  box-shadow:2px 3px 0 rgba(14,14,12,.2);
+  display:flex;flex-direction:column;align-items:flex-start;
+  line-height:1;
+  z-index:3;
+  pointer-events:none;
+  transition:transform .55s cubic-bezier(.2,.7,.2,1);
+}
+.card .stub::before{
+  content:'';
+  position:absolute;top:-4px;left:50%;transform:translateX(-50%);
+  width:7px;height:7px;background:var(--ink);border-radius:50%;
+  box-shadow:0 1px 2px rgba(14,14,12,.4);
+}
+.card .stub .num{
+  font-family:var(--serif);
+  font-weight:900;
+  font-size:1.55rem;
+  letter-spacing:-.025em;
+  font-variation-settings:'SOFT' 100;
+  white-space:nowrap;
+}
+.card .stub .num em{
+  font-style:italic;font-weight:300;
+  font-size:.7em;
+  letter-spacing:0;
+  margin:0 1px;
+}
+.card .stub .lbl{
+  font-family:var(--mono);
+  font-size:.5rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  margin-top:6px;
+  opacity:.72;
+  white-space:nowrap;
+}
+.card.c1 .stub{bottom:-22px;right:-16px;transform:rotate(4deg);}
+.card.c2 .stub{bottom:-20px;left:-16px;transform:rotate(-5deg);}
+.card.c3 .stub{bottom:-22px;right:-14px;transform:rotate(3deg);}
+.card:hover .stub{transform:rotate(0deg) translateY(-2px);}
+
+.card.c1{top:0;left:2%;transform:rotate(-3.8deg);z-index:3;}
+.card.c2{top:60px;left:30%;transform:rotate(2.2deg);z-index:5;width:340px;}
+.card.c3{top:30px;right:6%;transform:rotate(-1.4deg);z-index:4;width:280px;}
+.card.c4{top:430px;left:8%;transform:rotate(3.4deg);z-index:2;width:320px;}
+.card.c5{top:480px;left:38%;transform:rotate(-2deg);z-index:6;width:300px;}
+.card.c6{top:520px;right:4%;transform:rotate(4deg);z-index:3;width:300px;}
+
+.card.c1 .tape{top:-18px;left:30px;transform:rotate(-4deg);}
+.card.c2 .tape{top:-14px;right:24px;transform:rotate(6deg);background:var(--burn);color:var(--paper);border-color:rgba(244,241,232,.4);}
+.card.c4 .tape{bottom:-16px;left:20px;transform:rotate(-3deg);}
+.card.c5 .tape{top:-12px;left:50%;transform:translateX(-50%) rotate(2deg);}
+.card.c6 .tape{bottom:-14px;right:24px;transform:rotate(5deg);background:var(--bruise);color:var(--paper);border-color:rgba(244,241,232,.4);}
+
+@media (max-width:980px){
+  .corkboard{min-height:0;display:flex;flex-direction:column;gap:40px;}
+  .card{position:relative;top:auto;left:auto;right:auto;width:100% !important;
+    transform:rotate(0) !important;}
+  .card.c2,.card.c4,.card.c6{align-self:flex-end;max-width:90%;transform:rotate(0) !important;}
+  .card.c1,.card.c3,.card.c5{align-self:flex-start;max-width:90%;transform:rotate(0) !important;}
+  .card .stub{
+    top:auto !important;left:auto !important;bottom:-18px !important;right:14px !important;
+    transform:rotate(2deg) !important;
+  }
+}
+
+/* ============================================================
+   03 — MANIFESTO
+   ============================================================ */
+section.manifesto{
+  background:var(--bruise);color:var(--paper);
+  margin:0 calc(var(--gutter)*-1);
+  padding:140px var(--gutter);
+  position:relative;
+}
+.manifesto .bignum{
+  color:var(--paper);opacity:.06;
+  top:-2vw;right:-1vw;
+}
+.manifesto-eye{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--paper);opacity:.7;
+  display:inline-flex;align-items:center;gap:14px;
+  margin-bottom:60px;
+}
+.manifesto-eye .rule{width:60px;height:1px;background:var(--paper);opacity:.6;}
+.manifesto-body{
+  position:relative;z-index:2;
+  max-width:18ch;
+  font-family:var(--serif);
+  font-weight:300;
+  font-style:italic;
+  font-size:clamp(4rem, 11vw, 11rem);
+  line-height:.92;
+  letter-spacing:-.035em;
+  color:var(--paper);
+  font-variation-settings:'SOFT' 100;
+}
+.manifesto-body .acid{
+  color:var(--acid);
+  font-weight:400;
+}
+.manifesto-body .grot{
+  font-family:var(--sans);
+  font-style:normal;
+  font-weight:700;
+  font-stretch:75%;
+  text-transform:uppercase;
+  font-size:.68em;
+  letter-spacing:-.005em;
+}
+.manifesto-sig{
+  margin-top:80px;
+  font-family:var(--mono);
+  font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--paper);opacity:.75;
+  display:flex;align-items:center;gap:14px;
+}
+.manifesto-sig .dot{
+  width:8px;height:8px;background:var(--burn);border-radius:50%;
+}
+
+/* ============================================================
+   04 — LOGBOOK
+   ============================================================ */
+section.log{
+  padding:160px 0;
+}
+.log .bignum{top:5%;left:50%;transform:translateX(-50%);}
+.log-head{
+  text-align:center;
+  margin-bottom:100px;
+  position:relative;z-index:2;
+}
+.log-head h2{
+  font-family:var(--serif);
+  font-weight:400;
+  font-size:clamp(2.6rem, 6vw, 5rem);
+  line-height:1;letter-spacing:-.025em;
+  font-variation-settings:'SOFT' 80;
+}
+.log-head h2 em{font-style:italic;font-weight:300;color:var(--burn);}
+.log-head .eyebrow{margin-bottom:24px;}
+
+.spine-rail{
+  position:relative;
+  max-width:980px;
+  margin:0 auto;
+  padding:0 0 40px;
+}
+.spine-rail::before{
+  content:'';position:absolute;left:50%;top:0;bottom:0;
+  width:1px;background:rgba(14,14,12,.25);
+  transform:translateX(-50%);
+}
+.lentry{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 80px 1fr;
+  align-items:start;
+  padding:28px 0;
+}
+.lentry .pin{
+  grid-column:2;
+  display:flex;justify-content:center;
+  padding-top:8px;
+}
+.lentry .pin .d{
+  width:11px;height:11px;border-radius:50%;
+  background:var(--paper);
+  border:1px solid var(--ink);
+}
+.lentry.now .pin .d{
+  background:var(--burn);border-color:var(--burn);
+  box-shadow:0 0 0 0 rgba(208,74,31,.6);
+  animation:pulse 2s ease-out infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(208,74,31,.55);}
+  70%{box-shadow:0 0 0 16px rgba(208,74,31,0);}
+  100%{box-shadow:0 0 0 0 rgba(208,74,31,0);}
+}
+.lentry .body{
+  padding:0;
+}
+.lentry.left .body{grid-column:1;text-align:right;padding-right:36px;}
+.lentry.right .body{grid-column:3;padding-left:36px;}
+.lentry .date{
+  font-family:var(--mono);font-size:.74rem;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink);opacity:.6;margin-bottom:8px;
+}
+.lentry .date .tag{
+  border:1px solid currentColor;padding:1px 7px;margin-left:8px;
+  font-size:.62rem;
+}
+.lentry.now .date{color:var(--burn);opacity:1;}
+.lentry h3{
+  font-family:var(--serif);font-weight:400;
+  font-size:1.5rem;line-height:1.2;letter-spacing:-.01em;
+  text-wrap:balance;
+}
+.lentry h3 em{font-style:italic;font-weight:300;color:#3a3a36;}
+.lentry .where{
+  margin-top:4px;font-family:var(--sans);
+  font-size:.95rem;color:var(--ink);opacity:.55;
+}
+.lentry .note{
+  margin-top:10px;font-size:.95rem;
+  color:var(--ink);opacity:.85;
+  max-width:38ch;
+}
+.lentry.left .note{margin-left:auto;}
+.lentry.future{opacity:.34;}
+.lentry.future h3 em,.lentry.future .where{color:var(--ink);}
+.lentry.future .date .tag{
+  border-color:var(--ink);
+  color:var(--ink);
+}
+
+@media (max-width:780px){
+  .spine-rail::before{left:14px;}
+  .lentry{grid-template-columns:28px 1fr;}
+  .lentry .pin{grid-column:1;padding-top:8px;}
+  .lentry .body,.lentry.left .body,.lentry.right .body{
+    grid-column:2;text-align:left;padding:0 0 0 14px;
+  }
+  .lentry.left .note{margin-left:0;}
+}
+
+/* ============================================================
+   05 — OUTRO
+   ============================================================ */
+section.outro{
+  padding:160px 0 80px;
+  position:relative;
+  min-height:90vh;
+}
+.outro .bignum{top:-2vw;right:-3vw;}
+.outro .eyebrow{margin-bottom:48px;}
+a.bigmail{
+  font-family:var(--serif);
+  font-weight:300;
+  font-style:italic;
+  font-size:clamp(3rem, 11vw, 10.5rem);
+  line-height:.95;letter-spacing:-.035em;
+  color:var(--ink);
+  display:inline-block;
+  position:relative;
+  font-variation-settings:'SOFT' 100;
+  text-wrap:balance;
+}
+a.bigmail .at{
+  color:var(--burn);
+  font-style:normal;
+  font-weight:700;
+}
+a.bigmail .underline{
+  position:absolute;left:0;right:0;bottom:-4px;
+  height:6px;background:var(--burn);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .55s cubic-bezier(.6,.05,.05,1);
+}
+a.bigmail:hover .underline{transform:scaleX(1);}
+
+.outro-grid{
+  margin-top:80px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:48px;
+  align-items:end;
+}
+.outro-elsewhere{
+  font-family:var(--mono);
+  font-size:.84rem;letter-spacing:.16em;text-transform:uppercase;
+  line-height:2;
+}
+.outro-elsewhere a{
+  display:inline-block;position:relative;padding-bottom:3px;
+}
+.outro-elsewhere a::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;
+  height:1px;background:var(--burn);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .3s ease-out;
+}
+.outro-elsewhere a:hover::after{transform:scaleX(1);}
+.outro-elsewhere span.k{color:var(--ink);opacity:.5;}
+
+.outro-slash{
+  justify-self:end;align-self:end;
+  width:240px;height:240px;
+  position:relative;
+}
+.outro-slash svg{display:block;width:100%;height:100%;}
+.outro-slash path{
+  fill:none;stroke:var(--acid);stroke-width:14;
+  stroke-linecap:round;
+  filter:drop-shadow(2px 2px 0 var(--ink));
+}
+
+.outro-foot{
+  margin-top:140px;
+  padding-top:32px;
+  border-top:1px solid rgba(14,14,12,.2);
+  display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;
+  font-family:var(--mono);
+  font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink);opacity:.7;
+}
+.outro-foot b{color:var(--ink);font-weight:500;opacity:1;}
+
+/* ============================================================
+   REVEAL
+   ============================================================ */
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .85s cubic-bezier(.2,.7,.2,1), transform .85s cubic-bezier(.2,.7,.2,1);
+  transition-delay:var(--d,0ms);
+}
+.reveal.side{transform:translateX(40px);}
+.reveal.side-l{transform:translateX(-40px);}
+.reveal.in{opacity:1;transform:translate(0,0);}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+  .reveal{opacity:1;transform:none;}
+  .ticker-track,.spine-marquee .col{animation:none !important;}
+  body{cursor:auto !important;}
+  .cur,.cur-trail{display:none !important;}
+  h1.smash .scribble path{stroke-dashoffset:0 !important;animation:none !important;}
+  .cursor-blink{display:none !important;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Grain overlay -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- Crop marks -->
+<div class="crop tl" aria-hidden="true"></div>
+<div class="crop tr" aria-hidden="true"></div>
+<div class="crop bl" aria-hidden="true"></div>
+<div class="crop br" aria-hidden="true"></div>
+
+<!-- Top ticker -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="ticker-track"></div>
+</div>
+
+<!-- Left spine + name marquee -->
+<div class="spine" aria-hidden="true">
+  <div class="spine-marquee">
+    <div class="col" id="spine-col"></div>
+  </div>
+</div>
+
+<!-- Right spine -->
+<div class="rspine" aria-hidden="true"><span>Pressed · MMXXVI · No. 01</span></div>
+
+<!-- Custom cursor -->
+<div class="cur" id="cur" aria-hidden="true"></div>
+
+<!-- TOC hover preview -->
+<div id="toc-preview" aria-hidden="true">
+  <div class="inner" id="toc-preview-inner">PREVIEW</div>
+</div>
+
+<main>
+
+<!-- ============================================================ -->
+<!-- 00 — COLD OPEN                                                -->
+<!-- ============================================================ -->
+<section class="cold" data-screen-label="00 Cold Open" id="cold">
+  <div class="bignum" aria-hidden="true">00</div>
+
+  <div class="cold-top">
+    <div class="eyebrow"><span class="pill">FOLD 00</span><span class="rule"></span>SHIVAM&nbsp;/&nbsp;RIDE&nbsp;/&nbsp;2026</div>
+    <div class="clock"><span id="city">Rochester</span> &nbsp;<b id="clock-time">--:--:--</b></div>
+  </div>
+
+  <div class="cold-head">
+    <h1 class="smash" id="smash-h">
+      <!-- Built by JS for typing animation; static fallback below for SSR/no-JS -->
+      <noscript>I build AI for the parts of the internet nobody ships to.</noscript>
+    </h1>
+  </div>
+
+  <div class="cold-foot">
+    <p class="sub reveal">
+      Shivam Sharma. AI Product Manager at <b>ESC Partners</b>. Two-time founder, two acquisitions, one chatbot answering the
+      emails so a support manager can drink their coffee while it&rsquo;s still hot.
+    </p>
+    <div class="meta reveal" style="--d:160ms">
+      <a href="#index">SCROLL · INDEX BELOW <span aria-hidden="true">↓</span></a><br/>
+      <a href="/cdn-cgi/l/email-protection#167e7f56657e7f60777b386179647d">OR JUMP TO INBOX <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+
+  <svg class="tear" viewBox="0 0 2400 34" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 18 L40 14 L78 22 L120 12 L168 26 L210 10 L256 20 L302 14 L360 28 L420 12 L470 22 L520 14 L580 28 L640 14 L700 22 L760 14 L820 28 L880 12 L940 22 L1000 14 L1060 28 L1120 12 L1180 22 L1240 14 L1300 28 L1360 12 L1420 22 L1480 14 L1540 28 L1600 12 L1660 22 L1720 14 L1780 28 L1840 12 L1900 22 L1960 14 L2020 28 L2080 12 L2140 22 L2200 14 L2260 28 L2320 14 L2400 20"/>
+  </svg>
+</section>
+
+<!-- ============================================================ -->
+<!-- 01 — THE INDEX                                                -->
+<!-- ============================================================ -->
+<section class="index" data-screen-label="01 Index" id="index">
+  <div class="bignum" aria-hidden="true">01</div>
+
+  <div class="index-head reveal">
+    <h2>The <em>index</em>,<br/>or: <span class="grot">A TABLE OF CONTENTS THAT FLIRTS BACK.</span></h2>
+    <div class="eyebrow"><span class="pill">FOLD 01</span><span class="rule"></span>06 ENTRIES</div>
+  </div>
+
+  <div class="toc reveal" style="--d:120ms">
+    <a class="toc-row" href="#work" data-preview="Maya AI · the proof">
+      <div class="num">№ 01</div>
+      <div class="ttl">Maya AI <em>— the proof of work.</em></div>
+      <div class="meta">Case study · 2026</div>
+      <div class="arrow">→</div>
+    </a>
+    <a class="toc-row" href="#log" data-preview="The logbook · jobs & exits">
+      <div class="num">№ 02</div>
+      <div class="ttl">The logbook <em>(jobs, exits, a master&rsquo;s).</em></div>
+      <div class="meta">Career · 2019–now</div>
+      <div class="arrow">→</div>
+    </a>
+    <a class="toc-row" href="#manifesto" data-preview="A small opinion, held loudly">
+      <div class="num">№ 03</div>
+      <div class="ttl">An opinion <em>held loudly.</em> <span class="grot">RE: DEMOS.</span></div>
+      <div class="meta">Manifesto · 2026</div>
+      <div class="arrow">→</div>
+    </a>
+    <a class="toc-row" href="#work" data-preview="Founder years · CloudApproach, Approachables">
+      <div class="num">№ 04</div>
+      <div class="ttl">Two companies, <em>two acquisitions.</em></div>
+      <div class="meta">Founder · 2019–24</div>
+      <div class="arrow">→</div>
+    </a>
+    <a class="toc-row" href="#outro" data-preview="Contact · hi@shivam.work">
+      <div class="num">№ 05</div>
+      <div class="ttl">Where to find me <em>when the lights go down.</em></div>
+      <div class="meta">Contact · now</div>
+      <div class="arrow">→</div>
+    </a>
+    <a class="toc-row" href="#cold" data-preview="Back to the top">
+      <div class="num">№ 06</div>
+      <div class="ttl">Top of the ride. <em>Again.</em></div>
+      <div class="meta">Loop</div>
+      <div class="arrow">↑</div>
+    </a>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 02 — THE WORK                                                 -->
+<!-- ============================================================ -->
+<section class="work" data-screen-label="02 Work" id="work">
+  <div class="bignum" aria-hidden="true">02</div>
+
+  <div class="work-head">
+    <h2 class="reveal">
+      The <em>work</em>, laid out like<br/>
+      <span class="grot">EVIDENCE ON A CORKBOARD.</span>
+    </h2>
+    <p class="blurb reveal side" style="--d:120ms">
+      Six artefacts. Hover any one to bring it to the top of the stack. <b>The numbers I quote here I can defend on a call.</b>
+      The ones I can&rsquo;t are not on the page.
+    </p>
+  </div>
+
+  <div class="corkboard">
+
+    <article class="card c1 reveal side-l">
+      <span class="yr">2026</span>
+      <span class="tape">M A Y A · A I</span>
+      <svg class="clip" viewBox="0 0 30 46" aria-hidden="true">
+        <path d="M5 8 Q5 2 15 2 Q25 2 25 8 L25 36 Q25 42 18 42 Q11 42 11 36 L11 14 Q11 10 15 10 Q19 10 19 14 L19 32" fill="none" stroke="#0e0e0c" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="frame"><div class="ph">Customer-facing<br/>chat &amp; voice widget</div><div class="heat"></div></div>
+      <div class="label"><span class="tit">01 · Widget</span><span class="where">In pilot</span></div>
+      <span class="stub" aria-label="70 to 80 percent first-touch coverage">
+        <span class="num">70 <em>to</em> 80<em>%</em></span>
+        <span class="lbl">First-touch coverage</span>
+      </span>
+    </article>
+
+    <article class="card c2 reveal" style="--d:80ms">
+      <span class="yr">2026</span>
+      <span class="tape">CONSOLE · ORACLE CCS</span>
+      <svg class="clip" viewBox="0 0 30 46" aria-hidden="true">
+        <path d="M5 8 Q5 2 15 2 Q25 2 25 8 L25 36 Q25 42 18 42 Q11 42 11 36 L11 14 Q11 10 15 10 Q19 10 19 14 L19 32" fill="none" stroke="#0e0e0c" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="frame"><div class="ph">Internal agent console<br/>40+ seats</div><div class="heat"></div></div>
+      <div class="label"><span class="tit">02 · Console</span><span class="where">Production</span></div>
+      <span class="stub" aria-label="40 plus agents in pilot">
+        <span class="num">40<em>+</em></span>
+        <span class="lbl">Agents in pilot</span>
+      </span>
+    </article>
+
+    <article class="card c3 reveal side" style="--d:160ms">
+      <span class="yr">2025</span>
+      <span class="tape" style="top:-12px;left:14px;transform:rotate(-6deg);">FOUNDER · MENA</span>
+      <div class="frame"><div class="ph">Approachables<br/>acquired 2023</div><div class="heat"></div></div>
+      <div class="label"><span class="tit">03 · Approachables</span><span class="where">Exit</span></div>
+      <span class="stub" aria-label="575 thousand dollars across two exits combined">
+        <span class="num">$575<em>K</em></span>
+        <span class="lbl">Two exits, combined</span>
+      </span>
+    </article>
+
+    <article class="card c4 reveal side-l" style="--d:240ms">
+      <span class="yr">2024</span>
+      <span class="tape">CLOUDAPPROACH · UK</span>
+      <svg class="clip" viewBox="0 0 30 46" aria-hidden="true">
+        <path d="M5 8 Q5 2 15 2 Q25 2 25 8 L25 36 Q25 42 18 42 Q11 42 11 36 L11 14 Q11 10 15 10 Q19 10 19 14 L19 32" fill="none" stroke="#0e0e0c" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="frame"><div class="ph">CloudApproach<br/>acquired 2024</div><div class="heat"></div></div>
+      <div class="label"><span class="tit">04 · CloudApproach</span><span class="where">Exit</span></div>
+    </article>
+
+    <article class="card c5 reveal" style="--d:320ms">
+      <span class="yr">2025</span>
+      <span class="tape">VOLLIE · BUFFALO</span>
+      <div class="frame"><div class="ph">Founding PM<br/>(Buffalo, not Pleasanton)</div><div class="heat"></div></div>
+      <div class="label"><span class="tit">05 · Vollie</span><span class="where">Founding PM</span></div>
+    </article>
+
+    <article class="card c6 reveal side" style="--d:400ms">
+      <span class="yr">2025</span>
+      <span class="tape">M.S. AI · SIMON</span>
+      <svg class="clip" viewBox="0 0 30 46" aria-hidden="true">
+        <path d="M5 8 Q5 2 15 2 Q25 2 25 8 L25 36 Q25 42 18 42 Q11 42 11 36 L11 14 Q11 10 15 10 Q19 10 19 14 L19 32" fill="none" stroke="#0e0e0c" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="frame"><div class="ph">MS AI in Business<br/>STEM · Dec 2025</div><div class="heat"></div></div>
+      <div class="label"><span class="tit">06 · Simon</span><span class="where">Degree</span></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 03 — MANIFESTO                                                -->
+<!-- ============================================================ -->
+<section class="manifesto" data-screen-label="03 Manifesto" id="manifesto">
+  <div class="bignum" aria-hidden="true">03</div>
+
+  <div class="manifesto-eye reveal">
+    <span class="rule"></span> FOLD 03 &nbsp;·&nbsp; ONE LINE
+  </div>
+
+  <h2 class="manifesto-body reveal" style="--d:140ms">
+    The <span class="acid">asterisk</span> goes <span class="grot">in the headline.</span>
+  </h2>
+
+  <p class="manifesto-sig reveal" style="--d:280ms">
+    <span class="dot"></span> Shivam &nbsp;/&nbsp; on demos &nbsp;/&nbsp; 2026
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 04 — LOGBOOK                                                  -->
+<!-- ============================================================ -->
+<section class="log" data-screen-label="04 Logbook" id="log">
+  <div class="bignum" aria-hidden="true">04</div>
+
+  <div class="log-head">
+    <div class="eyebrow reveal"><span class="pill">FOLD 04</span><span class="rule"></span>LOGBOOK · CAPTAIN&rsquo;S NOTES</div>
+    <h2 class="reveal" style="--d:80ms">A career, <em>read like a spine.</em></h2>
+  </div>
+
+  <div class="spine-rail">
+
+    <!-- Future / ghost entries (top) -->
+    <div class="lentry future right reveal">
+      <div class="pin"><div class="d"></div></div>
+      <div class="body">
+        <p class="date">2026 · ahead <span class="tag">PLANNED</span></p>
+        <h3>Maya v2 — <em>voice-first, multi-tenant.</em></h3>
+        <p class="where">Rolling out beyond utilities.</p>
+      </div>
+    </div>
+
+    <div class="lentry future left reveal" style="--d:60ms">
+      <div class="pin"><div class="d"></div></div>
+      <div class="body">
+        <p class="date">2026 · summer <span class="tag">WRITING</span></p>
+        <h3>An essay <em>on honest AI metrics.</em></h3>
+        <p class="where">Working title. May change.</p>
+      </div>
+    </div>
+
+    <!-- Now -->
+    <div class="lentry now right reveal">
+      <div class="pin"><div class="d"></div></div>
+      <div class="body">
+        <p class="date">2026 · Jan → now <span class="tag">NOW</span></p>
+        <h3>AI Product Manager, <em>ESC Partners</em></h3>
+        <p class="where">Rochester, NY</p>
+        <p class="note">Built Maya AI end-to-end. Pilot with 40+ agents. Stack: FastAPI, React, AWS Bedrock, DynamoDB, Render.</p>
+      </div>
+    </div>
+
+    <div class="lentry left reveal" style="--d:60ms">
+      <div class="pin"><div class="d"></div></div>
+      <div class="body">
+        <p class="date">2025 · Oct → Jan 2026</p>
+        <h3>Senior PM, <em>Assisted Living Locators</em></h3>
+        <p class="where">Remote, CA</p>
+      </div>
+    </div>
+
+    <div class="lentry right reveal" style="--d:120ms">
+      <div class="pin"><div class="d"></div></div>
+      <div class="body">
+        <p class="date">2025 · May → Dec</p>
+        <h3>Founding PM, <em>Vollie Inc.</em></h3>
+        <p class="where">Buffalo, NY (not Pleasanton)</p>
+      </div>
+    </div>
+
+    <div class="lentry left reveal" style="--d:180ms">
+      <div class="pin"><div class="d"></div></div>
+      <div class="body">
+        <p class="date">2025 · Jan → Dec</p>
+        <h3>Product Lead, <em>Ain Center for Entrepreneurship</em></h3>
+        <p class="where">Simon Business School</p>
+      </div>
+    </div>
+
+    <div class="lentry right reveal" style="--d:240ms">
+      <div class="pin"><div class="d"></div></div>
+      <div class="body">
+        <p class="date">2025 · Dec</p>
+        <h3>M.S. AI in Business <em>(STEM)</em></h3>
+        <p class="where">Simon Business School, Rochester</p>
+      </div>
+    </div>
+
+    <div class="lentry left reveal" style="--d:300ms">
+      <div class="pin"><div class="d"></div></div>
+      <div class="body">
+        <p class="date">2019 → 2024</p>
+        <h3>Founder · <em>CloudApproach &amp; Approachables</em></h3>
+        <p class="where">UK · MENA</p>
+        <p class="note">Two companies. Two acquisitions. Combined exits of $575K. Influenced ~$5M in closed deals.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 05 — OUTRO                                                    -->
+<!-- ============================================================ -->
+<section class="outro" data-screen-label="05 Outro" id="outro">
+  <div class="bignum" aria-hidden="true">05</div>
+
+  <div class="eyebrow reveal"><span class="pill">FOLD 05</span><span class="rule"></span>END · OR · BEGIN</div>
+
+  <a class="bigmail reveal side-l" style="--d:100ms" href="/cdn-cgi/l/email-protection#355d5c75465d5c4354581b425a475e">
+    hi<span class="at">@</span>shivam.work<span class="underline"></span>
+  </a>
+
+  <div class="outro-grid">
+    <div class="outro-elsewhere reveal" style="--d:220ms">
+      <span class="k">elsewhere &nbsp;·&nbsp;</span>
+      <a href="#">linkedin</a> &nbsp;/&nbsp;
+      <a href="#">github</a> &nbsp;/&nbsp;
+      <a href="#">read.cv</a> &nbsp;/&nbsp;
+      <a href="#">are.na</a><br/>
+      <span class="k">audio &nbsp;·&nbsp;</span>
+      <a href="#">a podcast i never finish</a>
+    </div>
+
+    <div class="outro-slash reveal side" style="--d:300ms" aria-hidden="true">
+      <svg viewBox="0 0 240 240">
+        <path d="M40 210 C60 160, 110 80, 200 30"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="outro-foot">
+    <p>
+      Set in <b>Fraunces</b> and <b>Inter</b>. Mono accents in <b>JetBrains</b>.<br/>
+      Pressed on the web, <span id="press-date">May 2026</span> · <b>Rochester, NY</b>.
+    </p>
+    <p>© MMXXVI &nbsp;·&nbsp; <b>S.S.</b> &nbsp;·&nbsp; All quiet rights reserved</p>
+  </div>
+</section>
+
+</main>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ===== TICKER TRACK =====
+  const tickerEl = document.getElementById('ticker-track');
+  const tickerItems = [
+    'NOW PLAYING · No. 01 / 2026',
+    'SHIVAM SHARMA · AI PRODUCT MANAGER',
+    'PRESSED ON THE WEB · ROCHESTER, NY',
+    'CURRENTLY SHIPPING · MAYA AI',
+    'OPEN FOR HIRE · AI PM ROLES',
+    'NO SEMICOLONS · NO EM DASHES',
+    'ESTABLISHED 1994 · DELHI',
+    'AVAILABLE THIS QUARTER',
+  ];
+  const tickerHTML = tickerItems.map(t =>
+    `<span><span class="dot"></span>${t}</span>`
+  ).join('');
+  tickerEl.innerHTML = tickerHTML + tickerHTML; // double for seamless loop
+
+  // ===== LEFT SPINE MARQUEE =====
+  const spineCol = document.getElementById('spine-col');
+  const spineBits = '★ SHIVAM SHARMA ★ ROCHESTER NY ★ MAY MMXXVI ★ AI / PM ★ &lt;3 ★ ';
+  spineCol.innerHTML = spineBits.repeat(8);
+
+  // ===== LIVE CLOCK =====
+  const clock = document.getElementById('clock-time');
+  function tick(){
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mm = String(d.getMinutes()).padStart(2,'0');
+    const ss = String(d.getSeconds()).padStart(2,'0');
+    clock.textContent = `${hh}:${mm}:${ss}`;
+  }
+  tick();
+  if (!reduced) setInterval(tick, 1000);
+
+  // press date
+  const pd = new Date();
+  document.getElementById('press-date').textContent =
+    pd.toLocaleString('en-US', {month:'long', year:'numeric'});
+
+  // ===== HERO TYPE-ON =====
+  // Headline: I build AI for the parts of the internet [nobody] ships to.
+  // [nobody] is the burn-italic word with the scribble.
+  const target = document.getElementById('smash-h');
+  // We type characters one by one. Span tokens carry classes.
+  const tokens = [
+    {t:'I build ', cls:''},
+    {t:'AI', cls:'grot'},
+    {t:' for the parts of\u00A0', cls:''},
+    {t:'the internet', cls:'ital'},
+    {t:' ', cls:''},
+    {t:'nobody', cls:'burn', scribble:true},
+    {t:' ships to.', cls:''},
+  ];
+
+  const SCRIBBLE_PATH = "M20 60 C 60 20, 200 6, 360 18 C 510 30, 600 48, 614 72 C 624 96, 540 110, 380 116 C 220 122, 60 110, 30 90 C 6 74, 24 62, 80 56";
+
+  function buildSpan(tok){
+    const s = document.createElement('span');
+    if (tok.cls) s.className = tok.cls;
+    if (tok.scribble){
+      const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('class','scribble');
+      svg.setAttribute('viewBox','0 0 640 130');
+      svg.setAttribute('preserveAspectRatio','none');
+      svg.setAttribute('aria-hidden','true');
+      const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+      p.setAttribute('d', SCRIBBLE_PATH);
+      svg.appendChild(p);
+      s.appendChild(svg);
+    }
+    return s;
+  }
+
+  const cursorEl = document.createElement('span');
+  cursorEl.className = 'cursor-blink';
+  target.appendChild(cursorEl);
+
+  if (reduced){
+    // Just place all the text instantly
+    tokens.forEach(tok => {
+      const s = buildSpan(tok);
+      // burn span needs text before the scribble svg
+      const textNode = document.createTextNode(tok.t);
+      if (tok.scribble){
+        s.insertBefore(textNode, s.firstChild);
+      } else {
+        s.appendChild(textNode);
+      }
+      target.insertBefore(s, cursorEl);
+    });
+  } else {
+    let i = 0, j = 0;
+    let span = null;
+    let textNode = null;
+
+    function step(){
+      if (i >= tokens.length) return;
+      const tok = tokens[i];
+
+      if (!span){
+        span = buildSpan(tok);
+        textNode = document.createTextNode('');
+        if (tok.scribble){
+          span.insertBefore(textNode, span.firstChild);
+        } else {
+          span.appendChild(textNode);
+        }
+        target.insertBefore(span, cursorEl);
+      }
+
+      textNode.data += tok.t[j];
+      j++;
+
+      if (j >= tok.t.length){
+        i++; j = 0; span = null; textNode = null;
+      }
+
+      // Cadence:
+      //  - tokens 0..2 = slow (110ms)
+      //  - token 3 (the internet) ~ 70ms
+      //  - token 4..5 fast (30ms), but [nobody] slams in as a whole word
+      //  - token 6 fast (35ms)
+      let delay = 110;
+      if (i === 3) delay = 70;
+      else if (i === 4) delay = 30;
+      else if (i === 5){
+        // slam: skip char-by-char by filling the rest at once
+        textNode.data = tok.t;
+        j = tok.t.length;
+        // small pause for impact
+        i++; j = 0; span = null; textNode = null;
+        delay = 220;
+      }
+      else if (i === 6) delay = 35;
+
+      setTimeout(step, delay);
+    }
+    setTimeout(step, 500);
+  }
+
+  // ===== REVEAL ON SCROLL =====
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin:'0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal,.tear').forEach(el => io.observe(el));
+
+  // ===== TOC PREVIEW =====
+  const preview = document.getElementById('toc-preview');
+  const previewInner = document.getElementById('toc-preview-inner');
+  document.querySelectorAll('.toc-row').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      previewInner.textContent = row.dataset.preview || 'preview';
+      preview.classList.add('on');
+    });
+    row.addEventListener('mouseleave', () => {
+      preview.classList.remove('on');
+    });
+  });
+
+  // ===== CUSTOM CURSOR + TRAIL =====
+  if (matchMedia('(hover:hover) and (pointer:fine)').matches){
+    const cur = document.getElementById('cur');
+    let tx=0, ty=0, cx=0, cy=0;
+    let lastTrailX=0, lastTrailY=0;
+    const trailChars = ['/','.','·','-','+','×','*'];
+
+    document.addEventListener('mousemove', (e) => {
+      tx = e.clientX; ty = e.clientY;
+      preview.style.left = tx + 'px';
+      preview.style.top  = ty + 'px';
+
+      // throttle trail
+      const dx = tx - lastTrailX, dy = ty - lastTrailY;
+      if (Math.hypot(dx,dy) > 36){
+        lastTrailX = tx; lastTrailY = ty;
+        const c = document.createElement('span');
+        c.className = 'cur-trail';
+        c.textContent = trailChars[Math.floor(Math.random()*trailChars.length)];
+        c.style.left = tx + 'px';
+        c.style.top  = ty + 'px';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 850);
+      }
+    });
+
+    function loop(){
+      cx += (tx - cx) * .42;
+      cy += (ty - cy) * .42;
+      cur.style.transform = `translate3d(${cx}px,${cy}px,0) translate(-50%,-50%)`;
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    document.addEventListener('mouseover', (e) => {
+      const link = e.target.closest('a, button, [data-link]');
+      const textBlock = e.target.closest('p, h1, h2, h3, .ttl, .note, .sub');
+      document.body.classList.toggle('cur-link', !!link);
+      document.body.classList.toggle('cur-text', !!textBlock && !link);
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
