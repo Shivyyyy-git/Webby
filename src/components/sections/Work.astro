@@ -26,17 +26,23 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
     </div>
 
     {work.map((entry, i) => {
-      const { title, titleEm, role, era, note, tags, stats, accent } = entry.data;
+      const { title, titleEm, role, era, note, tags, stats, accent, year, tape } = entry.data;
+      const idx = String(i + 1).padStart(2, '0');
+      const initialA = title.charAt(0);
+      const initialB = titleEm.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase() || title.charAt(1).toUpperCase();
       return (
         <article class={`proj proj--${accent} reveal`} data-cur="proj" data-cur-lbl="Open">
-          <div class="proj-num">{String(i + 1).padStart(2, '0')} / {String(work.length).padStart(2, '0')}</div>
+          <div class="proj-num">{idx} / {String(work.length).padStart(2, '0')}</div>
 
-          {/* Visual mark — animated gradient + project initials. Stand-in for
-              wodniack's video previews; fits the editorial aesthetic. */}
-          <div class="proj-visual" aria-hidden="true">
-            <span class="pv-grad"></span>
-            <span class="pv-noise"></span>
-            <span class="pv-mark">{title.charAt(0)}{titleEm.charAt(0).toUpperCase()}</span>
+          {/* POLAROID — corkboard treatment replacing the old gradient block */}
+          <div class={`polaroid pol--${accent}`} aria-hidden="true">
+            {year && <span class="yr">{year}</span>}
+            {tape && <span class="tape">{tape}</span>}
+            <div class="frame">
+              <span class="pv-noise"></span>
+              <span class="mark">{initialA}<em>{initialB}</em></span>
+            </div>
+            <div class="pol-lbl">{idx} · {title}{titleEm ? ' ' + titleEm : ''}</div>
           </div>
 
           <div>
@@ -49,11 +55,11 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
               {tags.map((t: string) => <span class="proj-tag">{t}</span>)}
             </div>
           </div>
-          <div class="proj-stat">
+          <div class="proj-stats">
             {stats.map((s: { value: string; label: string }) => (
-              <div class="ps">
-                <div class="pv">{s.value}</div>
-                <div class="pl">{s.label}</div>
+              <div class="stub">
+                <span class="num" set:html={s.value} />
+                <span class="lbl">{s.label}</span>
               </div>
             ))}
           </div>
@@ -149,63 +155,115 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
   }
   .proj {
     display: grid;
-    grid-template-columns: 80px 160px 1.3fr 1.5fr 1fr;
-    gap: 32px;
-    padding: 36px 0;
+    grid-template-columns: 60px 220px 1.3fr 1.5fr 220px;
+    gap: 36px;
+    padding: 48px 0;
     border-top: 1px solid rgba(237, 228, 211, 0.15);
     position: relative;
     cursor: none;
+    align-items: start;
     transition: padding 0.5s cubic-bezier(0.2, 0.9, 0.2, 1), background 0.5s;
   }
 
-  /* Visual mark — gradient block per project. Stand-in for wodniack's video previews. */
-  .proj-visual {
+  /* POLAROID — replaces .proj-visual. Cream paper card with tape, year tag, and project mark inside a gradient frame. */
+  .polaroid {
     position: relative;
-    width: 160px;
-    height: 100px;
-    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    padding: 12px 12px 44px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    box-shadow: 6px 8px 0 rgba(0, 0, 0, 0.18), 0 18px 32px -14px rgba(0, 0, 0, 0.5);
+    width: 200px;
+    transform: rotate(-2deg);
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s;
+    will-change: transform;
+  }
+  .proj:nth-of-type(odd) .polaroid { transform: rotate(1.5deg); }
+  .proj:hover .polaroid {
+    transform: rotate(0deg) translateY(-4px) scale(1.03);
+    box-shadow: 8px 12px 0 rgba(0, 0, 0, 0.22), 0 28px 48px -12px rgba(0, 0, 0, 0.6);
+  }
+  .polaroid .frame {
+    aspect-ratio: 4 / 3;
+    position: relative;
     overflow: hidden;
-    transform: rotate(-1.2deg) scale(0.95);
-    transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 0.6s;
-    box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.4);
-  }
-  .pv-grad {
-    position: absolute;
-    inset: 0;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: linear-gradient(135deg, var(--terra) 0%, var(--terra-deep) 60%, var(--rust) 100%);
-    transition: transform 1.4s ease;
   }
-  .proj--moss .pv-grad { background: linear-gradient(135deg, #5a8a6a 0%, var(--moss) 60%, #15201a 100%); }
-  .proj--ink  .pv-grad { background: linear-gradient(135deg, #4a5a52 0%, #2a3a32 60%, #0f1812 100%); }
+  .pol--moss .frame { background: linear-gradient(135deg, #5a8a6a 0%, var(--moss) 60%, #15201a 100%); }
+  .pol--ink  .frame { background: linear-gradient(135deg, #4a5a52 0%, #2a3a32 60%, #0f1812 100%); }
   .pv-noise {
     position: absolute;
     inset: 0;
     opacity: 0.28;
     mix-blend-mode: overlay;
+    pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.4 0 0 0 0 0.35 0 0 0 0.7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
-  .pv-mark {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .polaroid .mark {
     font-family: var(--serif);
     font-style: italic;
     font-weight: 300;
-    font-size: 46px;
+    font-size: 44px;
     letter-spacing: -0.03em;
-    color: rgba(237, 228, 211, 0.92);
+    color: var(--paper);
     font-variation-settings: 'opsz' 60, 'ital' 1, 'wght' 300;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
     z-index: 2;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
-  .proj:hover .proj-visual {
-    transform: rotate(0) scale(1.02);
-    box-shadow: 0 24px 48px -10px rgba(0, 0, 0, 0.55);
+  .polaroid .mark em { font-weight: 400; }
+  .polaroid .tape {
+    position: absolute;
+    background: var(--acid, #e8ff3a);
+    padding: 3px 9px;
+    font-family: var(--mono);
+    font-size: 8.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border: 1px dashed rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+    top: -12px;
+    left: 18px;
+    transform: rotate(-4deg);
+    white-space: nowrap;
+    z-index: 3;
   }
-  .proj:hover .pv-grad {
-    transform: scale(1.12);
+  .proj:nth-of-type(odd) .polaroid .tape {
+    transform: rotate(5deg);
+    background: var(--terra);
+    color: var(--paper);
+    border-color: rgba(244, 236, 219, 0.4);
+    top: -10px;
+    right: 14px;
+    left: auto;
+  }
+  .polaroid .yr {
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3px 8px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    z-index: 4;
+  }
+  .polaroid .pol-lbl {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 10px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.7);
+    text-align: center;
   }
   .proj:last-child { border-bottom: 1px solid rgba(237, 228, 211, 0.15); }
   .proj-num {
@@ -260,29 +318,65 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
     border: 1px solid rgba(237, 228, 211, 0.2);
     border-radius: 99px;
   }
-  .proj-stat {
+  /* STAT STUBS — yellow sticky notes, replaces text-aligned right stats */
+  .proj-stats {
     display: flex;
     flex-direction: column;
     gap: 18px;
-    align-items: flex-end;
+    align-items: flex-start;
+    padding-top: 8px;
   }
-  .proj-stat .ps { text-align: right; }
-  .proj-stat .pv {
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: clamp(28px, 3vw, 46px);
-    color: var(--terra);
+  .stub {
+    position: relative;
+    background: #e8ff3a;
+    color: var(--ink);
+    padding: 11px 14px 10px;
+    border: 1px solid var(--ink);
+    box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.28);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
     line-height: 1;
-    font-variation-settings: 'opsz' 60, 'wght' 300;
-    letter-spacing: -0.02em;
+    transform: rotate(-2deg);
+    transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.2, 1);
   }
-  .proj-stat .pl {
+  .proj:nth-of-type(even) .stub { transform: rotate(2deg); }
+  .proj:nth-of-type(even) .stub:nth-child(2) { transform: rotate(-3deg); }
+  .proj:nth-of-type(odd) .stub:nth-child(2) { transform: rotate(3deg); }
+  .stub::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 7px;
+    height: 7px;
+    background: var(--ink);
+    border-radius: 50%;
+  }
+  .proj:hover .stub { transform: rotate(0deg) translateY(-2px); }
+  .stub .num {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.55rem;
+    letter-spacing: -0.025em;
+    font-variation-settings: 'opsz' 60, 'wght' 700, 'SOFT' 100;
+    white-space: nowrap;
+  }
+  .stub .num :global(em) {
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.7em;
+    margin: 0 1px;
+  }
+  .stub .lbl {
     font-family: var(--mono);
     font-size: 9px;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(237, 228, 211, 0.5);
-    margin-top: 4px;
+    margin-top: 6px;
+    opacity: 0.78;
+    white-space: nowrap;
   }
   .proj-arrow {
     position: absolute;
@@ -311,12 +405,18 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
     from { opacity: 0; transform: translateY(40px); }
     to   { opacity: 1; transform: none; }
   }
+  @media (max-width: 1100px) {
+    .proj { grid-template-columns: 50px 180px 1fr 1fr 200px; gap: 24px; }
+    .polaroid { width: 180px; }
+  }
   @media (max-width: 900px) {
     .work-mast { flex-direction: column; align-items: flex-start; gap: 16px; }
     .wm-meta { align-items: flex-start; padding-bottom: 0; }
     .work-head { grid-template-columns: 1fr; gap: 24px; }
-    .proj { grid-template-columns: 1fr; gap: 14px; }
-    .proj-visual { width: 100%; max-width: 320px; height: 120px; transform: none; }
-    .proj:hover .proj-visual { transform: scale(1.02); }
+    .proj { grid-template-columns: 1fr; gap: 18px; padding: 32px 0; }
+    .polaroid { width: 100%; max-width: 280px; transform: rotate(0) !important; }
+    .proj:nth-of-type(odd) .polaroid { transform: rotate(0) !important; }
+    .proj:hover .polaroid { transform: translateY(-4px) scale(1.02); }
+    .proj-stats { flex-direction: row; flex-wrap: wrap; }
   }
 </style>

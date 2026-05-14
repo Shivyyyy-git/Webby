@@ -62,10 +62,12 @@ export function initDesk() {
   const cards = Array.from(document.querySelectorAll<HTMLElement>('.pcard'));
   const stationEls = Array.from(document.querySelectorAll<HTMLElement>('.track-station'));
   const trainEl = document.querySelector<HTMLElement>('#desk-train');
+  const trackEl = document.querySelector<HTMLElement>('#desk-track');
   let x = 0, target = 0, dragging = false, sx = 0, startX = 0, interactive = false;
   let vx = 0, lastClack = 0;
   let stationXs: number[] = [];
   let trainX = 0, trainTarget = 0;
+  let tiesX = 0;
   let focusedIdx = 0;
   let cineFocused = -1;  // -1 means not in cinema; otherwise index of cinema-focused card
 
@@ -145,10 +147,21 @@ export function initDesk() {
     // TRAIN — lerp toward trainTarget. The 110px train SVG has its locomotive
     // chimney at viewBox-x≈14, so to "park" the locomotive at the station dot
     // we offset translateX by -14 (in SVG units, ~10px in 110px-wide).
+    //
+    // TIES + RAIL — scroll the cross-tie + rail highlight patterns opposite
+    // to train motion, scaled 2.2× for visual rush. Plus a tiny constant
+    // "wind" so the rail never reads as frozen even at full station rest.
     if (trainEl && stationXs.length) {
+      const prevTrainX = trainX;
       trainX += (trainTarget - trainX) * 0.07;
-      const TRAIN_NOSE_OFFSET = 10;  // px; aligns chimney over station dot
-      trainEl.style.transform = `translate3d(${trainX - TRAIN_NOSE_OFFSET}px, 0, 0)`;
+      const dTrain = trainX - prevTrainX;
+      tiesX -= dTrain * 2.2 + 0.16;  // 0.16px/frame ≈ ~10px/s idle drift
+      if (trackEl) trackEl.style.setProperty('--ties-x', tiesX.toFixed(2) + 'px');
+      // Vertical bob — amplitude scales with current speed, sells the chug
+      const bobAmp = Math.min(1.2, 0.35 + Math.abs(dTrain) * 0.8);
+      const bob = Math.sin(performance.now() / 95) * bobAmp;
+      const TRAIN_NOSE_OFFSET = 10;
+      trainEl.style.transform = `translate3d(${trainX - TRAIN_NOSE_OFFSET}px, ${bob.toFixed(2)}px, 0)`;
     }
 
     requestAnimationFrame(tick);
@@ -355,9 +368,10 @@ export function initDesk() {
     }
   }, { passive: false });
 
-  // CONTROLS
-  document.querySelector('#dc-skip')!.addEventListener('click', endCinema);
-  document.querySelector('#dc-replay')!.addEventListener('click', () => playCinema(false));
+  // CONTROLS — guarded since #desk-section is now hidden in the new ride
+  // layout but its handlers stay wired in case the old cinema is replayed.
+  document.querySelector('#dc-skip')?.addEventListener('click', endCinema);
+  document.querySelector('#dc-replay')?.addEventListener('click', () => playCinema(false));
   const tog = document.querySelector<HTMLElement>('#aud-tog');
   if (tog) {
     tog.addEventListener('click', () => {
@@ -365,6 +379,168 @@ export function initDesk() {
       const next = !audState().on;
       audSetOn(next);
       if (next && cineActive && !audState().rumble) audRumbleStart();
+    });
+  }
+
+  // ============================================================
+  // RIDE — sticky-scroll cinematic journey (new layout)
+  // ============================================================
+  const rideDriver = document.querySelector<HTMLElement>('#ride-driver');
+  const rideStations = Array.from(document.querySelectorAll<HTMLElement>('.station'));
+  const rideTrain = document.querySelector<HTMLElement>('#ride-train');
+  const rideTrack = document.querySelector<HTMLElement>('.ride-track');
+  const rpFill = document.querySelector<HTMLElement>('#rp-fill');
+  const rpStops = Array.from(document.querySelectorAll<HTMLElement>('.rp-stop'));
+  const rideCoord = document.querySelector<HTMLElement>('#ride-coord');
+  const rideNow = document.querySelector<HTMLElement>('#ride-now');
+
+  const RIDE_HUD = [
+    { coord: 'N 28.6° · E 77.2°', now: '· DELHI' },
+    { coord: 'N 31.1° · E 75.3°', now: '· PUNJAB' },
+    { coord: 'L 51.5° · D 25.2°', now: '· LONDON / DUBAI' },
+    { coord: 'N 43.2° · W 77.6°', now: '· ROCHESTER' },
+  ];
+
+  if (rideDriver && rideStations.length) {
+    // Parallax hill refs — translated each frame proportional to scroll.
+    const hillFar  = document.querySelector<SVGPathElement>('.ride-hills .hill-far');
+    const hillMid  = document.querySelector<SVGPathElement>('.ride-hills .hill-mid');
+    const hillNear = document.querySelector<SVGPathElement>('.ride-hills .hill-near');
+
+    let currentActive = 0;
+    let rideTiesX = 0;
+    // Lerped scroll progress: targetProgress is set by scroll listener,
+    // currentProgress catches up each frame for buttery motion.
+    let targetProgress = 0;
+    let currentProgress = 0;
+    let smoothVel = 0;
+    let lastCurrent = 0;
+
+    const readTarget = () => {
+      const rect = rideDriver.getBoundingClientRect();
+      const trackPx = rect.height - window.innerHeight;
+      const scrolled = Math.max(0, -rect.top);
+      targetProgress = trackPx > 0 ? Math.min(1, scrolled / trackPx) : 0;
+    };
+
+    const updateRide = () => {
+      // 1. Smooth progress toward scroll target
+      currentProgress += (targetProgress - currentProgress) * 0.085;
+      // 2. Smoothed velocity (no spikes on wheel events)
+      const instVel = currentProgress - lastCurrent;
+      smoothVel += (instVel - smoothVel) * 0.3;
+      lastCurrent = currentProgress;
+
+      // 5 segments: 4 stations + 1 coda at the end ("where could we go next?")
+      const SEGMENTS = 5;
+      const seg = Math.min(SEGMENTS - 1, Math.floor(currentProgress * SEGMENTS));
+      const inCoda = seg === SEGMENTS - 1;
+      const idx = inCoda ? rideStations.length - 1 : Math.min(rideStations.length - 1, seg);
+
+      document.body.classList.toggle('in-coda', inCoda);
+
+      if (inCoda) {
+        // Coda visible — fade all stations out, light all dots, HUD goes terminal.
+        rideStations.forEach((s) => s.classList.remove('active'));
+        rpStops.forEach((s) => s.classList.add('lit'));
+        if (rideCoord) rideCoord.textContent = '· · ·';
+        if (rideNow) rideNow.textContent = '· END OF LINE';
+        currentActive = -1;
+      } else if (idx !== currentActive) {
+        rideStations[currentActive]?.classList.remove('active');
+        rideStations[idx]?.classList.add('active');
+        rpStops.forEach((s, i) => s.classList.toggle('lit', i <= idx));
+        const data = RIDE_HUD[idx];
+        if (data) {
+          if (rideCoord) rideCoord.textContent = data.coord;
+          if (rideNow) rideNow.textContent = data.now;
+        }
+        currentActive = idx;
+        if (audState().on) audBell();
+      }
+
+      // Progress fill — smooth, off the lerped value
+      if (rpFill) rpFill.style.width = (currentProgress * 100).toFixed(2) + '%';
+
+      // Train + parallax + ties
+      const sideMargin = 80;
+      const trackWidth = window.innerWidth - sideMargin * 2;
+
+      // Parallax hills — far moves slowest, near moves fastest. All
+      // move opposite to "travel" direction (right-to-left as we go forward).
+      if (hillFar)  hillFar.style.transform  = `translateX(${(-currentProgress * trackWidth * 0.08).toFixed(2)}px)`;
+      if (hillMid)  hillMid.style.transform  = `translateX(${(-currentProgress * trackWidth * 0.18).toFixed(2)}px)`;
+      if (hillNear) hillNear.style.transform = `translateX(${(-currentProgress * trackWidth * 0.34).toFixed(2)}px)`;
+
+      if (rideTrain) {
+        const trainX = sideMargin + currentProgress * trackWidth;
+        // Ties scroll opposite to train motion, scaled by smoothed velocity
+        rideTiesX -= smoothVel * trackWidth * 2.4 + 0.16;
+        if (rideTrack) {
+          rideTrack.style.setProperty('--ties-x', rideTiesX.toFixed(2) + 'px');
+        }
+        // Bob amplitude grows with smoothed velocity (no spikes)
+        const bobAmp = Math.min(1.4, 0.32 + Math.abs(smoothVel) * 80);
+        const bob = Math.sin(performance.now() / 95) * bobAmp;
+        rideTrain.style.transform = `translate3d(${trainX.toFixed(2)}px, ${bob.toFixed(2)}px, 0)`;
+        // Smoke puffs faster when train is moving
+        const smokeDur = Math.max(0.85, 2.2 - Math.abs(smoothVel) * 38);
+        rideTrain.style.setProperty('--smoke-dur', smokeDur.toFixed(2) + 's');
+      }
+    };
+
+    // Scroll just updates the target — rAF does the smoothing.
+    window.addEventListener('scroll', readTarget, { passive: true });
+    window.addEventListener('resize', readTarget);
+
+    const rideTick = () => {
+      updateRide();
+      requestAnimationFrame(rideTick);
+    };
+    readTarget();
+    rideTick();
+    [50, 200, 600, 1500].forEach((d) => setTimeout(readTarget, d));
+
+    // Hide #ask (chat) and #np (now playing) while the ride section is in
+    // view — they were sitting on top of the train. Two mechanisms in case
+    // one fails: IntersectionObserver, plus a direct scroll-based check.
+    const rideObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          document.body.classList.toggle('ride-visible', entry.isIntersecting);
+        }
+      },
+      { threshold: 0, rootMargin: '0px 0px -10% 0px' }
+    );
+    rideObserver.observe(rideDriver);
+
+    const checkRideVisible = () => {
+      const r = rideDriver.getBoundingClientRect();
+      const inView = r.bottom > window.innerHeight * 0.1 && r.top < window.innerHeight * 0.9;
+      document.body.classList.toggle('ride-visible', inView);
+    };
+    window.addEventListener('scroll', checkRideVisible, { passive: true });
+    checkRideVisible();
+
+    // "open the postcard →" buttons trigger the existing spread modal
+    document.querySelectorAll<HTMLButtonElement>('.station-open').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const i = parseInt(btn.dataset.open || '0', 10);
+        openSpread(i);
+      });
+    });
+
+    // rp-stop dots are clickable shortcuts to jump to a station
+    rpStops.forEach((stop, i) => {
+      stop.style.cursor = 'pointer';
+      stop.style.pointerEvents = 'auto';
+      stop.addEventListener('click', () => {
+        const rect = rideDriver.getBoundingClientRect();
+        const driverTop = rect.top + window.scrollY;
+        const trackPx = rideDriver.offsetHeight - window.innerHeight;
+        const targetY = driverTop + (i / (rideStations.length - 1 || 1)) * trackPx;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      });
     });
   }
 }

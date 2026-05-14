@@ -12,6 +12,9 @@ const work = defineCollection({
     tags: z.array(z.string()),
     stats: z.array(z.object({ value: z.string(), label: z.string() })),
     accent: z.enum(['terra', 'moss', 'ink']).default('terra'),
+    // Polaroid extras (Option B corkboard treatment)
+    year: z.string().optional(),
+    tape: z.string().optional(),
   }),
 });
 

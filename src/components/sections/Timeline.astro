@@ -20,13 +20,66 @@ const CHAPTERS = [
   },
 ];
 
-const TL_ROWS = [
-  { y: '2026, now',          h: 'AI Product Manager, ESC Partners',                  c: 'Rochester NY · Maya AI',                d: 'Maya: a two-sided AI customer support platform for utility companies. Customer assistant (voice, chat, SMS, email, mobile) plus an internal agent console integrated with Oracle CCS. Handles 70-80% of first-touch volume on one US utility. Removes ~100 manual emails per manager per day. Pilot at 40+ agents.', t: 'AI PM · End-to-end' },
-  { y: 'Oct 2025 to Jan 2026', h: 'AI Product Consultant (Builder), Assisted Living Locators', c: 'Remote CA',                       d: 'Marketplace product matching families with care options. Owned the matching flow and the agent-facing console.',                                                                                            t: 'AI Consultant · Builder' },
-  { y: 'May to Dec 2025',      h: 'Founding PM, Vollie Inc.',                                   c: 'Buffalo NY',                     d: "Wrote the first eval suite. Scoped the first three features. Cut what didn't fit.",                                                                                                                          t: 'Founding PM · 0 to 1' },
-  { y: 'Jan to Dec 2025',      h: 'Product Lead, Ain Center',                                   c: 'Simon Business School',          d: "Built the application stack students used for programs and grants. Ran in parallel with the master's.",                                                                                                      t: 'Product Lead' },
-  { y: 'Dec 2025',            h: 'MS in AI in Business',                              c: 'Simon Business School · STEM',          d: "Master's in AI applied to business. Graduated December 2025.",                                                                                                                                              t: 'Education' },
-  { y: '2019 to 2024',        h: 'Founder, CloudApproach + Approachables',            c: 'London · Dubai · UK + MENA',            d: 'Two companies across the UK and Middle East. Sold both. $575K combined exits. Roughly $5M influenced in deals closed (deals my team and I drove, not personal revenue).',                                  t: 'Founder · 2 exits' },
+// Career, chronological (newest first). Center-rail spine, alternating
+// sides. Hover any entry → acid wash fills the body card and the
+// polaroid placeholder pops up next to the cursor. Drop a real image
+// path into the `photo` field whenever you have one — the script swaps
+// the hatch placeholder for the image automatically.
+const ROLES = [
+  {
+    side: 'right', now: true,
+    date: '2026 · Jan → now', tag: 'NOW',
+    title: 'AI Product Manager, ', em: 'ESC Partners',
+    where: 'Rochester, NY · Maya AI',
+    note: 'Built Maya AI end-to-end. 70 to 80 percent of first-touch volume on one US utility. Pilot at 40+ agents.',
+    preview: 'Maya AI · in pilot',
+    photo: null,
+  },
+  {
+    side: 'left',
+    date: '2025 · Oct → Jan 2026',
+    title: 'AI Product Consultant (Builder), ', em: 'Assisted Living Locators',
+    where: 'Remote, CA',
+    note: 'Owned the matching flow and the agent-facing console.',
+    preview: 'Marketplace · matching flow',
+    photo: null,
+  },
+  {
+    side: 'right',
+    date: '2025 · May → Dec',
+    title: 'Founding PM, ', em: 'Vollie Inc.',
+    where: 'Buffalo, NY (not Pleasanton)',
+    note: 'Wrote the first eval suite. Scoped the first three features. Cut what did not fit.',
+    preview: 'Vollie · founding PM',
+    photo: null,
+  },
+  {
+    side: 'left',
+    date: '2025 · Jan → Dec',
+    title: 'Product Lead, ', em: 'Ain Center for Entrepreneurship',
+    where: 'Simon Business School',
+    note: 'Built the application stack students used for programs and grants. Ran in parallel with the master’s.',
+    preview: 'Ain Center · application stack',
+    photo: null,
+  },
+  {
+    side: 'right',
+    date: '2025 · Dec',
+    title: 'M.S. AI in Business ', em: '(STEM)',
+    where: 'Simon Business School, Rochester',
+    note: 'Master’s in AI applied to business. Graduated December 2025.',
+    preview: 'M.S. AI · Simon',
+    photo: null,
+  },
+  {
+    side: 'left',
+    date: '2019 → 2024',
+    title: 'Founder · ', em: 'CloudApproach & Approachables',
+    where: 'UK · MENA',
+    note: 'Two companies. Two acquisitions. Combined exits of $575K. Influenced roughly $5M in closed deals (deals my team and I drove, not personal revenue).',
+    preview: 'Two companies · two exits',
+    photo: null,
+  },
 ];
 ---
 <section id="timeline">
@@ -113,22 +166,111 @@ const TL_ROWS = [
       </svg>
     </div>
 
-    <!-- Static rows for full résumé -->
-    <div class="tl-list">
-      {TL_ROWS.map((r) => (
-        <div class="tl-row" data-cur="drag" data-cur-lbl="Read">
-          <div class="tl-y">{r.y}</div>
-          <div class="tl-c">
-            <h4>{r.h}</h4>
-            <div class="tc">{r.c}</div>
-            <div class="td">{r.d}</div>
+    <!-- Spine heading — promoted from eyebrow to a proper h2, v4 logbook style -->
+    <div class="spine-head reveal">
+      <div class="spine-eye"><span class="r"></span> FOLD 04B &nbsp;·&nbsp; LOGBOOK · {ROLES.length} ENTRIES</div>
+      <h2 class="spine-h">A career, <em>read in order.</em></h2>
+    </div>
+
+    {/* Center-rail spine. Every role gets a dot on the rail and a body
+        card on the alternating side. Hover an entry → body card slides
+        away from the rail and fills with acid yellow; the polaroid
+        placeholder floats next to the cursor. Photos drop into .frame
+        later via the role's `photo` field. */}
+    <div class="spine-rail reveal" id="spine-rail">
+      {ROLES.map((r, i) => (
+        <a
+          class={`lentry ${r.now ? 'now' : ''} ${r.side}`}
+          href="#"
+          data-preview={r.preview}
+          data-photo={r.photo || ''}
+          style={`--d:${i * 60}ms`}
+        >
+          <div class="pin"><div class="d"></div></div>
+          <div class="body">
+            <p class="date">
+              {r.date}
+              {r.tag && <span class="tag">{r.tag}</span>}
+            </p>
+            <h3>{r.title}<em>{r.em}</em></h3>
+            {r.where && <p class="where">{r.where}</p>}
+            {r.note && <p class="note">{r.note}</p>}
           </div>
-          <div class="tl-tag">{r.t}</div>
-        </div>
+        </a>
       ))}
+    </div>
+
+    {/* Floating preview card — follows the cursor on TOC hover.
+        Photo slot inside .frame; if data-photo is empty we show the
+        polaroid hatch placeholder (matches v4). */}
+    <div id="toc-preview" aria-hidden="true">
+      <span class="tape">PREVIEW</span>
+      <div class="frame">
+        <div class="ph" id="toc-preview-ph">PLACEHOLDER</div>
+        <img id="toc-preview-img" alt="" />
+      </div>
+      <div class="cap" id="toc-preview-cap">—</div>
     </div>
   </div>
 </section>
+
+<script>
+  // ===== TOC HOVER PREVIEW =====
+  // Mirrors the v4 index-loud.html flirt: cursor-tracked polaroid card
+  // appears next to the row, slot ready for real photos when they exist.
+  (() => {
+    const preview = document.getElementById('toc-preview') as HTMLElement | null;
+    if (!preview) return;
+    const previewEl: HTMLElement = preview;
+    const ph  = document.getElementById('toc-preview-ph');
+    const img = document.getElementById('toc-preview-img') as HTMLImageElement | null;
+    const cap = document.getElementById('toc-preview-cap');
+    const rows = document.querySelectorAll<HTMLElement>('#spine-rail .lentry');
+
+    let mx = 0, my = 0, raf = 0;
+
+    function loop() {
+      // Offset so the card hugs the cursor without colliding with it.
+      previewEl.style.transform =
+        `translate3d(${mx + 24}px, ${my - 120}px, 0)`;
+      raf = requestAnimationFrame(loop);
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      mx = e.clientX; my = e.clientY;
+    }, { passive: true });
+
+    rows.forEach((row) => {
+      row.addEventListener('mouseenter', () => {
+        const label = row.dataset.preview || 'preview';
+        const photo = row.dataset.photo || '';
+        if (cap) cap.textContent = label;
+        if (img && ph) {
+          if (photo) {
+            img.src = photo;
+            img.style.display = 'block';
+            ph.style.display = 'none';
+          } else {
+            img.removeAttribute('src');
+            img.style.display = 'none';
+            ph.style.display = 'flex';
+            ph.textContent = label;
+          }
+        }
+        previewEl.classList.add('on');
+        if (!raf) raf = requestAnimationFrame(loop);
+      });
+      row.addEventListener('mouseleave', () => {
+        previewEl.classList.remove('on');
+      });
+    });
+
+    // Keyboard / reduced-motion: never show the floating card.
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      previewEl.style.display = 'none';
+    }
+  })();
+</script>
 
 <style>
   #timeline {
@@ -312,68 +454,317 @@ const TL_ROWS = [
     margin-top: 6px;
   }
 
-  /* Existing résumé list */
-  .tl-list {
-    display: grid;
-    grid-template-columns: 140px 1fr 220px;
-    gap: 0;
+  /* ============================================================
+     SPINE — center-rail timeline, alt left/right, future/now/past
+     ============================================================ */
+  .spine-head {
+    text-align: center;
+    margin: 24px auto 80px;
+    max-width: 1100px;
   }
-  .tl-list > div {
-    padding: 24px 32px 24px 0;
-    border-top: 1px solid var(--line);
-  }
-  .tl-list > div:nth-child(3n+3) { padding-right: 0; }
-  .tl-y {
+  .spine-eye {
     font-family: var(--mono);
     font-size: 11px;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
     color: var(--muted);
-    padding-top: 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
   }
-  .tl-c {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    transition: padding 0.4s cubic-bezier(0.2, 0.9, 0.2, 1);
+  .spine-eye .r {
+    width: 60px;
+    height: 1px;
+    background: var(--line);
+    display: inline-block;
   }
-  .tl-c h4 {
+  .spine-h {
     font-family: var(--serif);
     font-weight: 400;
-    font-style: italic;
-    font-size: clamp(22px, 2.4vw, 34px);
+    font-size: clamp(44px, 6vw, 88px);
+    line-height: 1;
+    letter-spacing: -0.025em;
     color: var(--ink);
-    font-variation-settings: 'opsz' 36, 'ital' 1, 'wght' 400;
-    line-height: 1.05;
+    text-wrap: balance;
+    font-variation-settings: 'opsz' 144, 'wght' 500, 'SOFT' 80;
   }
-  .tl-c .tc {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+  .spine-h em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
     color: var(--terra);
+    font-variation-settings: 'opsz' 144, 'wght' 300, 'SOFT' 100;
   }
-  .tl-c .td {
-    font-size: 14px;
+
+  /* Local acid yellow — same hex used on the polaroid stubs in Work.astro */
+  .spine-rail { --acid: #e8ff3a; }
+
+  .spine-rail {
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 0 60px;
+  }
+  /* Center rail */
+  .spine-rail::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+    transform: translateX(-50%);
+  }
+
+  .lentry {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 96px 1fr;
+    align-items: start;
+    padding: 40px 0;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  /* Rail dot */
+  .lentry .pin {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+    padding-top: 14px;
+    position: relative;
+    z-index: 2;
+  }
+  .lentry .pin .d {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.2, 1), background 0.3s, border-color 0.3s;
+  }
+  .lentry.now .pin .d {
+    background: var(--terra);
+    border-color: var(--terra);
+    box-shadow: 0 0 0 0 rgba(194, 90, 58, 0.6);
+    animation: spinePulse 2.2s ease-out infinite;
+  }
+  @keyframes spinePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(194, 90, 58, 0.55); }
+    70%  { box-shadow: 0 0 0 20px rgba(194, 90, 58, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(194, 90, 58, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lentry.now .pin .d { animation: none; }
+  }
+
+  /* Body card — gets the acid wash on hover */
+  .lentry .body {
+    position: relative;
+    overflow: hidden;
+    padding: 22px 26px;
+    border: 1px solid transparent;
+    background: transparent;
+    transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+                border-color 0.35s,
+                box-shadow 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .lentry.left  .body { grid-column: 1; text-align: right; margin-right: 4px; }
+  .lentry.right .body { grid-column: 3; margin-left: 4px; }
+  .lentry .body > * { position: relative; z-index: 1; }
+
+  /* Acid sweep — fills from the rail side toward the outside edge */
+  .lentry .body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: var(--acid);
+    z-index: 0;
+    transition: width 0.5s cubic-bezier(0.5, 0.05, 0.05, 1);
+  }
+  .lentry.right .body::before { left: 0; }
+  .lentry.left  .body::before { right: 0; }
+
+  /* Hover effects */
+  @media (hover: hover) {
+    .lentry:hover .body {
+      border-color: var(--ink);
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+    .lentry.right:hover .body { transform: translateX(12px); box-shadow: 6px 6px 0 var(--ink); }
+    .lentry.left:hover  .body { transform: translateX(-12px); box-shadow: -6px 6px 0 var(--ink); }
+    .lentry:hover .body::before { width: 100%; }
+    .lentry:hover .pin .d { transform: scale(1.35); }
+    .lentry:hover h3 em { color: var(--ink); }
+  }
+
+  .lentry .date {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--muted);
-    line-height: 1.5;
-    margin-top: 6px;
+    margin-bottom: 12px;
   }
-  .tl-tag {
+  .lentry .date .tag {
+    border: 1px solid currentColor;
+    padding: 2px 9px;
+    margin-left: 10px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+  }
+  .lentry.now .date { color: var(--terra); }
+
+  .lentry h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(26px, 2.6vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-wrap: balance;
+    font-variation-settings: 'opsz' 96, 'wght' 500, 'SOFT' 80;
+  }
+  .lentry h3 em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--moss);
+    font-variation-settings: 'opsz' 96, 'ital' 1, 'wght' 300, 'SOFT' 100;
+    transition: color 0.35s;
+  }
+  .lentry.now h3 em { color: var(--terra); }
+
+  .lentry .where {
+    margin-top: 10px;
+    font-family: var(--sans);
+    font-size: 16px;
+    color: var(--ink);
+    opacity: 0.72;
+  }
+  .lentry .note {
+    margin-top: 14px;
+    font-family: var(--sans);
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    opacity: 0.86;
+    max-width: 44ch;
+  }
+  .lentry.left .note { margin-left: auto; }
+
+  /* ============================================================
+     FLOATING PREVIEW — polaroid placeholder that follows the cursor
+     ============================================================ */
+  #toc-preview {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 220px;
+    z-index: 8000;
+    pointer-events: none;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 12px 12px 36px;
+    box-shadow: 6px 8px 0 var(--ink),
+                0 18px 32px -16px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.22s;
+    will-change: transform, opacity;
+    transform: translate3d(-9999px, -9999px, 0);
+  }
+  #toc-preview.on { opacity: 1; }
+  #toc-preview .tape {
+    position: absolute;
+    top: -10px;
+    left: 18px;
+    transform: rotate(-4deg);
+    background: var(--acid, #e8ff3a);
+    color: var(--ink);
+    padding: 3px 9px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    border: 1px dashed rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+  }
+  #toc-preview .frame {
+    aspect-ratio: 4 / 3;
+    background: var(--cream);
+    border: 1px solid rgba(29, 46, 34, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  #toc-preview .frame .ph {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 14px;
     font-family: var(--mono);
     font-size: 10px;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--moss);
-    text-align: right;
-    padding-top: 30px;
+    color: var(--ink);
+    opacity: 0.55;
+    background: repeating-linear-gradient(45deg,
+      rgba(29, 46, 34, 0.06) 0 1px, transparent 1px 10px);
   }
-  .tl-row { display: contents; }
-  .tl-row:hover .tl-c { padding-left: 18px; }
-  .tl-row:hover .tl-c h4 { color: var(--terra); }
+  #toc-preview .frame img {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #toc-preview .cap {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 10px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(29, 46, 34, 0.7);
+    text-align: center;
+  }
+
+  /* Skip the floating card on small screens / touch */
+  @media (max-width: 900px), (hover: none) {
+    #toc-preview { display: none; }
+  }
+
+  @media (max-width: 780px) {
+    .spine-eye { gap: 12px; font-size: 10px; }
+    .spine-eye .r { width: 28px; }
+
+    /* Collapse the rail to a single left column with all entries on one side */
+    .spine-rail::before { left: 14px; }
+    .lentry { grid-template-columns: 28px 1fr; padding: 28px 0; }
+    .lentry .pin { grid-column: 1; padding-top: 8px; }
+    .lentry .body,
+    .lentry.left .body,
+    .lentry.right .body {
+      grid-column: 2;
+      text-align: left;
+      margin: 0;
+      padding: 16px 18px;
+    }
+    .lentry.left .note { margin-left: 0; }
+    .lentry .body::before { left: 0; right: auto; }
+    .lentry.left:hover .body,
+    .lentry.right:hover .body { transform: translateX(8px); box-shadow: 4px 4px 0 var(--ink); }
+  }
 
   @media (max-width: 900px) {
     .tl-journey { grid-template-columns: 1fr; gap: 24px; }
     .tl-rail { display: none; }
-    .tl-list { grid-template-columns: 1fr; gap: 24px; }
   }
 </style>

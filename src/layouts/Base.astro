@@ -7,11 +7,13 @@ import '@/styles/grain.css';
 import Loader from '@/components/chrome/Loader.astro';
 import Greeter from '@/components/chrome/Greeter.astro';
 import Chrome from '@/components/chrome/Chrome.astro';
+import Margins from '@/components/chrome/Margins.astro';
 import Cursor from '@/components/chrome/Cursor.astro';
 import Grain from '@/components/chrome/Grain.astro';
 import NowPlaying from '@/components/chrome/NowPlaying.astro';
 import AskAI from '@/components/chrome/AskAI.astro';
-import AmbientField from '@/components/three/AmbientField.astro';
+/* AmbientField (three.js particle field) removed: the white dots
+   on the cream background read as page noise, not atmosphere. */
 
 interface Props {
   title?: string;
@@ -19,7 +21,7 @@ interface Props {
 }
 
 const {
-  title = 'Shivam Sharma — AI Product Manager',
+  title = 'Shivam Sharma · AI Product Manager',
   description = 'AI Product Manager at ESC Partners. Built Maya AI, a customer-support assistant for utility companies. Two prior exits, $575K combined.',
 } = Astro.props;
 ---
@@ -52,10 +54,10 @@ const {
   <Cursor />
   <Loader />
   <Greeter />
+  <Margins />
   <Chrome />
   <NowPlaying />
   <AskAI />
-  <AmbientField />
 
   <main>
     <slot />

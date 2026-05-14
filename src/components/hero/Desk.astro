@@ -1,4 +1,61 @@
 ---
+// Sticky-scroll ride. Each entry = one 100vh "stop". Body copy is
+// brief-aligned: no em dashes, no invented metrics, no client names.
+const SCRIPT = [
+  {
+    loc: 'delhi',
+    title: 'Delhi',
+    mood: 'rowdy',
+    era: '1994 · Childhood',
+    coord: 'N 28.6° · E 77.2°',
+    short: 'Delhi',
+    body: 'Born loud, raised loud. Five languages by the time I could read one. Negotiation as a survival skill before I knew what product was.',
+    cardEyebrow: 'DEPARTING',
+    year: '1994',
+    cardLoc: 'DELHI · INDIA',
+    bullets: ['Era · Childhood', 'Languages · 5', 'Took with me · grit, pace, loud laugh'],
+  },
+  {
+    loc: 'punjab',
+    title: 'Punjab',
+    mood: 'roots',
+    era: 'Every · Summer',
+    coord: 'N 31.1° · E 75.3°',
+    short: 'Punjab',
+    body: 'Family roots. Wheat, dhol, daal, a table where everybody talks at once. Hospitality as a default state. Feed strangers first, ask questions never.',
+    cardEyebrow: 'ROOTS',
+    year: 'Every summer',
+    cardLoc: 'JALANDHAR · INDIA',
+    bullets: ['Family from · Jalandhar', 'Languages · Punjabi, Hindi', 'Took with me · warmth, loyalty, bhangra'],
+  },
+  {
+    loc: 'london',
+    title: 'London',
+    mood: 'built',
+    era: '2019 · 2024',
+    coord: 'L 51.5° · D 25.2°',
+    short: 'London',
+    body: 'Two companies in five years. UK and the Middle East. Both sold. Hired teams, took payroll personally when cash was thin, learned product the hard way before I called myself a PM.',
+    cardEyebrow: 'FOUNDER',
+    year: '$575K combined',
+    cardLoc: 'LONDON · DUBAI',
+    bullets: ['Era · 2019 to 2024', 'CloudApproach · Approachables', 'Took with me · ship before perfect'],
+  },
+  {
+    loc: 'usa',
+    title: 'Rochester',
+    mood: 'shipping',
+    era: 'Now',
+    coord: 'N 43.2° · W 77.6°',
+    short: 'Rochester',
+    body: 'AI PM at ESC Partners. Built Maya AI end-to-end in about 2.5 months. The only AI person on the team. Customer support for utility companies. Voice, chat, SMS, email, mobile. In pilot with 40+ agents.',
+    cardEyebrow: 'NOW BOARDING',
+    year: '2026',
+    cardLoc: 'ROCHESTER · NY',
+    bullets: ['AI PM · ESC Partners', 'Maya AI · 70 to 80% first-touch', 'Open to the next stop'],
+  },
+];
+
 const POSTCARDS = [
   {
     loc: 'delhi',
@@ -70,7 +127,120 @@ const POSTCARDS = [
   },
 ];
 ---
-<div id="desk-section">
+{/* THE RIDE — sticky-scroll cinematic journey. Each SCRIPT entry gets
+    one 100vh slide. Train chugs at the bottom and traverses as you scroll.
+    Hidden #desk-section below preserves the postcards in DOM so the
+    spread modal can still read their inline SVG art on click. */}
+<section id="ride-section" aria-label="the ride">
+  <div id="ride-driver">
+    <div id="ride-sticky">
+
+      {/* Soft landscape: hills + ground band */}
+      <svg class="ride-hills" viewBox="0 0 1200 400" preserveAspectRatio="none" aria-hidden="true">
+        <path class="hill-far"  d="M0,260 Q300,210 600,250 T1200,230 L1200,400 L0,400 Z" />
+        <path class="hill-mid"  d="M0,300 Q260,260 520,290 T1040,290 T1200,280 L1200,400 L0,400 Z" />
+        <path class="hill-near" d="M0,340 Q200,310 400,330 T800,330 T1200,320 L1200,400 L0,400 Z" />
+      </svg>
+      <div class="ride-ground" aria-hidden="true"></div>
+
+      {/* Top HUD: title left, coord center, current stop right */}
+      <div class="ride-hud" aria-hidden="true">
+        <span class="hud-left">THE RIDE · DELHI → ROCHESTER</span>
+        <span class="hud-coord" id="ride-coord">N 28.6° · E 77.2°</span>
+        <span class="hud-now" id="ride-now">· DELHI</span>
+      </div>
+
+      {/* Coda — "where could we go next?" — appears after the 4 stations,
+          when the train reaches the end of the line. Staggered fade-in. */}
+      <div class="ride-coda" id="ride-coda" aria-hidden="true">
+        <div class="coda-eyebrow"><span class="rule"></span> STOP 05 · ?</div>
+        <h2 class="coda-h">where could we go next?</h2>
+        <p class="coda-p">your move, recruiter.</p>
+      </div>
+
+      {/* Stations — fade in/out as scroll progresses */}
+      <div class="ride-stations">
+        {SCRIPT.map((s, i) => (
+          <article class={`station${i === 0 ? ' active' : ''}`} data-i={i}>
+            <div class="station-inner">
+              <div class="station-text">
+                <div class="station-num">STOP {String(i + 1).padStart(2, '0')} · {s.era}</div>
+                <h2 class="station-h">{s.title}<em>.</em></h2>
+                <div class="station-mood">· {s.mood}.</div>
+                <p class="station-body">{s.body}</p>
+                <button class="station-open" data-open={i} type="button">
+                  open the postcard <span aria-hidden="true">→</span>
+                </button>
+              </div>
+              <aside class="station-card">
+                <span class="card-tape" aria-hidden="true"></span>
+                <b>STOP {String(i + 1).padStart(2, '0')} · {s.cardEyebrow}</b>
+                <span class="yr">{s.year}</span>
+                <span class="ploc">{s.cardLoc}</span>
+                <ul>
+                  {s.bullets.map((b) => <li>{b}</li>)}
+                </ul>
+              </aside>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Train track + locomotive */}
+      <div class="ride-track" aria-hidden="true">
+        <div class="ride-ties"></div>
+        <div class="ride-rail"></div>
+        <svg id="ride-train" viewBox="0 0 160 48" xmlns="http://www.w3.org/2000/svg">
+          <g class="smoke">
+            <circle cx="14" cy="10" r="2.5" />
+            <circle cx="11" cy="6"  r="3" />
+            <circle cx="16" cy="2"  r="3.5" />
+          </g>
+          <rect x="2"  y="18" width="44" height="22" rx="2" fill="#1d2e22" />
+          <rect x="6"  y="13" width="14" height="6" fill="#1d2e22" />
+          <rect x="11" y="8"  width="6"  height="6" fill="#1d2e22" />
+          <rect x="32" y="22" width="8"  height="8" fill="#ede4d3" />
+          <rect x="0"  y="31" width="48" height="2" fill="#c25a3a" />
+          <rect x="46" y="28" width="6"  height="2" fill="#1d2e22" />
+          <rect x="50" y="21" width="48" height="19" rx="1.5" fill="#c25a3a" />
+          <rect x="56" y="24" width="6"  height="6" fill="#ede4d3" />
+          <rect x="66" y="24" width="6"  height="6" fill="#ede4d3" />
+          <rect x="76" y="24" width="6"  height="6" fill="#ede4d3" />
+          <rect x="86" y="24" width="6"  height="6" fill="#ede4d3" />
+          <rect x="96" y="28" width="6"  height="2" fill="#1d2e22" />
+          <rect x="100" y="21" width="48" height="19" rx="1.5" fill="#2d4533" />
+          <rect x="106" y="24" width="6"  height="6" fill="#ede4d3" />
+          <rect x="116" y="24" width="6"  height="6" fill="#ede4d3" />
+          <rect x="126" y="24" width="6"  height="6" fill="#ede4d3" />
+          <rect x="136" y="24" width="6"  height="6" fill="#ede4d3" />
+          <circle cx="10"  cy="42" r="4"   fill="#1d2e22" />
+          <circle cx="36"  cy="42" r="4"   fill="#1d2e22" />
+          <circle cx="60"  cy="42" r="3.2" fill="#1d2e22" />
+          <circle cx="88"  cy="42" r="3.2" fill="#1d2e22" />
+          <circle cx="110" cy="42" r="3.2" fill="#1d2e22" />
+          <circle cx="138" cy="42" r="3.2" fill="#1d2e22" />
+        </svg>
+      </div>
+
+      {/* Bottom progress timeline */}
+      <div class="ride-progress" aria-hidden="true">
+        <div class="rp-line">
+          <div class="rp-fill" id="rp-fill"></div>
+          {SCRIPT.map((s, i) => (
+            <div class={`rp-stop${i === 0 ? ' lit' : ''}`} data-i={i} style={`left:${(i / (SCRIPT.length - 1)) * 100}%`}>
+              <span class="lbl">{s.short}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{/* Hidden — preserved so the spread modal can read each postcard's
+    inline SVG art. Display:none in CSS; .pcard click handlers still wire. */}
+<div id="desk-section" hidden>
   <div id="desk">
     <div id="desk-grain"></div>
     <div id="desk-rail">
@@ -637,29 +807,44 @@ const POSTCARDS = [
     pointer-events: none;
     z-index: 2;
   }
-  /* Wooden ties: short horizontal slabs poking out below the single rail */
+  /* Wooden ties: short horizontal slabs poking out below the single rail.
+     --ties-x is written by desk.ts each frame and scrolls the pattern in
+     the opposite direction the train is moving — parallax "rush past"
+     effect, plus a tiny idle wind so the rail never feels frozen. */
   .track-ties {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
     height: 16px;
-    background: repeating-linear-gradient(
+    background-image: repeating-linear-gradient(
       to right,
       rgba(29, 46, 34, 0.62) 0 4px,
       transparent 4px 22px
     );
+    background-position-x: var(--ties-x, 0px);
+    background-repeat: repeat;
     opacity: 0.55;
+    will-change: background-position;
   }
-  /* Single rail — train wheels rest on this */
+  /* Single rail — train wheels rest on this. A faint highlight scrolls
+     along it in lockstep with the ties so the whole rail reads as moving. */
   .track-rail {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 18px;
     height: 2px;
-    background: var(--ink);
-    opacity: 0.65;
+    background-color: var(--ink);
+    background-image: repeating-linear-gradient(
+      to right,
+      transparent 0 60px,
+      rgba(237, 228, 211, 0.35) 60px 64px,
+      transparent 64px 124px
+    );
+    background-position-x: var(--ties-x, 0px);
+    opacity: 0.7;
+    will-change: background-position;
   }
 
   .track-station {
@@ -1398,5 +1583,506 @@ const POSTCARDS = [
     #desk-strip { padding: 0 8vw; gap: 6vw; }
     .pcard { width: 80vw; }
     #dc-skip, #dc-replay, #dc-hint, #desk-cine, #aud-tog { display: none !important; }
+  }
+
+  /* ============================================================
+     RIDE — sticky-scroll cinematic journey
+     ============================================================ */
+  #desk-section[hidden] { display: none; }
+
+  /* While the ride is in view, hide the floating chat + now-playing
+     widgets so they don't sit on top of the train. They fade back in
+     once the user scrolls past into HeroWords. */
+  :global(body.ride-visible) :global(#ask),
+  :global(body.ride-visible) :global(#np) {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.4s ease;
+  }
+
+  #ride-section {
+    position: relative;
+    width: 100%;
+  }
+  #ride-driver {
+    /* One viewport per stop, plus one for the closing coda. Outer driver
+       provides scroll distance, inner sticky stays put while user scrolls
+       through it. */
+    position: relative;
+    height: calc(100vh * 5);
+  }
+  #ride-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, var(--cream) 0%, var(--cream) 55%, var(--paper-2) 100%);
+  }
+
+  /* Landscape ---------------------------------------------------- */
+  .ride-hills {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 12vh;
+    width: 100%;
+    height: 28vh;
+    pointer-events: none;
+  }
+  .ride-hills .hill-far  { fill: var(--sand);    opacity: .35; }
+  .ride-hills .hill-mid  { fill: var(--moss);    opacity: .18; }
+  .ride-hills .hill-near { fill: var(--ink);     opacity: .12; }
+  /* Parallax — JS writes translateX each frame. will-change hint keeps
+     the GPU layer warm so it doesn't repaint on every frame. */
+  .ride-hills .hill-far,
+  .ride-hills .hill-mid,
+  .ride-hills .hill-near {
+    will-change: transform;
+    transform-box: fill-box;
+  }
+
+  .ride-ground {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 12vh;
+    background: linear-gradient(180deg, var(--paper-2) 0%, var(--sand) 100%);
+    opacity: .65;
+    pointer-events: none;
+  }
+
+  /* HUD ---------------------------------------------------------- */
+  .ride-hud {
+    position: absolute;
+    top: calc(22px + 64px); /* clear margins ticker + chrome */
+    left: 0;
+    right: 0;
+    z-index: 5;
+    padding: 12px var(--g);
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .ride-hud .hud-coord { color: var(--gold); }
+  .ride-hud .hud-now { color: var(--terra); font-weight: 500; }
+
+  /* Stations ----------------------------------------------------- */
+  .ride-stations {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--g);
+  }
+  .station {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    /* Filmic ease-out (Apple/cinema curve) — slow finish, gentle landing */
+    transform: translateY(24px) scale(0.985);
+    transition:
+      opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--g);
+    will-change: opacity, transform;
+  }
+  .station.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  .station-inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+    max-width: 1280px;
+    width: 100%;
+  }
+  .station-text { max-width: 640px; }
+  .station-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--terra);
+    margin-bottom: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .station-num::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--terra);
+    display: inline-block;
+  }
+  .station-h {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(64px, 11vw, 168px);
+    line-height: 0.88;
+    letter-spacing: -0.055em;
+    color: var(--ink);
+    font-variation-settings: 'opsz' 144, 'wght' 300;
+    text-transform: lowercase;
+  }
+  .station-h em {
+    color: var(--terra);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'ital' 1, 'wght' 400;
+  }
+  .station-mood {
+    font-family: var(--script);
+    font-size: clamp(28px, 3.4vw, 48px);
+    color: var(--terra-deep);
+    margin-top: 10px;
+    line-height: 1;
+  }
+  .station-body {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 520px;
+    margin-top: 22px;
+    font-variation-settings: 'opsz' 36, 'ital' 1, 'wght' 400;
+  }
+  .station-open {
+    margin-top: 26px;
+    background: transparent;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 11px 18px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .station-open:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .station-open span {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+
+  /* Summary card on right --------------------------------------- */
+  .station-card {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 28px 28px 26px;
+    box-shadow:
+      0 28px 60px -20px rgba(29, 46, 34, 0.18),
+      0 4px 10px -4px rgba(29, 46, 34, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transform: rotate(1deg);
+    max-width: 360px;
+    justify-self: end;
+  }
+  .station-card .card-tape {
+    position: absolute;
+    top: -10px;
+    left: 24px;
+    width: 88px;
+    height: 18px;
+    background: rgba(212, 162, 76, 0.35);
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.16) 0 2px, transparent 2px 6px);
+    transform: rotate(-3deg);
+    box-shadow: 0 1px 2px rgba(29, 46, 34, 0.14);
+  }
+  .station-card b {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .station-card .yr {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 38px;
+    color: var(--terra);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    margin: 8px 0 4px;
+    font-variation-settings: 'opsz' 144, 'ital' 1, 'wght' 400;
+  }
+  .station-card .ploc {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .station-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .station-card li {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .station-card li::before {
+    content: '·';
+    color: var(--terra);
+    margin-right: 8px;
+    font-weight: 700;
+  }
+
+  /* Closing coda ------------------------------------------------ */
+  .ride-coda {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--g);
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+                visibility 0s linear 0.7s;
+  }
+  :global(body.in-coda) .ride-coda {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+                visibility 0s linear 0s;
+  }
+  .ride-coda .coda-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--terra);
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .ride-coda .coda-eyebrow .rule {
+    width: 60px;
+    height: 1px;
+    background: var(--terra);
+    display: inline-block;
+  }
+  .ride-coda .coda-h {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(56px, 8vw, 124px);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-top: 24px;
+    font-variation-settings: 'opsz' 144, 'ital' 1, 'wght' 300;
+    text-wrap: balance;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.9s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .ride-coda .coda-p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(18px, 1.6vw, 22px);
+    color: var(--muted);
+    margin-top: 18px;
+    font-variation-settings: 'opsz' 36, 'ital' 1, 'wght' 400;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  :global(body.in-coda) .ride-coda .coda-eyebrow {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.15s;
+  }
+  :global(body.in-coda) .ride-coda .coda-h {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.35s;
+  }
+  :global(body.in-coda) .ride-coda .coda-p {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.65s;
+  }
+
+  /* Train track + locomotive ------------------------------------ */
+  .ride-track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 9vh;
+    height: 50px;
+    z-index: 6;
+    pointer-events: none;
+  }
+  .ride-ties {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 14px;
+    background-image: repeating-linear-gradient(
+      to right,
+      rgba(29, 46, 34, 0.55) 0 4px,
+      transparent 4px 22px
+    );
+    background-position-x: var(--ties-x, 0px);
+    opacity: 0.6;
+  }
+  .ride-rail {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+    height: 2px;
+    background-color: var(--ink);
+    background-image: repeating-linear-gradient(
+      to right,
+      transparent 0 60px,
+      rgba(237, 228, 211, 0.4) 60px 64px,
+      transparent 64px 124px
+    );
+    background-position-x: var(--ties-x, 0px);
+    opacity: 0.7;
+  }
+  #ride-train {
+    position: absolute;
+    bottom: 17px;
+    left: 0;
+    width: 140px;
+    height: 42px;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    filter: drop-shadow(0 6px 10px rgba(29, 46, 34, 0.22));
+  }
+  /* Smoke speed is JS-coupled to train velocity via --smoke-dur. When parked,
+     gentle slow puffs (~2.2s). When chugging fast, quick puffs (~0.85s). */
+  #ride-train .smoke circle {
+    fill: var(--ink);
+    opacity: 0;
+    transform-origin: 14px 10px;
+    animation: ride-train-smoke var(--smoke-dur, 2.2s) ease-out infinite;
+  }
+  #ride-train .smoke circle:nth-child(2) { animation-delay: calc(var(--smoke-dur, 2.2s) * 0.27); }
+  #ride-train .smoke circle:nth-child(3) { animation-delay: calc(var(--smoke-dur, 2.2s) * 0.55); }
+  @keyframes ride-train-smoke {
+    0%   { opacity: 0; transform: translate(0, 0) scale(0.6); }
+    20%  { opacity: 0.45; }
+    100% { opacity: 0; transform: translate(7px, -24px) scale(1.7); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #ride-train .smoke circle { animation: none; opacity: 0; }
+  }
+
+  /* Bottom progress timeline ------------------------------------ */
+  .ride-progress {
+    position: absolute;
+    left: var(--g);
+    right: var(--g);
+    bottom: 3.4vh;
+    z-index: 7;
+    pointer-events: none;
+  }
+  .rp-line {
+    position: relative;
+    height: 1px;
+    background: rgba(29, 46, 34, 0.22);
+  }
+  .rp-fill {
+    position: absolute;
+    left: 0;
+    top: -1px;
+    height: 3px;
+    background: var(--terra);
+    width: 0%;
+    /* JS writes the lerped value every frame — short transition just
+       smooths the rare jumps (resize, navigation). */
+    transition: width 0.08s linear;
+    will-change: width;
+  }
+  .rp-stop {
+    position: absolute;
+    top: -3px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    transform: translateX(-3.5px);
+  }
+  .rp-stop.lit {
+    background: var(--terra);
+    border-color: var(--terra);
+    box-shadow: 0 0 0 4px rgba(194, 90, 58, 0.12);
+  }
+  .rp-stop .lbl {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .rp-stop.lit .lbl { color: var(--ink); }
+
+  /* Responsive --------------------------------------------------- */
+  @media (max-width: 880px) {
+    .station-inner { grid-template-columns: 1fr; gap: 30px; }
+    .station-card { justify-self: start; transform: rotate(0); }
+    .ride-hud { flex-wrap: wrap; }
+  }
+  @media (max-width: 720px) {
+    .ride-hud .hud-coord { display: none; }
+    .station-card { display: none; }
   }
 </style>

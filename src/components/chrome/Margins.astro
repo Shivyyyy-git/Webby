@@ -1,0 +1,160 @@
+---
+---
+{/* Top ticker — slim ink-on-cream-inverted horizontal marquee. Copy is
+    brief-aligned: no em dashes, no invented metrics, no client names. */}
+<div class="margin-ticker" aria-hidden="true">
+  <div class="mt-track" id="mt-track"></div>
+</div>
+
+{/* Left static vertical label — quiet print-zine signal without the
+    moving-marquee designer-flex. */}
+<div class="margin-lspine" aria-hidden="true">
+  <span>SHIVAM SHARMA · MMXXVI · ROCHESTER</span>
+</div>
+
+{/* Crop marks at all four corners. */}
+<div class="margin-crop tl" aria-hidden="true"></div>
+<div class="margin-crop tr" aria-hidden="true"></div>
+<div class="margin-crop bl" aria-hidden="true"></div>
+<div class="margin-crop br" aria-hidden="true"></div>
+
+<style>
+  /* TICKER ------------------------------------------------------------- */
+  .margin-ticker {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 22px;
+    background: var(--ink);
+    color: var(--cream);
+    border-bottom: 1px solid rgba(237, 228, 211, 0.12);
+    z-index: 350;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .mt-track {
+    display: flex;
+    gap: 60px;
+    padding-left: 60px;
+    animation: mt-slide 80s linear infinite;
+    will-change: transform;
+  }
+  .mt-track span {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .mt-track .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--terra);
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  @keyframes mt-slide {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mt-track { animation: none !important; }
+  }
+
+  /* LEFT STATIC LABEL -------------------------------------------------- */
+  .margin-lspine {
+    position: fixed;
+    left: 0;
+    top: 22px;
+    bottom: 0;
+    width: 28px;
+    z-index: 240;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    mix-blend-mode: multiply;
+  }
+  .margin-lspine span {
+    writing-mode: vertical-rl;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  :global(body.in-ride) .margin-lspine { mix-blend-mode: normal; }
+  :global(body.in-ride) .margin-lspine span { color: var(--cream); }
+  @media (max-width: 720px) {
+    .margin-lspine { display: none; }
+  }
+
+  /* CROP MARKS --------------------------------------------------------- */
+  .margin-crop {
+    position: fixed;
+    width: 18px;
+    height: 18px;
+    z-index: 210;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+  .margin-crop::before,
+  .margin-crop::after {
+    content: '';
+    position: absolute;
+    background: var(--ink);
+  }
+  .margin-crop::before {
+    width: 18px;
+    height: 1px;
+    top: 9px;
+    left: 0;
+  }
+  .margin-crop::after {
+    width: 1px;
+    height: 18px;
+    left: 9px;
+    top: 0;
+  }
+  .margin-crop.tl { top: 34px; left: 14px; }
+  .margin-crop.tr { top: 34px; right: 14px; }
+  .margin-crop.bl { bottom: 14px; left: 14px; }
+  .margin-crop.br { bottom: 14px; right: 14px; }
+  :global(body.in-ride) .margin-crop::before,
+  :global(body.in-ride) .margin-crop::after {
+    background: var(--cream);
+  }
+  @media (max-width: 720px) {
+    .margin-crop { display: none; }
+  }
+</style>
+
+<script>
+  // Populate the ticker. Brief-aligned copy: no em dashes, no invented
+  // metrics, no client company names. Reinforces the voice, not the noise.
+  const TICKER_ITEMS = [
+    'CURRENTLY SHIPPING MAYA AI',
+    'AI PM AT ESC PARTNERS',
+    'ROCHESTER, NY',
+    'TWO COMPANIES · TWO ACQUISITIONS',
+    'OPEN FOR FULL-TIME AI PM ROLES',
+    'DELHI · PUNJAB · LONDON · ROCHESTER',
+    'MS AI · SIMON BUSINESS SCHOOL · 2025',
+    'NO EM DASHES, EVER',
+  ];
+  const track = document.getElementById('mt-track');
+  if (track) {
+    const html = TICKER_ITEMS.map(
+      (t) => `<span><span class="dot"></span>${t}</span>`
+    ).join('');
+    track.innerHTML = html + html; // doubled for seamless loop
+  }
+</script>

@@ -3,7 +3,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://shivamsharma.dev',
+  site: 'https://shivam.website',
   integrations: [mdx(), sitemap()],
   build: {
     inlineStylesheets: 'auto',

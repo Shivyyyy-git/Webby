@@ -1,0 +1,252 @@
+---
+// TOC entries that map to existing v3 sections. Each row gets:
+//   - a route (#section)
+//   - a title with optional italic emphasis
+//   - a meta column (kind · year/state)
+//   - a preview line (shown on hover next to cursor)
+const ENTRIES = [
+  { href: '#work',     num: 'N° 01', title: 'Maya AI',           em: 'the proof of work.',                meta: 'Case study · 2026',     preview: 'Maya AI · the proof' },
+  { href: '#receipts', num: 'N° 02', title: 'Numbers',           em: 'I can defend.',                     meta: 'Metrics · now',         preview: 'Receipts · numbers I can defend' },
+  { href: '#timeline', num: 'N° 03', title: 'A career,',         em: 'read like a spine.',                meta: 'Timeline · 2019 → 26',  preview: 'The logbook · jobs, exits, a master\'s' },
+  { href: '#close',    num: 'N° 04', title: 'Where to find me',  em: 'when the lights go down.',          meta: 'Contact · now',         preview: 'Inbox · DMs · loud rooms' },
+  { href: '#hero',     num: 'N° 05', title: 'Top of the ride.',  em: 'Again.',                            meta: 'Loop',                  preview: 'Back to top · keep scrolling' },
+];
+---
+<section id="index">
+  <div class="w">
+    <div class="cap"><b>Section 01</b> · Index · or, the table of contents</div>
+
+    <div class="ix-head reveal">
+      <h2 class="ix-h">
+        The <em>index</em>,<br />
+        or: <span class="grot">a table of contents that flirts back.</span>
+      </h2>
+      <div class="ix-eye"><span class="pill">FOLD 01</span><span class="rule"></span><span>05 ENTRIES</span></div>
+    </div>
+
+    <div class="ix-list reveal">
+      {ENTRIES.map((e) => (
+        <a class="ix-row" href={e.href} data-preview={e.preview} data-cur="link" data-cur-lbl="Jump">
+          <span class="num">{e.num}</span>
+          <span class="ttl">{e.title} <em>{e.em}</em></span>
+          <span class="meta">{e.meta}</span>
+          <span class="arrow">→</span>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <!-- Floating preview card — follows the cursor on hover -->
+  <div id="ix-preview" aria-hidden="true">
+    <div class="ix-pv-inner" id="ix-preview-inner">PREVIEW</div>
+  </div>
+</section>
+
+<script>
+  // TOC: hover any row → preview card pops up next to cursor + yellow highlight slides
+  const preview = document.getElementById('ix-preview');
+  const inner   = document.getElementById('ix-preview-inner');
+  if (preview && inner) {
+    document.querySelectorAll<HTMLAnchorElement>('#index .ix-row').forEach((row) => {
+      row.addEventListener('mouseenter', () => {
+        inner.textContent = row.dataset.preview ?? 'preview';
+        preview.classList.add('on');
+      });
+      row.addEventListener('mouseleave', () => {
+        preview.classList.remove('on');
+      });
+    });
+    // Position the preview at the cursor
+    document.addEventListener('mousemove', (e) => {
+      preview.style.left = e.clientX + 'px';
+      preview.style.top  = e.clientY + 'px';
+    });
+  }
+</script>
+
+<style>
+  #index {
+    padding: 18vh 0 12vh;
+    background: var(--paper);
+    position: relative;
+    color: var(--ink);
+  }
+  #index .cap { color: var(--muted); }
+
+  .ix-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin: 56px 0 80px;
+  }
+  .ix-h {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(48px, 7vw, 108px);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    text-wrap: balance;
+    font-variation-settings: 'opsz' 144, 'ital' 1, 'wght' 300, 'SOFT' 100;
+    max-width: 22ch;
+  }
+  .ix-h em {
+    color: var(--terra);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .ix-h .grot {
+    font-family: var(--sans);
+    font-style: normal;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+    font-size: 0.72em;
+    color: var(--ink);
+  }
+  .ix-eye {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .ix-eye .pill {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4px 10px;
+    font-weight: 500;
+  }
+  .ix-eye .rule { width: 60px; height: 1px; background: var(--ink); display: inline-block; }
+
+  .ix-list {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid var(--ink);
+  }
+  .ix-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 240px 60px;
+    align-items: center;
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(29, 46, 34, 0.18);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.6, 0.05, 0.05, 1);
+    text-decoration: none;
+    color: inherit;
+  }
+  .ix-row .num {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--ink);
+    opacity: 0.55;
+    position: relative;
+    z-index: 2;
+    transition: opacity 0.35s;
+  }
+  .ix-row .ttl {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(28px, 3.4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    position: relative;
+    z-index: 2;
+    text-wrap: balance;
+    font-variation-settings: 'opsz' 96, 'wght' 500, 'SOFT' 80;
+  }
+  .ix-row .ttl em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--moss);
+    font-variation-settings: 'opsz' 96, 'ital' 1, 'wght' 300, 'SOFT' 100;
+  }
+  .ix-row .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    position: relative;
+    z-index: 2;
+  }
+  .ix-row .arrow {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 28px;
+    text-align: right;
+    color: var(--ink);
+    opacity: 0.35;
+    position: relative;
+    z-index: 2;
+    transition: transform 0.35s, opacity 0.35s, color 0.35s;
+  }
+  /* The acid-yellow highlight that slides in from the left */
+  .ix-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: #e8ff3a;
+    z-index: 1;
+    transition: width 0.4s cubic-bezier(0.5, 0.05, 0.05, 1);
+  }
+  .ix-row:hover { transform: translateX(20px); }
+  .ix-row:hover::before { width: 100%; }
+  .ix-row:hover .num { opacity: 1; }
+  .ix-row:hover .arrow { opacity: 1; transform: translateX(8px); color: var(--terra); }
+  .ix-row:hover .ttl em { color: var(--ink); }
+
+  /* Floating preview tooltip — follows cursor */
+  #ix-preview {
+    position: fixed;
+    width: 220px;
+    height: 150px;
+    pointer-events: none;
+    z-index: 8000;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 6px;
+    opacity: 0;
+    transition: opacity 0.25s;
+    transform: translate(-50%, -120%);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  #ix-preview .ix-pv-inner {
+    width: 100%;
+    height: 100%;
+    background:
+      repeating-linear-gradient(45deg, rgba(29, 46, 34, 0.06) 0 1px, transparent 1px 10px),
+      var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-align: center;
+    padding: 12px;
+    line-height: 1.5;
+  }
+  #ix-preview.on { opacity: 1; }
+
+  @media (max-width: 780px) {
+    .ix-row { grid-template-columns: 50px 1fr 40px; }
+    .ix-row .meta { display: none; }
+    #ix-preview { display: none; }
+    .ix-row:hover { transform: translateX(8px); }
+  }
+</style>

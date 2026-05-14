@@ -72,7 +72,9 @@
 </div>
 
 <style>
-  #hero { min-height: 200vh; display: block; padding: 0; position: relative; overflow: hidden; }
+  /* overflow removed from #hero: it broke position:sticky on the ride driver.
+     The internal .hero-bg already has its own overflow:hidden for the marquees. */
+  #hero { min-height: 200vh; display: block; padding: 0; position: relative; }
   .hero-top {
     display: flex;
     justify-content: space-between;
