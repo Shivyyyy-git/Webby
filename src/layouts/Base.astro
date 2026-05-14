@@ -12,17 +12,19 @@ import Cursor from '@/components/chrome/Cursor.astro';
 import Grain from '@/components/chrome/Grain.astro';
 import NowPlaying from '@/components/chrome/NowPlaying.astro';
 import AskAI from '@/components/chrome/AskAI.astro';
-/* AmbientField (three.js particle field) removed: the white dots
-   on the cream background read as page noise, not atmosphere. */
 
 interface Props {
   title?: string;
   description?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
 }
 
 const {
   title = 'Shivam Sharma · AI Product Manager',
   description = 'AI Product Manager at ESC Partners. Built Maya AI, a customer-support assistant for utility companies. Two prior exits, $575K combined.',
+  canonicalUrl = 'https://shivam.website/',
+  ogImage = 'https://shivam.website/images/shivam.jpg',
 } = Astro.props;
 ---
 <!DOCTYPE html>
@@ -32,24 +34,63 @@ const {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+
+  <!-- Open Graph -->
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="profile" />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="940" />
+  <meta property="og:image:height" content="940" />
+  <meta property="og:site_name" content="Shivam Sharma" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;600&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet"
   />
+  <!-- Preload hero image for faster LCP -->
+  <link rel="preload" as="image" href="/images/shivam.jpg" />
+
+  <!-- Structured data -->
   <script is:inline type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: 'Shivam Sharma',
     jobTitle: 'AI Product Manager',
     email: 'shivamsharma2023@gmail.com',
+    url: 'https://shivam.website',
+    image: 'https://shivam.website/images/shivam.jpg',
+    description: 'AI Product Manager at ESC Partners. Built Maya AI end-to-end — a customer support platform handling 70–80% of first-touch inbound volume for a US utility company. Two-time founder (CloudApproach, Approachables), $575K combined exits. MS in AI in Business, Simon Business School.',
+    sameAs: ['https://www.linkedin.com/in/shivamsharma-ai/'],
+    worksFor: {
+      '@type': 'Organization',
+      name: 'ESC Partners',
+    },
+    alumniOf: {
+      '@type': 'EducationalOrganization',
+      name: 'Simon Business School, University of Rochester',
+    },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Rochester',
+      addressRegion: 'NY',
+      addressCountry: 'US',
+    },
   })} />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <Grain />
   <Cursor />
   <Loader />
@@ -59,7 +100,7 @@ const {
   <NowPlaying />
   <AskAI />
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <slot />
   </main>
 

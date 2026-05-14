@@ -67,7 +67,8 @@ export function initNowPlaying() {
   }, 9000);
 
   np.addEventListener('click', (e) => {
-    if (e.target === x) {
+    const target = e.target as HTMLElement | null;
+    if (target && target.closest('#np-x')) {
       np.classList.add('collapsed');
       return;
     }
@@ -110,16 +111,31 @@ export function initLoader() {
   }, 4250);
 }
 
-function revealHero() {
-  document.querySelectorAll<HTMLElement>('#hero-name .word').forEach((w, i) =>
-    setTimeout(() => w.classList.add('in'), i * 120)
-  );
-  document.querySelectorAll<HTMLElement>('#hero .reveal').forEach((el) => el.classList.add('in'));
+export function dismissLoaderInstant() {
+  const loader = document.querySelector<HTMLElement>('#loader');
+  if (loader) loader.style.display = 'none';
+}
+
+export function revealHero(opts: { instant?: boolean; skipCinema?: boolean } = {}) {
+  const words = document.querySelectorAll<HTMLElement>('#hero-name .word');
+  const reveals = document.querySelectorAll<HTMLElement>('#hero .reveal');
   const photo = document.querySelector<HTMLElement>('#hero-photo');
-  if (photo) setTimeout(() => photo.classList.add('in'), 480);
   const np = document.querySelector<HTMLElement>('#np');
+
+  if (opts.instant) {
+    words.forEach((w) => w.classList.add('in'));
+    reveals.forEach((el) => el.classList.add('in'));
+    if (photo) photo.classList.add('in');
+  } else {
+    words.forEach((w, i) => setTimeout(() => w.classList.add('in'), i * 120));
+    reveals.forEach((el) => el.classList.add('in'));
+    if (photo) setTimeout(() => photo.classList.add('in'), 480);
+  }
+
   if (np) np.classList.add('show');
-  if ((window as any).__startRailCinema) (window as any).__startRailCinema();
+  if (!opts.skipCinema && (window as any).__startRailCinema) {
+    (window as any).__startRailCinema();
+  }
 }
 
 /* Magnetic photo — rotateX/Y on mousemove. Disabled on touch / reduced-motion. */

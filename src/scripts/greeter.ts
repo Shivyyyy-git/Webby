@@ -67,6 +67,46 @@ export function initGreeter(onDone: (payload: GreeterPayload) => void): boolean 
     return false;
   }
 
+  // Remember where focus was before the dialog opened so we can restore it.
+  const trigger = (document.activeElement as HTMLElement | null) ?? null;
+
+  // Focus management: move focus into the dialog, trap Tab while open.
+  function focusableEls(): HTMLElement[] {
+    return Array.from(
+      greeter!.querySelectorAll<HTMLElement>(
+        'input:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((el) => !el.hasAttribute('hidden') && el.offsetParent !== null || el.tagName === 'INPUT');
+  }
+  const firstInput = greeter.querySelector<HTMLElement>('input[name="name"]');
+  // Move focus into the dialog on the next frame (after any browser focus on body).
+  requestAnimationFrame(() => {
+    if (firstInput) firstInput.focus();
+  });
+
+  function onKeydown(e: KeyboardEvent) {
+    if (greeter!.classList.contains('hidden') || greeter!.classList.contains('gone')) return;
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      complete({ name: '', city: '', email: '', music: 'silent' });
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    const focusables = focusableEls();
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last  = focusables[focusables.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+    if (e.shiftKey && active === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+  document.addEventListener('keydown', onKeydown);
+
   function complete(payload: GreeterPayload) {
     try {
       localStorage.setItem(STORAGE_KEY, '1');
@@ -89,11 +129,20 @@ export function initGreeter(onDone: (payload: GreeterPayload) => void): boolean 
       } catch {}
     }
 
+    // Tear down focus trap and restore focus.
+    document.removeEventListener('keydown', onKeydown);
     // Fade greeter, then hand off to loader/cinema.
     greeter!.classList.add('gone');
     setTimeout(() => {
       greeter!.classList.add('hidden');
       onDone(payload);
+      // Restore focus to the original trigger if it still exists, otherwise main.
+      const main = document.getElementById('main-content');
+      if (trigger && document.body.contains(trigger)) {
+        trigger.focus();
+      } else if (main) {
+        main.focus();
+      }
     }, 950);
 
     window.dispatchEvent(new CustomEvent('greeter:done', { detail: payload }));

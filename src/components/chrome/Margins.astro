@@ -93,7 +93,9 @@
   }
   :global(body.in-ride) .margin-lspine { mix-blend-mode: normal; }
   :global(body.in-ride) .margin-lspine span { color: var(--cream); }
-  @media (max-width: 720px) {
+  /* Spine hides at tablet width — otherwise the 28px fixed strip eats into
+     the `--g` gutter and collides with headline copy. */
+  @media (max-width: 900px) {
     .margin-lspine { display: none; }
   }
 
@@ -132,7 +134,7 @@
   :global(body.in-ride) .margin-crop::after {
     background: var(--cream);
   }
-  @media (max-width: 720px) {
+  @media (max-width: 900px) {
     .margin-crop { display: none; }
   }
 </style>

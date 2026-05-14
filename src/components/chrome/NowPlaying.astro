@@ -1,8 +1,8 @@
 ---
 ---
-<div id="np">
-  <span class="np-x" id="np-x">×</span>
-  <div class="np-art"><div class="np-bars"><i></i><i></i><i></i><i></i></div></div>
+<div id="np" role="complementary" aria-label="Now playing">
+  <button type="button" class="np-x" id="np-x" aria-label="Dismiss now playing"><span aria-hidden="true">×</span></button>
+  <div class="np-art" aria-hidden="true"><div class="np-bars"><i></i><i></i><i></i><i></i></div></div>
   <div class="np-meta">
     <div class="np-cap">Now playing · Spotify</div>
     <div class="np-title" id="np-title">In rotation, mostly</div>
@@ -65,7 +65,7 @@
   .np-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .np-cap {
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: rgba(237, 228, 211, 0.5);
@@ -82,7 +82,7 @@
   }
   .np-sub {
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.1em;
     color: rgba(237, 228, 211, 0.6);
     white-space: nowrap;
@@ -91,13 +91,16 @@
     transition: opacity 0.35s;
   }
   .np-x {
+    /* 44x44 hit area for touch a11y; visible chip is the inner ::before. */
     position: absolute;
-    top: -10px;
-    right: -10px;
-    width: 22px;
-    height: 22px;
+    top: -21px;
+    right: -21px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     border-radius: 50%;
-    background: var(--cream);
+    background: transparent;
+    border: none;
     color: var(--ink);
     font-size: 14px;
     display: flex;
@@ -106,6 +109,24 @@
     cursor: none;
     line-height: 1;
     font-weight: 300;
+  }
+  .np-x::before {
+    /* Visible 22px circle, centered inside the 44px target. */
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--cream);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  .np-x > span { position: relative; z-index: 1; }
+  .np-x:focus-visible {
+    outline: 2px solid var(--terra);
+    outline-offset: -8px;
   }
   @media (max-width: 900px) {
     #np { display: none; }

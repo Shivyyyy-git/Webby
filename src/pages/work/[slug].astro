@@ -1,0 +1,263 @@
+---
+export const prerender = true;
+import { getCollection, render } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('work');
+  return entries.map((entry) => ({
+    params: { slug: entry.id.replace(/\.[^.]*$/, '') },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, titleEm, role, era, note, tags, stats, accent } = entry.data;
+
+const slug = entry.id.replace(/\.[^.]*$/, '');
+const canonicalUrl = `https://shivam.website/work/${slug}/`;
+const pageTitle = `${title}${titleEm ? ' ' + titleEm : ''} — Shivam Sharma`;
+const pageDescription = note.replace(/<[^>]+>/g, '').slice(0, 155);
+
+const accentColor = accent === 'terra' ? '#c25a3a' : accent === 'moss' ? '#3a6645' : '#1d2e22';
+---
+<Base title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl}>
+  <div class="cs-page">
+
+    <nav class="cs-nav">
+      <a href="/" class="cs-back"><span aria-hidden="true">←</span> Shivam Sharma</a>
+    </nav>
+
+    <header class="cs-header">
+      <div class="cs-eyebrow">{role} · {era}</div>
+      <h1 class="cs-title">{title} <em>{titleEm}</em></h1>
+      <div class="cs-tags">
+        {tags.map((t: string) => <span class="cs-tag">{t}</span>)}
+      </div>
+    </header>
+
+    <div class="cs-stats">
+      {stats.map((s: { value: string; label: string }) => (
+        <div class="cs-stat">
+          <span class="cs-stat-num" set:html={s.value} />
+          <span class="cs-stat-lbl">{s.label}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="cs-body">
+      <section aria-labelledby="cs-overview">
+        <h2 class="cs-section-h" id="cs-overview">Overview</h2>
+        <div class="cs-note" set:html={note} />
+      </section>
+      <section aria-labelledby="cs-detail">
+        <h2 class="cs-section-h" id="cs-detail">Detail</h2>
+        <div class="cs-content">
+          <Content />
+        </div>
+      </section>
+    </div>
+
+    <footer class="cs-foot">
+      <a href="/" class="cs-back-foot"><span aria-hidden="true">←</span> Back to portfolio</a>
+      <a href="mailto:shivamsharma2023@gmail.com" class="cs-contact">shivamsharma2023@gmail.com <span aria-hidden="true">→</span></a>
+    </footer>
+
+  </div>
+</Base>
+
+<style define:vars={{ accentColor }}>
+  .cs-page {
+    min-height: 100vh;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0 0 14vh;
+  }
+
+  .cs-nav {
+    padding: 32px var(--g);
+    border-bottom: 1px solid rgba(237, 228, 211, 0.12);
+  }
+  .cs-back {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.55);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .cs-back:hover { color: var(--cream); }
+
+  .cs-header {
+    padding: 10vh var(--g) 6vh;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .cs-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.55);
+    margin-bottom: 28px;
+  }
+  .cs-title {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(52px, 9vw, 140px);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--cream);
+    font-variation-settings: 'opsz' 144, 'wght' 300;
+    margin-bottom: 40px;
+    text-wrap: balance;
+  }
+  .cs-title em {
+    font-style: italic;
+    color: var(--accentColor);
+    font-variation-settings: 'opsz' 144, 'ital' 1, 'wght' 300;
+  }
+  .cs-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .cs-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.7);
+    padding: 5px 11px;
+    border: 1px solid rgba(237, 228, 211, 0.28);
+    border-radius: 99px;
+  }
+
+  .cs-stats {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid rgba(237, 228, 211, 0.15);
+    border-bottom: 1px solid rgba(237, 228, 211, 0.15);
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 var(--g);
+  }
+  .cs-stat {
+    flex: 1;
+    padding: 40px 0 36px;
+    border-right: 1px solid rgba(237, 228, 211, 0.15);
+    padding-right: 32px;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .cs-stat:first-child { padding-left: 0; }
+  .cs-stat:last-child { border-right: none; }
+  .cs-stat-num {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(40px, 5vw, 80px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    color: var(--accentColor);
+    font-variation-settings: 'opsz' 144, 'wght' 300;
+  }
+  .cs-stat-num :global(em) {
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.7em;
+    font-variation-settings: 'opsz' 60, 'ital' 1, 'wght' 300;
+  }
+  .cs-stat-lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.55);
+  }
+
+  .cs-body {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 8vh var(--g) 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .cs-section-h {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.55);
+    margin-bottom: 18px;
+    font-weight: 500;
+  }
+  .cs-note {
+    font-family: var(--sans);
+    font-size: clamp(16px, 1.3vw, 20px);
+    line-height: 1.6;
+    color: rgba(237, 228, 211, 0.78);
+  }
+  .cs-note :global(b) {
+    color: var(--cream);
+    font-weight: 500;
+  }
+  .cs-content {
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(237, 228, 211, 0.65);
+  }
+  .cs-content :global(p) { margin-bottom: 1.2em; }
+  .cs-content :global(p:last-child) { margin-bottom: 0; }
+
+  .cs-foot {
+    max-width: 1100px;
+    margin: 10vh auto 0;
+    padding: 32px var(--g) 0;
+    border-top: 1px solid rgba(237, 228, 211, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .cs-back-foot {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(237, 228, 211, 0.55);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .cs-back-foot:hover { color: var(--cream); }
+  .cs-contact {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(18px, 2vw, 28px);
+    color: var(--accentColor);
+    text-decoration: none;
+    font-variation-settings: 'opsz' 36, 'ital' 1, 'wght' 300;
+    transition: color 0.3s;
+  }
+  .cs-contact:hover { color: var(--cream); }
+
+  @media (max-width: 900px) {
+    .cs-body { grid-template-columns: 1fr; gap: 40px; }
+    .cs-stats { flex-direction: column; }
+    .cs-stat {
+      border-right: none;
+      border-bottom: 1px solid rgba(237, 228, 211, 0.15);
+      padding: 28px 0;
+    }
+    .cs-stat:last-child { border-bottom: none; }
+    .cs-foot { flex-direction: column; align-items: flex-start; }
+  }
+</style>

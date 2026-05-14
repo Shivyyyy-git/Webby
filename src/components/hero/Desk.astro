@@ -9,11 +9,11 @@ const SCRIPT = [
     era: '1994 · Childhood',
     coord: 'N 28.6° · E 77.2°',
     short: 'Delhi',
-    body: 'Born loud, raised loud. Five languages by the time I could read one. Negotiation as a survival skill before I knew what product was.',
+    body: 'Born loud, raised loud. Negotiation as a survival skill before I knew what product was.',
     cardEyebrow: 'DEPARTING',
     year: '1994',
     cardLoc: 'DELHI · INDIA',
-    bullets: ['Era · Childhood', 'Languages · 5', 'Took with me · grit, pace, loud laugh'],
+    bullets: ['Era · Childhood', 'City · Delhi', 'Took with me · grit, pace, loud laugh'],
   },
   {
     loc: 'punjab',
@@ -48,7 +48,7 @@ const SCRIPT = [
     era: 'Now',
     coord: 'N 43.2° · W 77.6°',
     short: 'Rochester',
-    body: 'AI PM at ESC Partners. Built Maya AI end-to-end in about 2.5 months. The only AI person on the team. Customer support for utility companies. Voice, chat, SMS, email, mobile. In pilot with 40+ agents.',
+    body: 'AI Product Manager at ESC Partners. Built Maya AI end-to-end in about 2.5 months. The only AI person on the team. Customer support for utility companies. Voice, chat, SMS, email, mobile. In pilot with 40+ agents.',
     cardEyebrow: 'NOW BOARDING',
     year: '2026',
     cardLoc: 'ROCHESTER · NY',
@@ -151,9 +151,11 @@ const POSTCARDS = [
       </div>
 
       {/* Coda — "where could we go next?" — appears after the 4 stations,
-          when the train reaches the end of the line. Staggered fade-in. */}
-      <div class="ride-coda" id="ride-coda" aria-hidden="true">
-        <div class="coda-eyebrow"><span class="rule"></span> STOP 05 · ?</div>
+          when the train reaches the end of the line. Staggered fade-in.
+          Kept in the accessibility tree (no aria-hidden) so SR users get
+          the closing line; visibility is controlled purely via opacity. */}
+      <div class="ride-coda" id="ride-coda">
+        <div class="coda-eyebrow" aria-hidden="true"><span class="rule"></span> STOP 05 · ?</div>
         <h2 class="coda-h">where could we go next?</h2>
         <p class="coda-p">your move, recruiter.</p>
       </div>
@@ -443,10 +445,10 @@ const POSTCARDS = [
 </div>
 
 <!-- POSTCARD SPREAD MODAL -->
-<div id="spread">
-  <div id="spread-bd"></div>
+<div id="spread" role="dialog" aria-modal="true" aria-labelledby="sp-h" aria-hidden="true" inert>
+  <div id="spread-bd" aria-hidden="true"></div>
   <div id="spread-card">
-    <button class="sp-close" id="sp-close" aria-label="Close">×</button>
+    <button class="sp-close" type="button" id="sp-close" aria-label="Close postcard"><span aria-hidden="true">×</span></button>
     <div class="sp-stage">
       <div class="sp-front">
         <div class="sp-photo">
@@ -772,7 +774,7 @@ const POSTCARDS = [
     border-top: 1px solid rgba(29, 46, 34, 0.18);
     padding-top: 8px;
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
@@ -791,7 +793,7 @@ const POSTCARDS = [
   .pc-addr-line {
     grid-column: 2;
     grid-row: 2;
-    font-size: 8px;
+    font-size: 10px;
     color: var(--muted);
   }
 
@@ -873,7 +875,7 @@ const POSTCARDS = [
   }
   .st-label {
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--muted);
@@ -947,7 +949,7 @@ const POSTCARDS = [
   }
   @media (max-width: 720px) {
     #desk-track { bottom: 14vh; height: 44px; }
-    .st-label { font-size: 9px; }
+    .st-label { font-size: 10px; }
     .st-label b { font-size: 11px; }
     #desk-train { width: 90px; height: 27px; }
   }
@@ -1107,7 +1109,7 @@ const POSTCARDS = [
     right: var(--g);
     z-index: 6;
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--muted);
@@ -1384,8 +1386,10 @@ const POSTCARDS = [
     align-items: center;
     justify-content: center;
     font-family: var(--mono);
-    font-size: 8px;
-    letter-spacing: 0.18em;
+    /* Bumped 8 → 10 to meet the site mono floor. Letter-spacing tightened
+       so "DELHI · 1994" still fits inside the 120px round postmark. */
+    font-size: 10px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgba(29, 46, 34, 0.65);
     transform: rotate(-12deg);
@@ -1550,7 +1554,7 @@ const POSTCARDS = [
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--muted);
@@ -2067,7 +2071,7 @@ const POSTCARDS = [
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--muted);

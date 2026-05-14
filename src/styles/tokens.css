@@ -8,6 +8,8 @@
   --terra-deep: #9a3f24;
   --rust: #7a3220;
   --sand: #d4c5a8;
+  /* Accent: acid yellow on sticky-note stubs + timeline acid sweep. */
+  --acid: #e8ff3a;
   /* Bumped from 0.55 → 0.72 for WCAG AA contrast on cream */
   --muted: rgba(29, 46, 34, 0.72);
   --line: rgba(29, 46, 34, 0.22);
@@ -21,4 +23,17 @@
   --serif-italic: 'Instrument Serif', 'Fraunces', serif;
   --sans: 'Space Grotesk', 'Inter Tight', system-ui, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Z-INDEX SCALE — promote magic numbers out of components. */
+  --z-main: 10;
+  --z-spread: 120;
+  --z-margin: 240;
+  --z-chrome: 300;
+  --z-ticker: 350;
+  --z-overlay: 600;
+  --z-toc: 8000;
+  --z-modal: 9100;
+  --z-cursor: 9998;
+  --z-cursor-dot: 9999;
+  --z-skip: 10000;
 }

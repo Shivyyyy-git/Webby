@@ -2,19 +2,57 @@
 ---
 <div id="chrome">
   <span class="mark">Shivam.</span>
-  <nav>
+  <nav id="chrome-nav" aria-label="Primary">
     <a href="#receipts">Receipts</a>
     <a href="#work">Work</a>
     <a href="#timeline">Path</a>
-    <a href="#phil">Mind</a>
     <a href="#close">Contact</a>
   </nav>
+  <button
+    type="button"
+    id="chrome-menu-toggle"
+    class="menu-toggle"
+    aria-controls="chrome-nav"
+    aria-expanded="false"
+    aria-label="Open navigation menu"
+  >
+    <span class="bar" aria-hidden="true"></span>
+    <span class="bar" aria-hidden="true"></span>
+  </button>
   <div class="right">
-    <a class="pill" href="/resume.pdf" target="_blank" rel="noopener" data-cur="link">
-      <span class="led live"></span>Open to roles
+    <a class="pill" href="/resume.pdf" target="_blank" rel="noopener" data-cur="link" aria-label="Open resume PDF in a new tab — Open to roles">
+      <span class="led live" aria-hidden="true"></span>Open to roles
     </a>
   </div>
 </div>
+
+<script>
+  // Mobile menu toggle — opens/closes the nav below 900px.
+  (() => {
+    const toggle = document.getElementById('chrome-menu-toggle');
+    const nav = document.getElementById('chrome-nav');
+    if (!toggle || !nav) return;
+    function setOpen(open: boolean) {
+      toggle!.setAttribute('aria-expanded', String(open));
+      toggle!.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      nav!.classList.toggle('open', open);
+    }
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') === 'true';
+      setOpen(!open);
+    });
+    // Close on link click and on Escape.
+    nav.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).tagName === 'A') setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  })();
+</script>
 
 <style>
   #chrome {
@@ -32,8 +70,16 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     pointer-events: none;
-    mix-blend-mode: difference;
+    /* mix-blend-mode removed: it produced unreliable pill-border contrast
+       on cream sections. Replaced with a fade-down ink veil + backdrop blur
+       so the nav reads against any section. */
     color: var(--cream);
+    background: linear-gradient(to bottom,
+      rgba(29, 46, 34, 0.92) 0%,
+      rgba(29, 46, 34, 0.78) 60%,
+      rgba(29, 46, 34, 0) 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
   #chrome > * { pointer-events: auto; }
   #chrome .mark {
@@ -92,7 +138,73 @@
     opacity: 1;
     animation: lp 1.6s infinite;
   }
+
+  /* Hamburger toggle — hidden on desktop, shown below 900px. */
+  .menu-toggle {
+    display: none;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    cursor: none;
+  }
+  .menu-toggle .bar {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  .menu-toggle[aria-expanded="true"] .bar:nth-child(1) {
+    transform: translateY(3.25px) rotate(45deg);
+  }
+  .menu-toggle[aria-expanded="true"] .bar:nth-child(2) {
+    transform: translateY(-3.25px) rotate(-45deg);
+  }
+  .menu-toggle:focus-visible {
+    outline: 2px solid var(--terra);
+    outline-offset: 2px;
+  }
+
   @media (max-width: 900px) {
-    #chrome nav { display: none; }
+    .menu-toggle { display: inline-flex; }
+    /* Nav becomes a dropdown panel sliding down from the chrome bar. */
+    #chrome nav {
+      position: fixed;
+      top: 60px;
+      right: var(--g);
+      left: var(--g);
+      flex-direction: column;
+      gap: 0;
+      padding: 18px 20px;
+      background: var(--ink);
+      color: var(--cream);
+      border-radius: 6px;
+      box-shadow: 0 18px 36px -12px rgba(0, 0, 0, 0.35);
+      transform: translateY(-12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.22s ease, opacity 0.22s ease;
+      mix-blend-mode: normal;
+      font-size: 13px;
+      letter-spacing: 0.14em;
+    }
+    #chrome nav.open {
+      transform: none;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #chrome nav a {
+      padding: 12px 4px;
+      opacity: 0.92;
+      border-bottom: 1px solid rgba(237, 228, 211, 0.12);
+    }
+    #chrome nav a:last-child { border-bottom: none; }
   }
 </style>

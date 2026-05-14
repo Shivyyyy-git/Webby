@@ -1,24 +1,22 @@
 ---
+export const prerender = true;
 import Base from '@/layouts/Base.astro';
 import Desk from '@/components/hero/Desk.astro';
 import HeroWords from '@/components/hero/HeroWords.astro';
-import Ribbon from '@/components/sections/Ribbon.astro';
-import IndexSection from '@/components/sections/Index.astro';
 import Receipts from '@/components/sections/Receipts.astro';
 import Work from '@/components/sections/Work.astro';
 import Timeline from '@/components/sections/Timeline.astro';
 import Close from '@/components/sections/Close.astro';
-/* Off-duty section cut for v1 per brief. Add back later as a short
-   editorial P.S. in voice, not a fabricated reading list. */
+/* Off-duty section cut for v1 per brief. */
 /* Phil/opinions section dropped — file kept on disk, just unhooked. */
+/* Ribbon + Index TOC cut — Ribbon's 4 facts repeat in Receipts, and a TOC
+   on a single-page site just delays the first real content. */
 ---
 <Base>
   <section id="hero">
     <Desk />
     <HeroWords />
   </section>
-  <Ribbon />
-  <IndexSection />
   <Receipts />
   <Work />
   <Timeline />

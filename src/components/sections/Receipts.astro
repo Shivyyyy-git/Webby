@@ -1,7 +1,7 @@
 ---
 const RECEIPTS = [
-  { value: 70, suffix: '%+', label: 'First-touch coverage', note: "Maya handles 70 to 80% of inbound support volume on one US utility's channel." },
-  { value: 40, suffix: '+',  label: 'Agents in pilot',      note: 'Internal agent console plus a customer-facing assistant. Voice, chat, SMS, email, mobile.' },
+  { value: 70, suffix: '%+', label: 'First-touch coverage', note: "Maya handles 70 to 80% of inbound support volume on one US utility. Voice, chat, SMS, email, mobile." },
+  { value: 40, suffix: '+',  label: 'Agents in pilot',      note: 'Pilot running with 40+ agents at a US utility. Internal console plus customer-facing assistant.' },
   { value: 2,  suffix: '·',  label: 'Exits',                note: 'CloudApproach and Approachables. $575K combined. Roughly $5M influenced in deals closed (deals my team and I drove, not personal revenue).' },
   { value: 5,  suffix: '',   label: 'Channels',             note: 'Voice, chat, SMS, email, mobile. Built end-to-end at ESC Partners. FastAPI, React, AWS Bedrock, DynamoDB, Oracle CCS.' },
 ];
@@ -99,7 +99,7 @@ const RECEIPTS = [
     margin-top: 18px;
   }
   .tnote {
-    font-size: 13px;
+    font-size: clamp(13px, 1vw, 15px);
     color: var(--muted);
     line-height: 1.5;
     margin-top: 8px;

@@ -5,21 +5,20 @@
 //   - a meta column (kind · year/state)
 //   - a preview line (shown on hover next to cursor)
 const ENTRIES = [
-  { href: '#work',     num: 'N° 01', title: 'Maya AI',           em: 'the proof of work.',                meta: 'Case study · 2026',     preview: 'Maya AI · the proof' },
-  { href: '#receipts', num: 'N° 02', title: 'Numbers',           em: 'I can defend.',                     meta: 'Metrics · now',         preview: 'Receipts · numbers I can defend' },
-  { href: '#timeline', num: 'N° 03', title: 'A career,',         em: 'read like a spine.',                meta: 'Timeline · 2019 → 26',  preview: 'The logbook · jobs, exits, a master\'s' },
-  { href: '#close',    num: 'N° 04', title: 'Where to find me',  em: 'when the lights go down.',          meta: 'Contact · now',         preview: 'Inbox · DMs · loud rooms' },
-  { href: '#hero',     num: 'N° 05', title: 'Top of the ride.',  em: 'Again.',                            meta: 'Loop',                  preview: 'Back to top · keep scrolling' },
+  { href: '#work',     num: 'N° 01', title: 'Maya AI.',          em: '',                                  meta: 'Case study · 2026',     preview: 'Maya AI' },
+  { href: '#receipts', num: 'N° 02', title: 'Numbers',           em: 'I can defend.',                     meta: 'Metrics · now',         preview: 'Numbers I can defend' },
+  { href: '#timeline', num: 'N° 03', title: 'The career.',       em: '',                                  meta: 'Timeline · 2019 → 26',  preview: 'Career, in order' },
+  { href: '#close',    num: 'N° 04', title: 'Reach me.',         em: '',                                  meta: 'Contact · now',         preview: 'Inbox, DMs' },
+  { href: '#hero',     num: 'N° 05', title: 'Top.',              em: '',                                  meta: 'Loop',                  preview: 'Back to top' },
 ];
 ---
 <section id="index">
   <div class="w">
-    <div class="cap"><b>Section 01</b> · Index · or, the table of contents</div>
+    <div class="cap"><b>Section 01</b> · Index</div>
 
     <div class="ix-head reveal">
       <h2 class="ix-h">
-        The <em>index</em>,<br />
-        or: <span class="grot">a table of contents that flirts back.</span>
+        The <em>index</em>.
       </h2>
       <div class="ix-eye"><span class="pill">FOLD 01</span><span class="rule"></span><span>05 ENTRIES</span></div>
     </div>
@@ -27,10 +26,10 @@ const ENTRIES = [
     <div class="ix-list reveal">
       {ENTRIES.map((e) => (
         <a class="ix-row" href={e.href} data-preview={e.preview} data-cur="link" data-cur-lbl="Jump">
-          <span class="num">{e.num}</span>
+          <span class="num" aria-hidden="true">{e.num}</span>
           <span class="ttl">{e.title} <em>{e.em}</em></span>
           <span class="meta">{e.meta}</span>
-          <span class="arrow">→</span>
+          <span class="arrow" aria-hidden="true">→</span>
         </a>
       ))}
     </div>

@@ -11,13 +11,13 @@
         kick off the atmospheric loader → cinema sequence.
 */
 ---
-<section id="greeter" aria-modal="true" role="dialog" aria-labelledby="greeter-title">
+<div id="greeter" aria-modal="true" role="dialog" aria-labelledby="greeter-title" aria-describedby="greeter-sub">
   <div class="greeter-inner">
     <span class="greeter-eyebrow"><span class="dot"></span>Index № 01 · 2026</span>
     <h2 class="greeter-mark" id="greeter-title">Hi.</h2>
-    <p class="greeter-sub">
+    <p class="greeter-sub" id="greeter-sub">
       A quick hello before we begin. <em>None of this is required.</em>
-      Skip if you want.
+      Press <kbd>Esc</kbd> to skip.
     </p>
 
     <form class="greeter-form" id="greeter-form" novalidate>
@@ -60,7 +60,7 @@
       <div class="g-actions">
         <button class="g-submit" type="submit">
           <span>Begin the ride</span>
-          <span class="g-arrow">→</span>
+          <span class="g-arrow" aria-hidden="true">→</span>
         </button>
         <button class="g-skip" type="button" id="greeter-skip">Skip the questions</button>
       </div>
@@ -72,7 +72,7 @@
       </p>
     </form>
   </div>
-</section>
+</div>
 
 <style>
   #greeter {
@@ -144,6 +144,18 @@
     color: var(--terra);
     font-style: italic;
   }
+  .greeter-sub kbd {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 2px 6px;
+    border: 1px solid rgba(237, 228, 211, 0.35);
+    border-radius: 3px;
+    background: rgba(237, 228, 211, 0.06);
+    color: rgba(237, 228, 211, 0.85);
+    text-transform: uppercase;
+    vertical-align: 1px;
+  }
 
   .greeter-form {
     display: flex;
@@ -174,14 +186,14 @@
     font-size: 11px;
     text-transform: none;
     letter-spacing: 0;
-    color: rgba(237, 228, 211, 0.45);
+    color: rgba(237, 228, 211, 0.78);
     font-variation-settings: 'opsz' 24, 'ital' 1, 'wght' 400;
   }
   .g-input {
     width: 100%;
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(237, 228, 211, 0.3);
+    border-bottom: 1px solid rgba(237, 228, 211, 0.5);
     color: var(--cream);
     font-family: var(--sans);
     font-size: 17px;
@@ -190,7 +202,7 @@
     cursor: none;
   }
   .g-input::placeholder {
-    color: rgba(237, 228, 211, 0.35);
+    color: rgba(237, 228, 211, 0.6);
   }
   .g-input:focus {
     outline: none;
@@ -220,7 +232,7 @@
     align-items: center;
     gap: 10px;
     padding: 12px 16px;
-    border: 1px solid rgba(237, 228, 211, 0.22);
+    border: 1px solid rgba(237, 228, 211, 0.4);
     border-radius: 4px;
     cursor: none;
     transition: border-color 0.25s, background 0.25s;
@@ -230,9 +242,22 @@
     border-color: rgba(237, 228, 211, 0.45);
   }
   .g-radio input {
+    /* Keep visually hidden but in the accessibility tree and focusable
+       so keyboard users can tab to it. .g-radio:focus-within mirrors the
+       focus state on the visible chip. */
     position: absolute;
-    opacity: 0;
-    pointer-events: none;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    border: 0;
+    white-space: nowrap;
+  }
+  .g-radio:focus-within {
+    outline: 2px solid var(--terra);
+    outline-offset: 2px;
   }
   .g-radio-dot {
     width: 14px;
@@ -320,7 +345,7 @@
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(237, 228, 211, 0.4);
+    color: rgba(237, 228, 211, 0.7);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -329,7 +354,7 @@
   .g-sep { opacity: 0.5; }
 
   /* Reduce on mobile */
-  @media (max-width: 720px) {
+  @media (max-width: 600px) {
     .g-radio { padding: 10px 12px; }
     .greeter-mark { font-size: clamp(44px, 12vw, 72px); }
   }

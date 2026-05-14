@@ -14,4 +14,28 @@ year: '2026'
 tape: 'Maya · AI'
 ---
 
-Maya handles 70 to 80% of inbound support volume at first touch on one US utility. That removes roughly 100 manual emails per manager per day.
+Maya handles 70 to 80% of inbound support volume at first touch on one US utility. That removes 100+ manual emails per manager per day.
+
+## What it is
+
+Two surfaces. One customer-facing assistant (voice, chat, SMS, email, mobile, 26 languages) that handles inbound support for utility customers. One internal console for the human agents, integrated with Oracle CCS, that surfaces account context, conversation history, and suggested next steps.
+
+The idea: most support queries are repetitive. Bill questions, outage status, account changes. Maya handles the first touch. When it can not, it hands off cleanly to a human with full context already loaded.
+
+## What I built
+
+I was the only AI person at ESC Partners when this started. No handoff from a previous team. No prior codebase to extend.
+
+Built end-to-end in about 2.5 months. FastAPI backend, React frontend, AWS Bedrock for the LLM layer, DynamoDB for session state, n8n for workflow orchestration, deployed on Render. Oracle CCS integration was the hardest part — the documentation is not designed for this kind of use.
+
+The moment that made it real: watching an agent use the console for the first time with a live customer. They did not have to dig through three tabs to find the account. It was just there.
+
+## The number I can defend
+
+70 to 80% first-touch coverage on one US utility client. I can explain exactly how we measure it, what counts as a handled conversation, and where the edge cases are.
+
+I will not give you a bigger number than that.
+
+## Stack
+
+FastAPI, React, AWS Bedrock (Claude), DynamoDB, Oracle CCS, n8n, Render. Voice via a third-party voice provider. SMS and email handled through dedicated channels. Mobile via a customer widget.

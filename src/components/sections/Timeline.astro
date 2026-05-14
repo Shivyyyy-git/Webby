@@ -1,39 +1,14 @@
 ---
-const CHAPTERS = [
-  {
-    era: '2019 to 2024',
-    place: 'London · Dubai',
-    headline: 'Started in undergrad',
-    body: 'Approachables came out of my second year at UCLan. Marketing agency, 200+ clients. Then CloudApproach with a co-founder, AI-powered real estate CRM across UK and MENA. Sold both. $575K combined.',
-  },
-  {
-    era: '2025',
-    place: 'Simon Business School',
-    headline: "Master's in AI",
-    body: "MS in AI in Business (STEM), graduated December 2025. Ran the program alongside Product Lead at the Ain Center and a stint as Founding PM at Vollie.",
-  },
-  {
-    era: '2026, now',
-    place: 'Rochester · ESC Partners',
-    headline: 'Shipping Maya AI',
-    body: 'Maya is a two-sided AI customer support platform for utility companies. Customer-facing assistant (voice, chat, SMS, email, mobile) paired with an internal agent console.',
-  },
-];
-
 // Career, chronological (newest first). Center-rail spine, alternating
-// sides. Hover any entry → acid wash fills the body card and the
-// polaroid placeholder pops up next to the cursor. Drop a real image
-// path into the `photo` field whenever you have one — the script swaps
-// the hatch placeholder for the image automatically.
+// sides. Hover any entry → acid wash fills the body card. The floating
+// cursor-tracked preview was removed when we shipped without role photos.
 const ROLES = [
   {
     side: 'right', now: true,
     date: '2026 · Jan → now', tag: 'NOW',
     title: 'AI Product Manager, ', em: 'ESC Partners',
     where: 'Rochester, NY · Maya AI',
-    note: 'Built Maya AI end-to-end. 70 to 80 percent of first-touch volume on one US utility. Pilot at 40+ agents.',
-    preview: 'Maya AI · in pilot',
-    photo: null,
+    note: 'Built Maya AI end-to-end. 70 to 80% of first-touch volume on one US utility. Pilot at 40+ agents.',
   },
   {
     side: 'left',
@@ -41,8 +16,6 @@ const ROLES = [
     title: 'AI Product Consultant (Builder), ', em: 'Assisted Living Locators',
     where: 'Remote, CA',
     note: 'Owned the matching flow and the agent-facing console.',
-    preview: 'Marketplace · matching flow',
-    photo: null,
   },
   {
     side: 'right',
@@ -50,26 +23,20 @@ const ROLES = [
     title: 'Founding PM, ', em: 'Vollie Inc.',
     where: 'Buffalo, NY (not Pleasanton)',
     note: 'Wrote the first eval suite. Scoped the first three features. Cut what did not fit.',
-    preview: 'Vollie · founding PM',
-    photo: null,
   },
   {
     side: 'left',
     date: '2025 · Jan → Dec',
     title: 'Product Lead, ', em: 'Ain Center for Entrepreneurship',
     where: 'Simon Business School',
-    note: 'Built the application stack students used for programs and grants. Ran in parallel with the master’s.',
-    preview: 'Ain Center · application stack',
-    photo: null,
+    note: "Built the application stack students used for programs and grants. Ran in parallel with the master's.",
   },
   {
     side: 'right',
     date: '2025 · Dec',
     title: 'M.S. AI in Business ', em: '(STEM)',
     where: 'Simon Business School, Rochester',
-    note: 'Master’s in AI applied to business. Graduated December 2025.',
-    preview: 'M.S. AI · Simon',
-    photo: null,
+    note: "Master's in AI applied to business. Graduated December 2025.",
   },
   {
     side: 'left',
@@ -77,8 +44,6 @@ const ROLES = [
     title: 'Founder · ', em: 'CloudApproach & Approachables',
     where: 'UK · MENA',
     note: 'Two companies. Two acquisitions. Combined exits of $575K. Influenced roughly $5M in closed deals (deals my team and I drove, not personal revenue).',
-    preview: 'Two companies · two exits',
-    photo: null,
   },
 ];
 ---
@@ -87,89 +52,10 @@ const ROLES = [
     <div class="cap"><b>Section 04</b> · How I got here</div>
     <h2 class="tl-h reveal">Three cities. Two exits.<br />One <em>thread</em>.</h2>
 
-    <!-- JOURNEY: pinned scrub — zig-zag track + train weaving past 5 chapter cards -->
-    <div id="tl-journey" class="tl-journey reveal">
-      {/* Zig-zag rail — top-left → upper-right → middle-left → lower-right → bottom-right */}
-      <svg id="tl-track" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path
-          id="tl-track-path"
-          d="M 8 10 L 92 50 L 8 90"
-          fill="none"
-          stroke="rgba(29,46,34,0.22)"
-          stroke-width="0.35"
-          stroke-dasharray="0.8 1.4"
-          vector-effect="non-scaling-stroke"
-        />
-        <path
-          id="tl-track-fill"
-          d="M 8 10 L 92 50 L 8 90"
-          fill="none"
-          stroke="var(--terra)"
-          stroke-width="0.45"
-          stroke-dasharray="0 1000"
-          vector-effect="non-scaling-stroke"
-        />
-      </svg>
-
-      {/* Station markers at each chapter waypoint */}
-      <div class="tl-stations" aria-hidden="true">
-        {CHAPTERS.map((_, i) => (
-          <div class="tl-station" data-i={i}>
-            <span class="tl-st-dot"></span>
-            <span class="tl-st-num">{String(i + 1).padStart(2, '0')}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Chapter cards — only one visible at a time, centered in pinned viewport */}
-      <div class="tl-stage">
-        {CHAPTERS.map((ch, i) => (
-          <article class="tl-chapter" data-i={i} data-active={i === 0 ? 'true' : 'false'}>
-            <div class="tl-era">{ch.era}</div>
-            <div class="tl-place">{ch.place}</div>
-            <h3 class="tl-headline">{ch.headline}</h3>
-            <p class="tl-body">{ch.body}</p>
-          </article>
-        ))}
-      </div>
-
-      {/* Train — slides along the zig-zag track, position set by JS */}
-      <svg id="tl-train" viewBox="0 0 160 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g class="smoke">
-          <circle cx="14" cy="10" r="2.5" />
-          <circle cx="11" cy="6"  r="3" />
-          <circle cx="16" cy="2"  r="3.5" />
-        </g>
-        <rect x="2"  y="18" width="44" height="22" rx="2" fill="#1d2e22" />
-        <rect x="6"  y="13" width="14" height="6" fill="#1d2e22" />
-        <rect x="11" y="8"  width="6"  height="6" fill="#1d2e22" />
-        <rect x="32" y="22" width="8"  height="8" fill="#ede4d3" />
-        <rect x="0"  y="31" width="48" height="2" fill="#c25a3a" />
-        <rect x="46" y="28" width="6" height="2" fill="#1d2e22" />
-        <rect x="50" y="21" width="48" height="19" rx="1.5" fill="#c25a3a" />
-        <rect x="56" y="24" width="6" height="6" fill="#ede4d3" />
-        <rect x="66" y="24" width="6" height="6" fill="#ede4d3" />
-        <rect x="76" y="24" width="6" height="6" fill="#ede4d3" />
-        <rect x="86" y="24" width="6" height="6" fill="#ede4d3" />
-        <rect x="96" y="28" width="6" height="2" fill="#1d2e22" />
-        <rect x="100" y="21" width="48" height="19" rx="1.5" fill="#2d4533" />
-        <rect x="106" y="24" width="6" height="6" fill="#ede4d3" />
-        <rect x="116" y="24" width="6" height="6" fill="#ede4d3" />
-        <rect x="126" y="24" width="6" height="6" fill="#ede4d3" />
-        <rect x="136" y="24" width="6" height="6" fill="#ede4d3" />
-        <circle cx="10"  cy="42" r="4"   fill="#1d2e22" />
-        <circle cx="36"  cy="42" r="4"   fill="#1d2e22" />
-        <circle cx="60"  cy="42" r="3.2" fill="#1d2e22" />
-        <circle cx="88"  cy="42" r="3.2" fill="#1d2e22" />
-        <circle cx="110" cy="42" r="3.2" fill="#1d2e22" />
-        <circle cx="138" cy="42" r="3.2" fill="#1d2e22" />
-      </svg>
-    </div>
-
-    <!-- Spine heading — promoted from eyebrow to a proper h2, v4 logbook style -->
+    <!-- Logbook strap above the rail. Was a second H2; collapsed to a single
+         meta line so the section has one display headline (`.tl-h`). -->
     <div class="spine-head reveal">
-      <div class="spine-eye"><span class="r"></span> FOLD 04B &nbsp;·&nbsp; LOGBOOK · {ROLES.length} ENTRIES</div>
-      <h2 class="spine-h">A career, <em>read in order.</em></h2>
+      <div class="spine-eye"><span class="r"></span> LOGBOOK · {ROLES.length} ENTRIES</div>
     </div>
 
     {/* Center-rail spine. Every role gets a dot on the rail and a body
@@ -177,16 +63,13 @@ const ROLES = [
         away from the rail and fills with acid yellow; the polaroid
         placeholder floats next to the cursor. Photos drop into .frame
         later via the role's `photo` field. */}
-    <div class="spine-rail reveal" id="spine-rail">
+    <ol class="spine-rail reveal" id="spine-rail" aria-label="Career timeline, newest first">
       {ROLES.map((r, i) => (
-        <a
+        <li
           class={`lentry ${r.now ? 'now' : ''} ${r.side}`}
-          href="#"
-          data-preview={r.preview}
-          data-photo={r.photo || ''}
           style={`--d:${i * 60}ms`}
         >
-          <div class="pin"><div class="d"></div></div>
+          <div class="pin" aria-hidden="true"><div class="d"></div></div>
           <div class="body">
             <p class="date">
               {r.date}
@@ -196,81 +79,15 @@ const ROLES = [
             {r.where && <p class="where">{r.where}</p>}
             {r.note && <p class="note">{r.note}</p>}
           </div>
-        </a>
+        </li>
       ))}
-    </div>
+    </ol>
 
-    {/* Floating preview card — follows the cursor on TOC hover.
-        Photo slot inside .frame; if data-photo is empty we show the
-        polaroid hatch placeholder (matches v4). */}
-    <div id="toc-preview" aria-hidden="true">
-      <span class="tape">PREVIEW</span>
-      <div class="frame">
-        <div class="ph" id="toc-preview-ph">PLACEHOLDER</div>
-        <img id="toc-preview-img" alt="" />
-      </div>
-      <div class="cap" id="toc-preview-cap">—</div>
-    </div>
+    {/* Floating cursor-tracked preview card was removed — we shipped without
+        role photos, so every hover was a "PLACEHOLDER" hatch. Restore from
+        git history (look for `#toc-preview`) when real photos exist. */}
   </div>
 </section>
-
-<script>
-  // ===== TOC HOVER PREVIEW =====
-  // Mirrors the v4 index-loud.html flirt: cursor-tracked polaroid card
-  // appears next to the row, slot ready for real photos when they exist.
-  (() => {
-    const preview = document.getElementById('toc-preview') as HTMLElement | null;
-    if (!preview) return;
-    const previewEl: HTMLElement = preview;
-    const ph  = document.getElementById('toc-preview-ph');
-    const img = document.getElementById('toc-preview-img') as HTMLImageElement | null;
-    const cap = document.getElementById('toc-preview-cap');
-    const rows = document.querySelectorAll<HTMLElement>('#spine-rail .lentry');
-
-    let mx = 0, my = 0, raf = 0;
-
-    function loop() {
-      // Offset so the card hugs the cursor without colliding with it.
-      previewEl.style.transform =
-        `translate3d(${mx + 24}px, ${my - 120}px, 0)`;
-      raf = requestAnimationFrame(loop);
-    }
-
-    document.addEventListener('mousemove', (e) => {
-      mx = e.clientX; my = e.clientY;
-    }, { passive: true });
-
-    rows.forEach((row) => {
-      row.addEventListener('mouseenter', () => {
-        const label = row.dataset.preview || 'preview';
-        const photo = row.dataset.photo || '';
-        if (cap) cap.textContent = label;
-        if (img && ph) {
-          if (photo) {
-            img.src = photo;
-            img.style.display = 'block';
-            ph.style.display = 'none';
-          } else {
-            img.removeAttribute('src');
-            img.style.display = 'none';
-            ph.style.display = 'flex';
-            ph.textContent = label;
-          }
-        }
-        previewEl.classList.add('on');
-        if (!raf) raf = requestAnimationFrame(loop);
-      });
-      row.addEventListener('mouseleave', () => {
-        previewEl.classList.remove('on');
-      });
-    });
-
-    // Keyboard / reduced-motion: never show the floating card.
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      previewEl.style.display = 'none';
-    }
-  })();
-</script>
 
 <style>
   #timeline {
@@ -286,172 +103,6 @@ const ROLES = [
     margin: 48px 0 60px;
     text-wrap: balance;
     max-width: 18ch;
-  }
-
-  /* JOURNEY — pinned scrub stage with zig-zag train track */
-  .tl-journey {
-    position: relative;
-    margin-bottom: 14vh;
-    height: 78vh;
-    min-height: 560px;
-  }
-
-  /* Zig-zag rail (decorative SVG) — fills the journey area */
-  #tl-track {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-  }
-  #tl-track-fill {
-    transition: stroke-dasharray 0.4s ease;
-  }
-
-  /* Station markers — positioned absolutely at each waypoint (set in JS) */
-  .tl-stations {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-  }
-  .tl-station {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-  .tl-st-dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: var(--paper);
-    border: 1.5px solid var(--ink);
-    box-shadow: 0 0 0 2px var(--paper);
-    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.2, 1), background 0.3s, border-color 0.3s;
-  }
-  .tl-station[data-live="true"] .tl-st-dot {
-    background: var(--terra);
-    border-color: var(--terra);
-    transform: scale(1.6);
-  }
-  .tl-st-num {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-  .tl-station[data-live="true"] .tl-st-num { color: var(--terra); }
-
-  /* Chapter card — single card centered in pinned viewport */
-  .tl-stage {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: min(640px, 80%);
-    z-index: 3;
-    pointer-events: none;
-  }
-  .tl-chapter {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.9, 0.2, 1);
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-    padding: 24px;
-    background: rgba(244, 236, 219, 0.78);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    border-radius: 4px;
-  }
-  .tl-chapter[data-active="true"] {
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
-  }
-  .tl-chapter .tl-era,
-  .tl-chapter .tl-place {
-    text-align: center;
-  }
-
-  /* Train — absolutely positioned, JS sets left/top/rotation */
-  #tl-train {
-    position: absolute;
-    width: 92px;
-    height: 28px;
-    left: 6%;
-    top: 6%;
-    transform: translate(-50%, -50%);
-    z-index: 4;
-    pointer-events: none;
-    filter: drop-shadow(0 4px 6px rgba(29, 46, 34, 0.18));
-    will-change: transform, left, top;
-  }
-  #tl-train .smoke circle {
-    fill: var(--ink);
-    opacity: 0;
-    animation: tl-train-smoke 2.2s ease-out infinite;
-  }
-  #tl-train .smoke circle:nth-child(2) { animation-delay: 0.6s; }
-  #tl-train .smoke circle:nth-child(3) { animation-delay: 1.2s; }
-  @keyframes tl-train-smoke {
-    0%   { opacity: 0;   transform: translate(0, 0)     scale(0.6); }
-    20%  { opacity: 0.4; }
-    100% { opacity: 0;   transform: translate(7px, -22px) scale(1.6); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    #tl-train .smoke circle { animation: none; }
-  }
-
-  @media (max-width: 720px) {
-    .tl-journey { height: 90vh; }
-    #tl-train { width: 70px; height: 22px; }
-    .tl-stage { width: 90%; }
-    .tl-chapter { padding: 16px; }
-  }
-  .tl-era {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--terra);
-  }
-  .tl-place {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: -8px;
-  }
-  .tl-headline {
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 300;
-    font-size: clamp(40px, 5.5vw, 88px);
-    line-height: 1.0;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    font-variation-settings: 'opsz' 144, 'ital' 1, 'wght' 300;
-    text-wrap: balance;
-  }
-  .tl-body {
-    font-family: var(--sans);
-    font-size: clamp(15px, 1.2vw, 18px);
-    line-height: 1.55;
-    color: var(--ink);
-    max-width: 56ch;
-    margin-top: 6px;
   }
 
   /* ============================================================
@@ -479,32 +130,14 @@ const ROLES = [
     background: var(--line);
     display: inline-block;
   }
-  .spine-h {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: clamp(44px, 6vw, 88px);
-    line-height: 1;
-    letter-spacing: -0.025em;
-    color: var(--ink);
-    text-wrap: balance;
-    font-variation-settings: 'opsz' 144, 'wght' 500, 'SOFT' 80;
-  }
-  .spine-h em {
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 300;
-    color: var(--terra);
-    font-variation-settings: 'opsz' 144, 'wght' 300, 'SOFT' 100;
-  }
-
-  /* Local acid yellow — same hex used on the polaroid stubs in Work.astro */
-  .spine-rail { --acid: #e8ff3a; }
+  /* .spine-h removed — duplicated `.tl-h`. Strap stays as `.spine-eye`. */
 
   .spine-rail {
     position: relative;
     max-width: 1180px;
     margin: 0 auto;
     padding: 0 0 60px;
+    list-style: none;
   }
   /* Center rail */
   .spine-rail::before {
@@ -525,7 +158,7 @@ const ROLES = [
     align-items: start;
     padding: 40px 0;
     color: var(--ink);
-    text-decoration: none;
+    list-style: none;
   }
 
   /* Rail dot */
@@ -575,7 +208,8 @@ const ROLES = [
   .lentry.right .body { grid-column: 3; margin-left: 4px; }
   .lentry .body > * { position: relative; z-index: 1; }
 
-  /* Acid sweep — fills from the rail side toward the outside edge */
+  /* Acid sweep — fills from the rail side toward the outside edge. The
+     `--acid` token is defined in tokens.css. */
   .lentry .body::before {
     content: '';
     position: absolute;
@@ -642,14 +276,14 @@ const ROLES = [
   .lentry .where {
     margin-top: 10px;
     font-family: var(--sans);
-    font-size: 16px;
+    font-size: clamp(15px, 1vw, 17px);
     color: var(--ink);
     opacity: 0.72;
   }
   .lentry .note {
     margin-top: 14px;
     font-family: var(--sans);
-    font-size: 15.5px;
+    font-size: clamp(15.5px, 1.1vw, 18px);
     line-height: 1.55;
     color: var(--ink);
     opacity: 0.86;
@@ -657,91 +291,9 @@ const ROLES = [
   }
   .lentry.left .note { margin-left: auto; }
 
-  /* ============================================================
-     FLOATING PREVIEW — polaroid placeholder that follows the cursor
-     ============================================================ */
-  #toc-preview {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 220px;
-    z-index: 8000;
-    pointer-events: none;
-    background: var(--paper);
-    border: 1px solid var(--ink);
-    padding: 12px 12px 36px;
-    box-shadow: 6px 8px 0 var(--ink),
-                0 18px 32px -16px rgba(0, 0, 0, 0.4);
-    opacity: 0;
-    transition: opacity 0.22s;
-    will-change: transform, opacity;
-    transform: translate3d(-9999px, -9999px, 0);
-  }
-  #toc-preview.on { opacity: 1; }
-  #toc-preview .tape {
-    position: absolute;
-    top: -10px;
-    left: 18px;
-    transform: rotate(-4deg);
-    background: var(--acid, #e8ff3a);
-    color: var(--ink);
-    padding: 3px 9px;
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    border: 1px dashed rgba(0, 0, 0, 0.4);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
-  }
-  #toc-preview .frame {
-    aspect-ratio: 4 / 3;
-    background: var(--cream);
-    border: 1px solid rgba(29, 46, 34, 0.2);
-    position: relative;
-    overflow: hidden;
-  }
-  #toc-preview .frame .ph {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 14px;
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink);
-    opacity: 0.55;
-    background: repeating-linear-gradient(45deg,
-      rgba(29, 46, 34, 0.06) 0 1px, transparent 1px 10px);
-  }
-  #toc-preview .frame img {
-    display: none;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  #toc-preview .cap {
-    position: absolute;
-    left: 12px;
-    right: 12px;
-    bottom: 10px;
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(29, 46, 34, 0.7);
-    text-align: center;
-  }
+  /* (Floating cursor-tracked preview card removed; see component note above.) */
 
-  /* Skip the floating card on small screens / touch */
-  @media (max-width: 900px), (hover: none) {
-    #toc-preview { display: none; }
-  }
-
-  @media (max-width: 780px) {
+  @media (max-width: 900px) {
     .spine-eye { gap: 12px; font-size: 10px; }
     .spine-eye .r { width: 28px; }
 
@@ -763,8 +315,4 @@ const ROLES = [
     .lentry.right:hover .body { transform: translateX(8px); box-shadow: 4px 4px 0 var(--ink); }
   }
 
-  @media (max-width: 900px) {
-    .tl-journey { grid-template-columns: 1fr; gap: 24px; }
-    .tl-rail { display: none; }
-  }
 </style>

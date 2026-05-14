@@ -1,4 +1,24 @@
 ---
+/*
+  FIXME — Off.astro is currently UNHOOKED from src/pages/index.astro per the
+  BRIEF: "Off-duty section cut for v1 per brief. Add back later as a short
+  editorial P.S. in voice, not a fabricated reading list."
+
+  Before re-hooking this component, verify or replace each CARDS entry:
+    - Reading: "Ted Chiang, Jenny Odell, Stories of Your Life" — NOT in BRIEF.
+      Confirm these are actually what Shivam reads, or swap for real titles.
+    - Listening: "Khruangbin", "tabla loop from a friend's record" —
+      NOT in BRIEF. Confirm or replace. The Spotify playlist link in
+      Close.astro IS real and could anchor this card factually.
+    - Doing: "Marathi food, slow runs" — NOT in BRIEF. Punjabi heritage IS in
+      BRIEF §3 (Delhi, Punjab roots). Reconcile or replace.
+
+  BRIEF voice rules that apply when re-writing:
+    - No em dashes (this file has already been pre-fixed).
+    - Short sentences, Slack-DM tone, not LinkedIn.
+    - No "passionate about", "driven by", "obsessed with".
+    - If the line could apply to any other PM, rewrite it.
+*/
 const CARDS = [
   {
     cap: 'Reading',
@@ -9,20 +29,20 @@ const CARDS = [
   {
     cap: 'Listening',
     h: 'Alt-pop, jazz, and one specific tabla loop.',
-    p: "The Spotify card pinned to your screen is the live playlist. Heavy on Khruangbin. The tabla loop is from a friend's record — she's never released it.",
+    p: "The Spotify card pinned to your screen is the live playlist. Heavy on Khruangbin. The tabla loop is from a friend's record. She's never released it.",
     tag: 'In rotation',
   },
   {
     cap: 'Doing',
     h: 'Marathi food, slow runs, slower writing.',
-    p: 'Cooks badly, runs poorly, writes slowly. Believes "amateurs notice more." Mastery is overrated — first contact is where the real product insight lives.',
+    p: 'I cook badly, run slowly, write slowly. Amateurs notice more. Mastery is overrated. First contact is where the real insight lives.',
     tag: 'Always',
   },
 ];
 ---
 <section id="off">
   <div class="w">
-    <div class="cap"><b>Section 06</b> — Off-duty</div>
+    <div class="cap"><b>Section 06</b> · Off-duty</div>
     <h2 class="off-h reveal">When I'm not<br />shipping <em>things.</em></h2>
     <div class="off-grid">
       {CARDS.map((c) => (
@@ -98,7 +118,7 @@ const CARDS = [
     bottom: 18px;
     right: 18px;
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);

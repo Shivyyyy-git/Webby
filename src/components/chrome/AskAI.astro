@@ -1,20 +1,87 @@
 ---
 ---
-<div id="ask">
+<div id="ask" role="region" aria-label="Ask the AI version of Shivam">
   <div id="ask-pill">
-    <div id="ask-icon">S</div>
-    <input id="ask-input" placeholder="Ask the AI version of me anything →" autocomplete="off" />
-    <button id="ask-send" aria-label="Send">→</button>
+    <div id="ask-icon" aria-hidden="true">S</div>
+    <label for="ask-input" class="sr-only">Ask the AI version of Shivam a question</label>
+    <input id="ask-input" placeholder="Ask me anything" autocomplete="off" aria-label="Ask the AI version of Shivam a question" />
+    <button id="ask-send" type="button" aria-label="Send question"><span aria-hidden="true">→</span></button>
   </div>
-  <div id="ask-suggest">
-    <span class="ask-chip" data-q="What did you actually build at Maya?">What did you build at Maya?</span>
-    <span class="ask-chip" data-q="What's the metric you can defend?">The metric you can defend?</span>
-    <span class="ask-chip" data-q="Why utility companies?">Why utility companies?</span>
-    <span class="ask-chip" data-q="Tell me about the founder years.">Founder years?</span>
-    <span class="ask-chip" data-q="Are you hireable right now?">Are you hireable?</span>
+  <div id="ask-suggest" role="group" aria-label="Suggested questions">
+    <button type="button" class="ask-chip" data-q="What did you actually build at Maya?">What did you build at Maya?</button>
+    <button type="button" class="ask-chip" data-q="What's your one metric you can actually defend?">Your one defensible metric?</button>
+    <button type="button" class="ask-chip" data-q="Why utility companies?">Why utility companies?</button>
+    <button type="button" class="ask-chip" data-q="Tell me about the founder years.">Founder years?</button>
+    <button type="button" class="ask-chip" data-q="Are you open to new roles right now?">Open to new roles?</button>
   </div>
-  <div id="ask-thread"></div>
+  <div id="ask-thread" aria-live="polite"></div>
 </div>
+
+<script>
+  (() => {
+    const input = document.getElementById('ask-input') as HTMLInputElement | null;
+    const send  = document.getElementById('ask-send');
+    const thread = document.getElementById('ask-thread');
+    const ask = document.getElementById('ask');
+    if (!input || !ask) return;
+
+    document.querySelectorAll<HTMLButtonElement>('#ask-suggest .ask-chip').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const q = btn.dataset.q || btn.textContent || '';
+        input.value = q;
+        input.focus();
+      });
+    });
+
+    async function submitQuestion() {
+      const q = (input!.value || '').trim();
+      if (!q || !thread) return;
+
+      ask!.classList.add('has-thread');
+
+      const u = document.createElement('div');
+      u.className = 'msg u';
+      u.textContent = q;
+      thread.appendChild(u);
+      input!.value = '';
+
+      // Loading dots
+      const thinking = document.createElement('div');
+      thinking.className = 'msg thinking';
+      thinking.innerHTML = '<i></i><i></i><i></i>';
+      thread.appendChild(thinking);
+      thread.scrollTop = thread.scrollHeight;
+
+      try {
+        const res = await fetch('/api/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: q }),
+        });
+        const data = await res.json();
+        thinking.remove();
+
+        const a = document.createElement('div');
+        a.className = 'msg a';
+        a.textContent = data.answer || 'Reach me at shivamsharma2023@gmail.com';
+        thread.appendChild(a);
+      } catch {
+        thinking.remove();
+        const a = document.createElement('div');
+        a.className = 'msg a';
+        a.textContent = 'Having trouble right now. Email works: shivamsharma2023@gmail.com';
+        thread.appendChild(a);
+      }
+
+      thread.scrollTop = thread.scrollHeight;
+    }
+
+    send?.addEventListener('click', submitQuestion);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); submitQuestion(); }
+    });
+  })();
+</script>
 
 <style>
   #ask {
@@ -67,7 +134,7 @@
     font-size: 14px;
     padding: 8px 0;
   }
-  #ask-input::placeholder { color: rgba(237, 228, 211, 0.45); }
+  #ask-input::placeholder { color: rgba(237, 228, 211, 0.7); }
   #ask-send {
     width: 38px;
     height: 38px;
@@ -131,7 +198,7 @@
   .msg.u::before {
     content: "You · ";
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
@@ -143,7 +210,7 @@
   .msg.a::before {
     content: "Shivam (AI) · ";
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--terra);

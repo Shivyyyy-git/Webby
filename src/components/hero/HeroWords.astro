@@ -39,8 +39,8 @@
       <span class="word ital"><span>sharma.</span></span>
     </h1>
     <p class="hero-sub">
-      <span class="hs-line">I build AI for utilities and healthcare. <em>Maya AI</em> at ESC Partners.</span>
-      <span class="hs-cta">→ scroll for the receipts</span>
+      <span class="hs-line">I build AI for utility companies. <em>Maya AI</em> at ESC Partners.</span>
+      <span class="hs-cta"><span aria-hidden="true">→</span> scroll for the receipts</span>
     </p>
   </div>
 
@@ -48,7 +48,7 @@
       tilt-on-mousemove handled in chrome.ts → initMagneticPhoto(). */}
   <figure id="hero-photo" data-cur="proj" data-cur-lbl="Hi">
     <span class="hp-frame">
-      <img src="/images/shivam.jpg" alt="Shivam Sharma" width="940" height="940" loading="eager" decoding="async" />
+      <img src="/images/shivam.jpg" alt="Shivam Sharma, AI Product Manager" width="940" height="940" loading="eager" decoding="async" fetchpriority="high" />
     </span>
     <figcaption>
       <span class="hp-name">Builder.</span>
@@ -60,14 +60,7 @@
     <p class="hero-bio">
       Right now I'm building <em>Maya AI</em> at ESC Partners, a customer support platform for utility companies. Before that, I was a two-time founder in the UK and Middle East. <em>Both sold</em>. Then a master's in AI at Simon Business School.
     </p>
-    <div class="hero-meta">
-      <div>Currently<b>AI PM, ESC Partners</b></div>
-      <div>Based<b>Rochester, NY</b></div>
-    </div>
-    <div class="hero-meta">
-      <div>Open to<b>AI PM roles, full-time</b></div>
-      <div>Reach<b><a href="mailto:shivamsharma2023@gmail.com">shivamsharma2023@gmail.com</a></b></div>
-    </div>
+    <a class="hero-mail" href="mailto:shivamsharma2023@gmail.com">shivamsharma2023@gmail.com <span aria-hidden="true">→</span></a>
   </div>
 </div>
 
@@ -221,7 +214,9 @@
     overflow: hidden;
     vertical-align: bottom;
     line-height: 0.95;
-    padding: 0 0.04em 0.14em;
+    /* Bumped bottom padding from 0.14em → 0.18em so the period after
+       "sharma." and any italic descenders don't clip at large viewports. */
+    padding: 0 0.04em 0.18em;
   }
   .hero-name .word > span {
     display: inline-block;
@@ -268,7 +263,9 @@
     width: clamp(280px, 30vw, 480px);
     aspect-ratio: 3 / 4;
     background: var(--paper);
-    padding: 16px 16px 62px;
+    /* Bottom pad tightened 62 → 40 so the figcaption sits close to the photo
+       instead of leaving ~60px of empty polaroid paper. */
+    padding: 16px 16px 40px;
     border-radius: 4px;
     box-shadow:
       0 40px 100px -10px rgba(29, 46, 34, 0.28),
@@ -320,7 +317,7 @@
   }
   #hero-photo figcaption {
     position: absolute;
-    bottom: 14px;
+    bottom: 10px;
     left: 0;
     right: 0;
     text-align: center;
@@ -338,8 +335,8 @@
   }
   .hp-meta {
     font-family: var(--mono);
-    font-size: 8px;
-    letter-spacing: 0.22em;
+    font-size: 10px;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--muted);
   }
@@ -364,9 +361,9 @@
     padding-top: 28px;
     border-top: 1px solid var(--line);
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     gap: 56px;
-    align-items: start;
+    align-items: center;
     position: relative;
     z-index: 6;
   }
@@ -383,27 +380,26 @@
     color: var(--terra);
     font-variation-settings: 'opsz' 24, 'ital' 1, 'wght' 500;
   }
-  .hero-meta {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
+  .hero-mail {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(18px, 1.6vw, 24px);
+    color: var(--moss);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 4px;
+    justify-self: end;
+    font-variation-settings: 'opsz' 36, 'ital' 1, 'wght' 400;
+    transition: color 0.3s, border-color 0.3s;
   }
-  .hero-meta div {
-    margin-bottom: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .hero-meta b {
-    color: var(--ink);
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    font-size: 11px;
+  .hero-mail:hover {
+    color: var(--terra);
+    border-color: var(--terra);
   }
 
   @media (max-width: 900px) {
     .hero-foot { grid-template-columns: 1fr; gap: 24px; }
+    .hero-mail { justify-self: start; }
   }
 </style>

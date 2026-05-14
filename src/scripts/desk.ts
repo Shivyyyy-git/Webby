@@ -287,7 +287,13 @@ export function initDesk() {
   });
   let spCurrent = 0;
 
+  // Remember where focus was before the dialog opened so we can return.
+  let preSpreadFocus: HTMLElement | null = null;
+
   function openSpread(i: number) {
+    if (!spread.classList.contains('open')) {
+      preSpreadFocus = document.activeElement as HTMLElement | null;
+    }
     spCurrent = i;
     if (!cineActive) {
       cineFocused = i;  // train pulls into station while spread is open
@@ -311,12 +317,20 @@ export function initDesk() {
     spEls.grid.innerHTML = d.grid.map(([k, v]) => `<div><b>${k}</b><span>${v}</span></div>`).join('');
     spEls.foot.textContent = 'stop · 0' + (i + 1) + ' of 04';
     spread.classList.add('open');
+    spread.setAttribute('aria-hidden', 'false');
+    spread.removeAttribute('inert');
     audBell();
     target = centerOf(i);
     focusCard(i);
+    // Move keyboard focus into the dialog so SR users land inside.
+    // 50ms delay gives the transition a frame to flush before focus shifts —
+    // rAF alone was racing with the click event's focus restore in some browsers.
+    setTimeout(() => spClose.focus(), 50);
   }
   function closeSpread() {
     spread.classList.remove('open');
+    spread.setAttribute('aria-hidden', 'true');
+    spread.setAttribute('inert', '');
     if (!cineActive) {
       cards.forEach((c) => c.classList.remove('focus'));
       // Reset strip pan + train target so the user lands back at rest state
@@ -325,6 +339,10 @@ export function initDesk() {
       cineFocused = -1;
       updateTrainTarget();
     }
+    // Restore focus to whatever triggered the open.
+    if (preSpreadFocus && document.body.contains(preSpreadFocus)) {
+      preSpreadFocus.focus();
+    }
   }
   spBd.addEventListener('click', closeSpread);
   spClose.addEventListener('click', closeSpread);
@@ -332,9 +350,30 @@ export function initDesk() {
   document.querySelector('#sp-next')!.addEventListener('click', () => openSpread((spCurrent + 1) % 4));
   document.addEventListener('keydown', (e) => {
     if (!spread.classList.contains('open')) return;
-    if (e.key === 'Escape') closeSpread();
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeSpread();
+      return;
+    }
     if (e.key === 'ArrowLeft') openSpread((spCurrent + 3) % 4);
     if (e.key === 'ArrowRight') openSpread((spCurrent + 1) % 4);
+    // Trap Tab inside the dialog.
+    if (e.key === 'Tab') {
+      const focusables = Array.from(
+        spread.querySelectorAll<HTMLElement>('button, [href], input, [tabindex]:not([tabindex="-1"])')
+      ).filter((el) => !el.hasAttribute('disabled'));
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   });
 
   // INTERACTION
